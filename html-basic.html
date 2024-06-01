@@ -43,7 +43,7 @@
     </code>
   </pre>
   <hr>
-  <ol>
+  <ul>
     <li>
       小学
       <ol>
@@ -60,7 +60,7 @@
     </li>
     <li>中学</li>
     <li>大学</li>
-  </ol>
+  </ul>
   <hr>
   <dl>
     <dt>班级</dt>
@@ -75,8 +75,69 @@
   </dl>
   <hr>
   <h2>Google搜索</h2>
-  <input type="text">
-  <button>在新窗口打开搜索结果</button>
+  <form action="https://www.google.com.hk/search">
+    <input name="q" type="text">
+    <button type="submit" formtarget="_blank">在新窗口打开搜索结果</button>
+  </form>
+  <hr>
+  <form action>
+  <p>个人信息调查表</p>
+    <dl>
+      <dt>性别</dt>
+      <dd>
+        <label>
+          <input name="gender" type="radio" value="male"> 男
+        </label>
+        <label>
+          <input name="gender" type="radio" value="female"> 女
+        </label>
+      </dd>
+      <dt>年龄</dt>
+        <dd>
+          <select name="age">
+            <optgroup label="少年">
+              <option selected hidden>请选择</option>
+              <option value="1-6">1到6岁</option>
+              <option value="6-12">6到12岁</option>
+            </optgroup>
+            <optgroup label="青年">
+              <option value="13-15">13到15岁</option>
+              <option value="16-18">16到18岁</option>
+            </optgroup>
+            <optgroup label="少年">
+              <option value="1-6">1到6岁</option>
+              <option value="6-12">6到12岁</option>
+            </optgroup>
+          </select>
+        </dd>
+        <dt>生日</dt>
+        <dd>
+          <input type="date" value="2021-11-04" name="birthday">
+        </dd>
+        <dt>生辰</dt>
+        <dd>
+          <input type="time" name="birthtime">
+        </dd>
+        <dt>照片</dt>
+        <dd>
+          <input hidden type="file" name="avatar" id="avatar-upload">
+          <label for="avatar-upload">点我上传照片，我比文件上传按钮好看</label>
+        </dd>
+        <dt>自我介绍</dt>
+        <dd>
+          <textarea name="intro" rows="10" cols="30">&lt;&#47;textarea&gt;</textarea>
+        </dd>
+    </dl>
+    <fieldset disabled>
+      <legend>这里全部禁用了</legend>
+      <input type="text">
+      <input type="text">
+      <input type="text">
+      <input type="text">
+    </fieldset>
+    <input type="submit">
+    <input type="reset">
+  </form>
   <hr>
 
 </body>
