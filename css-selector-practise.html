@@ -8,13 +8,13 @@
 
     <style>
       /* 只能在这个style标签里写css，不能改变html结构 */
-      .color-red, p:hover.a {
+      span:first-child, body>p:first-child, p:hover.a {
         color: red;
       }
-      .color-blue, p:focus.a {
+      span:nth-child(2), p:focus.a {
         color: blue;
       }
-      .color-green, p:active.a {
+      span>span:first-child, p:active.a {
         color: green;
       }
       :link {
@@ -35,15 +35,15 @@
     </style>
   </head>
   <body>
-    <p class="color-red">红色</p>
+    <p>红色</p>
 
     <p class="a" tabindex="1">鼠标悬浮时为红色，按下去时为绿色，获得焦点时为蓝色</p>
 
     <p class="a c">
-      <span class="color-red">
+      <span>
         红色
-        <span class="color-green">绿色</span>
-        <span class="color-blue">蓝色</span>
+        <span>绿色</span>
+        <span>蓝色</span>
       </span>
     </p>
 
