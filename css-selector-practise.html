@@ -8,13 +8,13 @@
 
     <style>
       /* 只能在这个style标签里写css，不能改变html结构 */
-      span:first-child, body>p:first-child, p:hover.a {
+      p>span:first-child, body>p:first-child, p:hover.a[tabindex="1"] {
         color: red;
       }
-      span:nth-child(2), p:focus.a {
+      span:nth-child(2), p:focus.a[tabindex="1"] {
         color: blue;
       }
-      span>span:first-child, p:active.a {
+      span>span:first-child, p:active.a[tabindex="1"] {
         color: green;
       }
       :link {
@@ -44,18 +44,16 @@
       div.b li:nth-child(n+65) {
         color: green;
       }
-      div.prime li:first-child {
-        color:black;
+      div.prime li:nth-child(2n+4),
+      div.prime li:nth-child(3n+9),
+      div.prime li:nth-child(5n+25),
+      div.prime li:nth-child(7n+49) {
+        color: grey;
       }
-      div.prime li {
+      div.prime li:not(:nth-child(1)):not(:nth-child(2n+4)):not(:nth-child(3n+9)):not(:nth-child(5n+25)):not(:nth-child(7n+49)) {
         color: red;
       }
-      div.prime li:nth-child(2n+4),
-      div.prime li:nth-child(3n+6),
-      div.prime li:nth-child(5n+10),
-      div.prime li:nth-child(7n+14) {
-        color: green;
-      }
+
     </style>
   </head>
   <body>
