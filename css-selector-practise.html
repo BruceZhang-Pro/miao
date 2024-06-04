@@ -32,6 +32,30 @@
       [href$="pdf" i] {
         font-size: 30px;
       }
+      div.a li:nth-child(-1n+7):nth-child(n+4) {
+        color: red;
+      }
+      div.b li:nth-child(-1n+50):nth-child(n+35) {
+        color: blue;
+      }
+      div.b li:nth-child(-1n+25) {
+        color: red;
+      }
+      div.b li:nth-child(n+65) {
+        color: green;
+      }
+      div.prime li:first-child {
+        color:black;
+      }
+      div.prime li {
+        color: red;
+      }
+      div.prime li:nth-child(2n+4),
+      div.prime li:nth-child(3n+6),
+      div.prime li:nth-child(5n+10),
+      div.prime li:nth-child(7n+14) {
+        color: green;
+      }
     </style>
   </head>
   <body>
