@@ -80,7 +80,7 @@
             text-align: center;
             margin: 0;
         }
-        section:last-child {
+        .copyright {
             margin-top: 17px;
             background-color: rgb(238, 138, 238);
         }
@@ -116,6 +116,26 @@
             margin-left: auto;
             margin-right: auto;
             line-height: 50px;
+        }
+        .wrapper {
+            width: 600px;
+            margin: auto;
+            overflow: hidden;
+        }
+        .grid {
+            font-size: 0px;
+            margin: -7.5px -15px;
+        }
+        .item {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 180px;
+            height: 40px;
+            border: 3px solid;
+            font-size: 16px;
+            margin: 7.5px 15px;
+            text-align: center;
+            line-height: 36px;
         }
     </style>
 </head>
@@ -164,7 +184,22 @@
         <span>产品</span>
         <span>产品</span>
     </section>
-    
+    <div class="wrapper">
+        <section class="grid">
+            <div class="item">宽180高40(包含边框)</div>
+            <div class="item">产品</div>
+            <div class="item">产品</div>
+            <div class="item">水平间隙30px</div>
+            <div class="item">产品</div>
+            <div class="item">产品</div>
+            <div class="item">垂直间隙15px</div>
+            <div class="item">产品</div>
+            <div class="item">产品</div>
+            <div class="item">边框宽度3px</div>
+            <div class="item">产品</div>
+            <div class="item">产品</div>
+        </section>
+    </div>
     <footer>
         <div>link</div>
         <div>link</div>
@@ -172,7 +207,7 @@
         <div>link</div>
         <div>link</div>
     </footer>
-    <section>
+    <section class="copyright">
         <p>&#169版权所有</p>
         <p>本页所有布局均使用块元素</p>
     </section>
