@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            min-width: 930px;
+        }
+        body {
+            margin: 0;
+            /* min-width: 930px; */
+        }
+        .left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: pink;
+            width: 200px;
+            box-sizing: border-box;
+            border: 1px solid;
+        }
+        .left h2, section h2, .right h2 {
+            position: relative;
+            text-align: right;
+            margin-right: 10px;
+            margin-left: 0;
+            /* right: 10px; */
+        }
+        .input {
+            position: relative;
+            font-size: 0;
+        }
+        input, button {
+            position: absolute;
+            font-size: 16px;
+        }
+        button {
+            height: 25px;
+            right: 0;
+            width: 25px;
+        }
+        ul {
+            position: absolute;
+            top: 92.34px;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            overflow: auto;
+            list-style: none;
+        }
+        main {
+            position: fixed;
+            left: 200px;
+            top: 0;
+            bottom: 0;
+            right: 400px;
+            background-color: rgb(255, 248, 220);
+            border: 2px solid;
+            min-width: 330px;
+            box-sizing: border-box;
+        }
+        main h2 {
+            position: absolute;
+            right: 0px;
+            left: 0;
+            border-bottom: 2px solid ;
+            padding-left: 10px;
+        }
+        .title {
+            position: relative;
+            top: 69.34px;
+        }
+        .main-content {
+            position: relative;
+            top: 69.34px;
+            overflow: auto;
+            height: calc(100vh - 87.84px);
+        }
+        section {
+            position: sticky;
+            /* right: 200px; */
+            top: 0;
+            bottom: 0;
+            /* left: calc(100% - 400px);  */
+            margin-left: calc(100% - 400px);
+            width: 200px;
+            height: 100vh;
+            border: 1px solid;
+            background-color: pink;
+            box-sizing: border-box;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .right {
+            position: sticky;
+            right: 0;
+            /* top: 0; */
+            /* left: calc(100% - 200px); */
+            /* bottom: calc(100vh - 70px); */
+            width: 200px;
+            background-color: pink;
+            border: 1px solid;
+            box-sizing: border-box;
+            /* margin-left: calc(100% - 200px);*/
+            /* margin-right: calc(100vh * (-1));  */
+            height: 100vh;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .sticky {
+            font-size: 0;
+        }
+    </style>
+</head>
+<body>
+    <aside class="left">
+        <h2>OALD Se7en</h2>
+        <div class="input">
+            <input type="text">
+            <button></button>
+        </div>
+        <ul>
+            <li>word1</li>
+            <li>word2</li>
+            <li>word3</li>
+            <li>word4</li>
+            <li>word5</li>
+            <li>word6</li>
+            <li>word7</li>
+            <li>word8</li>
+            <li>word9</li>
+            <li>word10</li>
+            <li>word11</li>
+            <li>word12</li>
+            <li>word13</li>
+            <li>word14</li>
+            <li>word15</li>
+            <li>word16</li>
+            <li>word17</li>
+            <li>word18</li>
+            <li>word19</li>
+            <li>word20</li>
+            <li>word21</li>
+            <li>word22</li>
+            <li>word23</li>
+            <li>word24</li>
+            <li>word25</li>
+            <li>word26</li>
+            <li>word27</li>
+            <li>word28</li>
+            <li>word29</li>
+            <li>word30</li>
+            <li>word31</li>
+            <li>word32</li>
+            <li>word33</li>
+            <li>word34</li>
+            <li>word35</li>
+            <li>word36</li>
+            <li>word37</li>
+            <li>word38</li>
+            <li>word39</li>
+            <li>word40</li>
+            <li>word41</li>
+            <li>word42</li>
+            <li>word43</li>
+            <li>word44</li>
+            <li>word45</li>
+            <li>word46</li>
+            <li>word47</li>
+            <li>word48</li>
+            <li>word49</li>
+            <li>word50</li>
+        </ul>
+    </aside>
+    <main>
+        <h2>fantasy</h2>
+        <div class="title">Lorem,ipsurm.</div>
+        <div class="main-content">
+            <ol>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo aliquid voluptatem saepe aperiam quibusdam cupiditate culpa molestiae magni suscipit? Sapiente dicta minus a veniam doloremque repudiandae iure, dolorum minima enim.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+                <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Culpa unde ratione libero molestias reprehenderit, vel tempore fugit neque officiis. Doloremque quasi aliquid ad! Quasi laboriosam accusamus repellendus id laudantium voluptatibus.</li>
+            </ol>
+        </div>
+    </main>
+    <div class="sticky">
+        <section>
+            <h2>Vocabulary</h2>
+        </section>
+        <aside class="right">
+            <h2>History</h2>
+        </aside>
+    </div>
+</body>
+</html>
