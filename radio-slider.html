@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* * {
+            box-shadow: inset 0 0 1px red;
+        } */
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+        .main {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        img {
+            width: 100%;
+            height: 640px;
+            object-fit: cover;
+            object-position: 16% 42%;
+            /* transform: scale(1);
+            transform-origin: 16% 42%; */
+            display: none;
+        }
+        input:checked + * + * + img {
+            display: block;
+        }
+        input:checked#one-radio ~ div > :nth-child(1) {
+            border: 4px solid rgb(36, 145, 255);
+        }
+        input:checked#two-radio ~ div > :nth-child(2) {
+            border: 4px solid rgb(36, 145, 255);
+        }
+        input:checked#three-radio ~ div > :nth-child(3) {
+            border: 4px solid rgb(36, 145, 255);
+        }
+        input {
+            display: none;
+        }
+        .iconHub {
+            position: absolute;
+            right: 0;
+            bottom: 30px;
+        }
+        .icon {
+            display: inline-block;
+            height: 60px;
+            width: 60px;
+            background-origin: border-box;
+            background-size: cover;
+            border-radius: 99%;
+            margin-right: 30px;
+            vertical-align: middle;
+            border: 4px solid transparent;
+        }
+        .icon:first-child {
+            background-image: url(image/Earth-section.webp);
+        }
+        .icon:nth-child(2) {
+            background-image: url(image/Maps-section.webp);
+        }
+        .icon:nth-child(3) {
+            background-image: url(image/Rockets-section.webp);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <input id="one-radio" type="radio" name="slider" checked>
+        <input id="two-radio" type="radio" name="slider">
+        <input id="three-radio" type="radio" name="slider">
+        <img src="image/Earth.webp" alt="Earth">
+        <img src="image/Maps.webp" alt="Maps">
+        <img src="image/Rockets.webp" alt="Rockets">
+        <div class="iconHub">
+            <label class="icon" for="one-radio"></label>
+            <label class="icon" for="two-radio"></label>
+            <label class="icon" for="three-radio"></label>
+        </div>
+    </div>
+</body>
+</html>
