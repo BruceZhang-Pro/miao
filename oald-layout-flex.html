@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            /* box-shadow: inset 0 0 1px red;
+            background-color: rgb(0, 0, 0, 0.08); */
+            box-sizing: inherit;
+        }
+        html {
+            box-sizing: border-box;
+        }
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+        .main-page {
+            display: flex;
+            flex-wrap: nowrap;
+            min-width: 930px;
+            height: 100%;
+            background-color: pink;
+        }
+        .left {
+            height: 100%;
+            display: flex;
+            flex-basis: 200px;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border: 1px solid;
+        }
+        section {
+            display: flex;
+            flex-basis: 330px;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            flex-grow: 1;
+            flex-shrink: 1;
+            border: 3px solid;
+            background-color: rgb(255, 248, 220);
+        }
+        .right {
+            display: flex;
+            flex-basis: 200px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            justify-content: end;
+            border: 1px solid;
+        }
+        .left h2 {
+            align-self: end;
+            margin-right: 10px;
+            flex-shrink: 0;
+            flex-grow: 0;
+            flex-basis: 27.5px;
+        }
+        .left .text-button {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            flex-shrink: 0;
+            flex-grow: 0;
+            flex-basis: 21.5px;
+        }
+        .left .text-button input {
+            height: 30px;
+            flex-basis: 160px;
+            flex-shrink: 1;
+            
+        }
+        .left .text-button button {
+            flex-basis: 25px;
+            flex-shrink: 0;
+        }
+        .left .link {
+            flex-shrink: 1;
+            flex-grow: 1;
+            flex-basis: 200px;
+            overflow: auto;
+        }
+        .left li {
+            list-style: none;
+        }
+        .left a {
+            text-decoration: none;
+        }
+        section h2 {
+            flex-basis: 27.5px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            padding: 0 0 20px 20px;
+            border-bottom: 2px solid ;
+        }
+        section .main-content {
+            flex-basis: 200px;
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: auto;
+        }
+        .main-content p {
+            margin-left: 10px;
+        }
+        .right h2 {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-page">
+        <aside class="left">
+            <h2>OALD Sen7en</h2>
+            <div class="text-button">
+                <input type="text">
+                <button></button>
+            </div>
+            <div class="link">
+                <ul>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word1</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word2</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word3</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word4</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word5</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word6</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word7</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word8</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word9</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word10</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word11</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word12</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word13</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word14</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word15</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word16</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word17</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word18</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word19</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word20</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word21</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word22</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word23</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word24</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word25</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word26</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word27</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word28</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word29</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word30</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word31</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word32</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word33</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word34</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word35</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word36</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word37</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word38</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word39</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word40</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word41</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word42</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word43</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word44</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word45</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word46</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word47</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word48</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word49</a></li>
+                    <li><a href="https://brucezhang-pro.github.io/miao/oald-layout-flex.html">word50</a></li>
+                </ul>
+            </div>
+        </aside>
+        <section>
+            <h2>fantasy</h2>
+            <div class="main-content">
+                <p>Lorem,ipsurm</p>
+                <ol>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae illo, voluptatum excepturi consectetur expedita maiores. Mollitia ab, facere, animi perspiciatis quos commodi labore blanditiis illum dignissimos hic ea numquam cum.</li>
+                </ol>
+            </div>
+        </section>
+        <aside class="right-one right">
+            <h2>Vocabulary</h2>
+        </aside>
+        <aside class="right-two right">
+            <h2>History</h2>
+        </aside>
+    </div>
+</body>
+</html>
