@@ -1,0 +1,198 @@
+
+<script  id="ch0103/01">
+  var a = Number(prompt('请输入A'))
+  var b = Number(prompt('请输入B'))
+
+  var c = a + b
+
+  console.log(c)
+</script>
+
+<script  id="ch0103/02">
+  var a = Number(prompt('请输入A'))
+  var b = Number(prompt('请输入B'))
+  var c = Number(prompt('请输入C'))
+
+  var result = (a + b) * c
+
+  console.log(result)
+</script>
+
+<script  id="ch0103/03">
+	var a = Number(prompt('请输入A'))
+  var b = Number(prompt('请输入B'))
+  var c = Number(prompt('请输入C'))
+
+  var d = a + b
+  
+  var result = (d - d % c) / c
+  
+  console.log(result)
+
+</script>
+
+<script  id="ch0103/04">
+  var dividend = Number(prompt('请输入被除数'))
+  var divisor = Number(prompt('请输入除数'))
+
+  var remainder = dividend % divisor //取余
+  var quotient = (dividend - remainder) / divisor //整数商
+
+  console.log(quotient + " " + remainder)
+</script>
+
+<script  id="ch0103/05">
+  var a = Number(prompt('请输入整数 a'))
+  var b = Number(prompt('请输入整数 b'))
+
+  var result = (a / b).toFixed(9)
+
+  console.log(result)
+</script>
+
+<script  id="ch0103/06">
+  var confirmation = Number(prompt('请输入确诊人数'))
+  var death = Number(prompt('请输入死亡人数'))
+
+  var percentage = (death / confirmation * 100).toFixed(3)
+  console.log(percentage + "%")
+</script>
+
+<script  id="ch0103/07">
+  var x = Number(prompt('请输入x 的值'))
+  var a = Number(prompt('请输入a 的值'))
+  var b = Number(prompt('请输入b 的值'))
+  var c = Number(prompt('请输入c 的值'))
+  var d = Number(prompt('请输入d 的值'))
+
+  var value = (a * (x ** 3) + b * (x ** 2) + c * x + d).toFixed(7)
+  console.log(value)
+</script>
+
+<script  id="ch0103/08">
+  var temperature = Number(prompt('请输入华氏度'))
+
+  temperature = (5 * (temperature - 32) / 9).toFixed(5)
+  console.log(temperature)
+</script>
+
+<script  id="ch0103/09">
+  var r = Number(prompt('请输入圆的半径'))
+
+  var pi = 3.14159
+  var diameter = (2 * r).toFixed(4)
+  var perimeter = (2 * pi * r).toFixed(4)
+  var area =  (pi * r * r).toFixed(4)
+
+  console.log("直径=" + diameter)
+  console.log("周长=" + perimeter)
+  console.log("面积=" + area)
+</script>
+
+<script  id="ch0103/10">
+  var r1 = Number(prompt('请输入 r1 的阻值'))
+  var r2 = Number(prompt('请输入 r2 的阻值'))
+
+  var R =  (1 / (1 / r1 + 1 / r2)).toFixed(2)
+
+  console.log(R)
+</script>
+
+<script  id="ch0103/11">
+  var a = Number(prompt('请输入浮点数 a'))
+  var b = Number(prompt('请输入浮点数 b'))
+
+  var value = a % b
+
+  console.log(value.toFixed(4))
+</script>
+
+<script  id="ch0103/12">
+  var r = Number(prompt('请输入球体的半径'))
+
+  var volume =((4 / 3) * (3.14 * (r ** 3))).toFixed(2)
+
+  console.log(volume)
+</script>
+
+<script  id="ch0103/13">
+  var number = Number(prompt('请输入一个三位数'))
+
+  var digit = number % 10
+  var ten = ((number - digit) % 100) / 10
+  var hundred = (number - (ten * 10) - digit) / 100
+  console.log(digit + "" + ten + hundred)
+</script>
+
+<script  id="ch0103/14">
+  var h = Number(prompt('请输入小圆桶的高度'))
+  var r = Number(prompt('请输入小圆桶的底面半径'))
+
+  var pi = 3.14159
+  var millilitres = 20000  //大象需要2万毫升水
+  var required = 20000 / (pi * r * r * h)
+  required = (required % 1 !== 0) ? (required - required % 1 + 1) : required
+  console.log(required)
+</script>
+
+<script  id="ch0103/15">
+  var n = Number(prompt('请输入买了多少个苹果'))
+  var x = Number(prompt('请输入虫子多少小时能吃完一个苹果'))
+  var y = Number(prompt('请输入过了多少小时'))
+
+  var remaining = n - y / x
+  remaining =  remaining - remaining % 1
+  console.log(remaining)
+</script>
+
+<script  id="ch0103/16">
+  var xa = Number(prompt('请输入a 点的 x 轴数值'))
+  var ya = Number(prompt('请输入a 点的 y 轴数值'))
+  var xb = Number(prompt('请输入b 点的 x 轴数值'))
+  var yb = Number(prompt('请输入b 点的 y 轴数值'))
+
+  length = ((((xb - xa) ** 2) + ((yb - ya) ** 2)) ** 0.5).toFixed(3)
+  console.log(length)
+</script>
+
+<script  id="ch0103/17">
+  var xa = Number(prompt('请输入a 点的 x 轴数值'))
+  var ya = Number(prompt('请输入a 点的 y 轴数值'))
+  var xb = Number(prompt('请输入b 点的 x 轴数值'))
+  var yb = Number(prompt('请输入b 点的 y 轴数值'))
+  var xc = Number(prompt('请输入c 点的 x 轴数值'))
+  var yc = Number(prompt('请输入c 点的 y 轴数值'))
+
+  var ab = (((xb - xa) ** 2) + ((yb - ya) ** 2)) ** 0.5
+  var ac = (((xc - xa) ** 2) + ((yc - ya) ** 2)) ** 0.5
+  var bc = (((xb - xc) ** 2) + ((yb - yc) ** 2)) ** 0.5
+
+  var s = (ab + ac + bc) / 2 // 计算半周长
+
+  var area = (s * (s - ab) * (s - ac) * (s - bc)) ** 0.5 // 海伦公式计算三角形面积
+  console.log(area)
+</script>
+
+<script  id="ch0103/18">
+  var a1 = Number(prompt('请输入等差数列的第一项'))
+  var a2 = Number(prompt('请输入等差数列的第二项'))
+  var n = Number(prompt('请输入想知道第多少项的值'))
+  
+  var value = a1 + (n - 1) * (a2 - a1)
+  console.log(value)
+</script>
+
+<script  id="ch0103/19">
+  var a = Number(prompt('请输入 a 的值'))
+  var b = Number(prompt('请输入 b 的值'))
+  
+  var value = a * b
+  console.log(value)
+</script>
+
+<script  id="ch0103/20">
+  var n = Number(prompt('你想知道 2 的几次幂?'))
+  
+  var value = 2 ** n
+  console.log(value)
+</script>
