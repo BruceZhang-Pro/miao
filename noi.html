@@ -843,15 +843,15 @@
 <script type="1" id="ch0105/13">
   var a = +prompt('请输入一个整数')
   var n = +prompt('请输入一个正整数')
-  var base = a
+  var base = 1
   var count = 0
-  while (count < n - 1) {
-    a *= base
+  while (count < n) {
+    base *= a
 
     count += 1
   }
 
-  console.log(a)
+  console.log(base)
 
 </script>
 
@@ -876,11 +876,11 @@
   var money = +prompt('请输入钱数')
   var year = +prompt('请输入年数')
   
-  R = R / 100
+  R = 1 + R / 100
   
   var count = 0
   while (count < year) {
-    money =  money * R + money
+    money =  money * R
 
     count += 1
   }
@@ -919,10 +919,10 @@
   var  k = +prompt('请输入需要知道第几个数')
 
   var prev = 1
-  var curr = 1
+  var curr = 0
   var next = 0
 
-  for (var i = 2; i < k; i++) {
+  for (var i = 0; i < k; i++) {
     next = prev + curr
     prev = curr
     curr = next
@@ -980,18 +980,27 @@ debugger
   var height = +prompt('请输入球的初始高度')
 
   var passing = 0 //记录球经过的米数
+  var currentH = height 
   var num = 10 // 球落地的次数
 
   for (var i = 0; i < num; i++) {
-    if (i == 0) {
-      passing += height
-    } else {
-      passing += height
-      height /= 2
-    }
+    passing += currentH * 2
+
+    currentH /= 2
   }
+  passing -= height
   console.log(passing.toFixed(4))
-  console.log((height / 2).toFixed(7)) // 除 2 是因为计算第十次弹跳的高度
+  console.log(currentH.toFixed(7))
+  // for (var i = 0; i < num; i++) {
+  //   if (i == 0) {
+  //     passing += height
+  //   } else {
+  //     passing += height
+  //     height /= 2
+  //   }
+  // }
+  // console.log(passing.toFixed(4))
+  // console.log((height / 2).toFixed(7)) // 除 2 是因为计算第十次弹跳的高度
 </script>
 
 <script type="1" id="ch0105/21">
@@ -1222,5 +1231,151 @@ debugger
   } else {
     console.log('NO')
   }
+
+</script>
+
+<script type="1" id="ch0105/31">
+
+  var n = +prompt('请输入灯的数量')
+  var m = +prompt('请输入人的数量')
+  var times = 0
+  var result = ''
+for (var i = 1; i <= n; i++) {
+  for (var j = 1; j <= i && j <= m; j++) {
+    if (i % j == 0) {
+      times++
+    }
+  }
+  if (times % 2 !== 0 && i == 1) {
+    result = result + i
+  } else if(times % 2 !== 0) {
+    result = result + ',' + i
+  }
+  times = 0
+}
+console.log(result)
+
+</script>
+
+<script type="1" id="ch0105/32">
+
+  var n = +prompt('请输入数量')
+  var sum = 0
+  var numerator = 2  
+  var denominator = 1
+
+for (var i = 0; i < n; i++) {
+  sum += numerator / denominator
+
+  numerator = numerator + denominator
+  denominator = numerator - denominator
+}
+console.log(sum.toFixed(4))
+
+</script>
+
+<script type="1" id="ch0105/33">
+
+  var n = +prompt('请输入数量')
+  var result = 0
+
+for (var i = 1; i <= n; i++) {
+  //result += ((-1) ** (i - 1)) / i
+  if (i % 2 == 0) {
+    result += -1 / i
+  } else {
+    result += 1 / i
+  }
+}
+
+console.log(result.toFixed(4))
+
+</script>
+
+<script type="1" id="ch0105/34">
+
+  var n = +prompt('请输入数量')
+  var result = 1
+  var sum = 1
+
+for (var i = 2; i <= n; i++) {
+  result *= i
+  sum += result
+}
+
+console.log(sum)
+
+</script>
+
+<script type="1" id="ch0105/35">
+
+  var n = +prompt('请输入数量')
+  var result = 1
+  var sum = 2
+
+for (var i = 2; i <= n; i++) {
+  result *= i
+  sum += 1 / result
+}
+
+console.log(sum.toFixed(10))
+
+</script>
+
+<script type="1" id="ch0105/36">
+  var x = +prompt('请输入浮点数x的值')
+  var n = +prompt('请输入正整数n的值')
+  
+  var sum = 0
+
+for (var i = 0; i <= n; i++) {
+  sum += x ** i
+}
+
+console.log(sum.toFixed(2))
+
+</script>
+
+<script type="1" id="ch0105/37">
+  var max = +prompt('请输入体力的最大值')
+  var combatant = +prompt('请输入战斗力的值')
+  var energy = +prompt('请输入能量元素的值')
+  var current = 0
+
+while (combatant <= max) {
+  energy = energy - Math.ceil(max / combatant)
+  if (energy < 0) {
+    break
+  }
+  current = max
+  do {
+    current = current - combatant
+    combatant++
+  } while (current >= combatant)
+}
+
+console.log(combatant)
+
+</script>
+
+<script type="1" id="ch0105/38">
+  var max = +prompt('请输入体力的最大值')
+  var combatant = +prompt('请输入战斗力的值')
+  var energy = +prompt('请输入能量元素的值')
+  var current = 0
+
+while (combatant <= max) {
+  energy = energy - Math.ceil(max / combatant)
+  if (energy < 0) {
+    break
+  }
+  current = max
+  do {
+    current = current - combatant
+    combatant++
+  } while (current >= combatant)
+}
+
+console.log(combatant)
 
 </script>
