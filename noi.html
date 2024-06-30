@@ -1077,6 +1077,7 @@ debugger
   var times = 0 //测量次数
   var systPres = 0 // 收缩压
   var diasPres = 0 // 舒张压
+  var maxTimes = 0
 
   times = +prompt('测量多少次血压')
 
@@ -1085,12 +1086,15 @@ debugger
     diasPres = +prompt('舒张压是多少')
     if ((systPres >= 90 && systPres <= 140) && (diasPres >= 60 && diasPres <= 90)) {
       normalTimes++
+      if (maxTimes < normalTimes) {
+        maxTimes = normalTimes
+      }
     } else {
       normalTimes = 0
     }
     
   }
-  console.log(normalTimes)
+  console.log(maxTimes)
 
 </script>
 
@@ -1170,7 +1174,7 @@ debugger
     count++
     sum = sum + 1 / count
     
-  } while (sum <= number && count < 100)
+  } while (sum <= number && count < 100000)
 
   console.log(count)
 
@@ -1240,13 +1244,14 @@ debugger
   var m = +prompt('请输入人的数量')
   var times = 0
   var result = ''
+
 for (var i = 1; i <= n; i++) {
   for (var j = 1; j <= i && j <= m; j++) {
-    if (i % j == 0) {
-      times++
+    if (i % j == 0) { 
+      times++ 
     }
   }
-  if (times % 2 !== 0 && i == 1) {
+  if (times % 2 !== 0 && i == 1) { //奇数个时,灯为关,偶数个时,灯为开
     result = result + i
   } else if(times % 2 !== 0) {
     result = result + ',' + i
@@ -1278,14 +1283,20 @@ console.log(sum.toFixed(4))
 
   var n = +prompt('请输入数量')
   var result = 0
+  var temp = 1
 
 for (var i = 1; i <= n; i++) {
   //result += ((-1) ** (i - 1)) / i
-  if (i % 2 == 0) {
-    result += -1 / i
-  } else {
-    result += 1 / i
-  }
+  
+  // if (i % 2 == 0) {
+  //   result += -1 / i
+  // } else {
+  //   result += 1 / i
+  // }
+
+  result += temp / i
+  temp *= -1 // 正负反转,奇数正,偶数负
+
 }
 
 console.log(result.toFixed(4))
@@ -1359,23 +1370,277 @@ console.log(combatant)
 </script>
 
 <script type="1" id="ch0105/38">
-  var max = +prompt('请输入体力的最大值')
-  var combatant = +prompt('请输入战斗力的值')
-  var energy = +prompt('请输入能量元素的值')
-  var current = 0
+  var times = +prompt('请输入计算几次多项式')
+  var n = 0
+  var coefficient = 0
+  var temp = 0
 
-while (combatant <= max) {
-  energy = energy - Math.ceil(max / combatant)
-  if (energy < 0) {
-    break
+  for (var i = 0; i < times; i++) {
+    n = +prompt('请输入多项式的最高次幂')
+    for (j = n; j >= 0; j--) {
+      coefficient = +prompt('请输入多项式的系数')
+      temp = j * coefficient
+      if (temp > 0 || j !== 0 || n == 0) {
+        console.log(temp)
+      }
+    }
   }
-  current = max
-  do {
-    current = current - combatant
-    combatant++
-  } while (current >= combatant)
-}
 
-console.log(combatant)
+</script>
 
+<script type="1" id="ch0105/39">
+  var times = +prompt('请输入一个小于100的正整数')
+  var sum = 0
+  var seven = false
+  var temp = 0
+  var notRelated7 = function(number) {
+    var temp = number
+    if (temp % 7 == 0) {
+      return false
+    } else {
+      while (temp > 0) {
+        if (temp % 10 == 7) {
+          return false
+        }
+        temp = (temp - temp % 10) / 10
+      }
+    }
+    return true
+  }
+
+  for (var i = 1; i <= times; i++ ) {
+    if (notRelated7(i)) {
+      sum += i * i
+    }
+  }
+
+  console.log(sum)
+
+
+
+  // for (var i = 1; i <= times; i++ ) {
+  //   temp = i
+  //   seven = false
+  //   if (temp % 7 == 0) {
+  //     seven = true
+  //   } else {
+  //     while (temp > 0) {
+  //       if (temp % 10 == 7) {
+  //         seven = true
+  //         break
+  //       }
+  //       temp = (temp - temp % 10) / 10
+  //     }
+  //   }
+  //   if (!seven) {
+  //     sum += i * i
+  //   }
+  // }
+  // console.log(sum)
+
+
+
+  // for (var i = 1; i <= times; i++ ) {
+  //   if (i % 7 == 0 || i % 10 == 7 || (i - i % 10 ) / 10) {
+  //     continue
+  //   }
+  //   sum += i * i
+  // }
+  // console.log(sum)
+
+</script>
+
+<script type="1" id="ch0105/40">
+  var number = +prompt('请输入一个正整数')
+  var times = 0
+  var tempNumber = 0
+
+  for (var i = 1; i <= number; i++) {
+    tempNumber = i
+    while (tempNumber > 0) {
+      if (tempNumber % 10 == 1) {
+        times++
+      }
+      tempNumber = (tempNumber - tempNumber % 10) / 10
+    }
+  }
+  console.log(times)
+
+</script>
+
+<script type="1" id="ch0105/41">
+  var numberLeft = +prompt('请输入第一个正整数')
+  var numberRight = +prompt('请输入第二个正整数')
+  var times = 0
+  var tempNumber = 0
+
+  for (var i = numberLeft; i <= numberRight; i++) {
+    tempNumber = i
+    while (tempNumber > 0) {
+      if (tempNumber % 10 == 2) {
+        times++
+      }
+      tempNumber = (tempNumber - tempNumber % 10) / 10
+    }
+  }
+  console.log(times)
+
+</script>
+
+<script type="1" id="ch0105/42">
+  var height = +prompt('请输入矩形高度')
+  var width = +prompt('请输入矩形宽度')
+  var symbol = prompt('请输入画矩形用的符号')
+  var solid = +prompt('请输入矩形是空心还是实心')
+
+  var totalSymbol = ''
+
+  for (var i = 1; i <= height; i++) {
+    for (var j = 1; j <= width; j++) {
+      if (solid == 1 || i == 1 || i == height || j == 1 || j == width) {
+        if (j == width && i != height) {
+          totalSymbol += symbol + '\n'
+        } else {
+          totalSymbol += symbol
+        }
+      } else {
+        totalSymbol += ' '
+      }
+    }
+  }
+  console.log(totalSymbol)
+
+</script>
+
+<script type="1" id="ch0105/43">
+  var number = +prompt('请输入正整数')
+  var times = Math.trunc(number / 2) //只需要从 2 至number的一半里找其质数因子
+  var prime = true
+  for (var i = 2; i <= times; i++) {
+    prime = true
+    for (var j = 2; j < i / 2; j++) { //判断 i 是不是质数
+      if (i % j == 0) { //能被1和他自身以外的数除尽说明不是质数
+        prime = false
+        break
+      }
+    }
+    if (prime == true || i == 2) {
+      if (number % i == 0) { //能被质数除尽时,商肯定大于除数
+        console.log(number / i)
+        break
+      }
+    }
+  }
+
+</script>
+
+<script type="1" id="ch0105/44">
+  var times = +prompt('请输入正整数')
+  var count = 0
+  var number = 1
+  var prime = function(number) {
+    var n = number / 2
+    for (var i = 2; i <= n; i++) {
+      if (number % i == 0) {
+        return false
+      }
+    }
+    return true
+  }
+
+  while (count != times) {
+    number++
+    if (prime(number)) {
+      count++
+    }
+  }
+  console.log(number)
+
+  // var prime = true
+  // while (count != times) {
+  //   prime = true
+  //   number++
+  //   for (var i = 2; i <= number / 2; i++) { //判断 number 是不是质数
+  //     if (number % i == 0) { //能被1和他自身以外的数除尽说明不是质数
+  //       prime = false
+  //       break
+  //     }
+  //   }
+  //   if (prime == true) {
+  //     count++
+  //   }
+  // }
+  // console.log(number)
+
+</script>
+
+<script type="1" id="ch0105/45">
+  var dayNumber = +prompt('请输入天数')
+  var sum = 0
+  var currentMoney = 1
+  var day = 0
+
+  for (var i = 0; i < dayNumber; i++) {
+    sum += currentMoney
+    day++
+    if (day == currentMoney) {
+      currentMoney++
+      day = 0
+    }
+  }
+  console.log(sum)
+</script>
+
+<script type="1" id="ch02/01">
+  // 书本第二章课后习题第1题
+  var height = +prompt('请输入行数')
+  var symbol = prompt('请输入字符')
+  var result = ''
+  var currentSymbol = symbol
+
+  for (var i = 0; i < height; i++) {
+    if (i + 1 == height) {
+      result += currentSymbol
+    } else {
+      result += currentSymbol + '\n'
+    }
+    currentSymbol += symbol
+  }
+  console.log(result)
+</script>
+
+<script type="1" id="ch02/02">
+  // 书本第二章课后习题第2题
+  var number = +prompt('请输入一个正整数')
+
+  for (var i = 1; i <= number; i++) {
+    if (i % 3 == 0 && i % 5 == 0) {
+      console.log('FizzBuzz')
+    } else if (i % 3 == 0) {
+      console.log('Fizz')
+    } else if (i % 5 == 0) {
+      console.log('Buzz')
+    } else {
+      console.log(i)
+    }
+  }
+</script>
+
+<script type="1" id="ch02/03">
+  // 书本第二章课后习题第3题
+  var height = +prompt('请输入行数')
+  var width = +prompt('请输入列数')
+  var result = ''
+
+  for (var i = 1; i <= height; i++) {
+    for (var j = 1; j <= width; j++) {
+      if ((i + j) % 2 == 0) {
+        result += ' '
+      } else {
+        result += '#'
+      }
+    }
+    result += '\n'
+  }
+  console.log(result)
 </script>
