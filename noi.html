@@ -1644,3 +1644,254 @@ console.log(combatant)
   }
   console.log(result)
 </script>
+
+<script type="1" id="narcissistic">
+  var number = +prompt('请输入一个整数')
+
+  var isDaffodil = function(number) {
+    var sum = 0
+    var temp = number
+    if (number > 100 && number < 1000) {
+      while (temp > 0) {
+        sum += (temp % 10) ** 3
+        temp = (temp - temp % 10) / 10
+      }
+      if (sum == number) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+
+  if (isDaffodil(number)) {
+    console.log('YES')
+  } else {
+    console.log('NO')
+  }
+</script>
+
+<script type="1" id="narcissistics">
+  var times = 10000
+
+  var isDaffodil = function(number) {
+    var sum = 0
+    var temp = 0
+    temp = number
+    sum = 0
+    while (temp > 0) {
+      sum += (temp % 10) ** 3
+      temp = (temp - temp % 10) / 10
+    }
+    if (sum == number) {
+      return true
+    } else {
+      return false
+    }
+
+  }
+
+  for (var i = 100; i < times; i++) {
+    if (isDaffodil(i)) {
+      console.log(i)
+    }
+  }
+
+</script>
+
+<script type="1" id="palindrom">
+  var number = +prompt('请输入一个整数')
+  var invert = function(number) {
+    var result = 0
+    var temp = number
+
+    while (temp > 0) {
+      result *= 10
+      result += temp % 10
+      temp = (temp - temp % 10) / 10
+    }
+    return result
+  }
+
+  if (number === invert(number)) {
+    console.log('YES')
+  } else {
+    console.log('NO')
+  }
+
+</script>
+
+<script type="1" id="weekday">
+  var year = +prompt('请输入年份')
+  var month = +prompt('请输入月份')
+  var day = 1
+  var zeller = function (year, month, day) { // zeller公式用来计算给定日期为星期几,用的是简化后的公式
+    var weekday = 0
+
+    if (month < 3) {
+      month += 12
+      year-- 
+    }
+    weekday = (day + Math.floor(13 * (month + 1) / 5) + year + Math.floor(year / 4) - Math.trunc(year / 100) + Math.floor(year / 400)) % 7
+    weekday = (weekday - 1 + 7) % 7
+    return weekday
+  }
+
+  console.log(zeller(year, month, day))
+
+</script>
+
+<script type="1" id="complete-number">
+  // 输入一个数，判断它是否是完全数
+  var number = +prompt('请输入一个正整数')
+  var isPerfNum = function(number) {
+    var sum = 0
+    var halfNum = number / 2
+    for (var i = 1; i <= halfNum; i++) {
+      if (number % i == 0) {
+        sum += i
+      }
+    }
+    if (sum === number) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  if (isPerfNum(number)) {
+    console.log('YES')
+  } else {
+    console.log('NO')
+  }
+</script>
+
+<script type="1" id="complete-numbers">
+  // 输出1000以内的完全数
+  var times = 1000
+  var isPerfNum = function(number) {
+    var sum = 0
+    var halfNum = number / 2
+    for (var i = 1; i <= halfNum; i++) {
+      if (number % i == 0) {
+        sum += i
+      }
+    }
+    if (sum === number) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  for (var i = 1; i < times; i++) {
+    if (isPerfNum(i)) {
+      console.log(i)
+    }
+  }
+</script>
+
+<script type="1" id="prime">
+  // 输入一个数，判断它是否是素数
+  var number = +prompt('请输入一个数')
+  var isPrime = function(number) {
+    var halfNum = number / 2
+    if (number <= 1) {
+      return false
+    }
+    for (var i = 2; i <= halfNum; i++) {
+      if (number % i == 0) {
+        return false
+      }
+    }
+    return true
+  }
+
+  if (isPrime(number)) {
+    console.log('YES')
+  } else {
+    console.log('NO')
+  }
+
+</script>
+
+<script type="1" id="primes">
+  // 输出100以内的素数
+  var times = 100
+  var isPrime = function(number) {
+    var halfNum = number / 2
+    if (number <= 1) {
+      return false
+    }
+    for (var i = 2; i <= halfNum; i++) {
+      if (number % i == 0) {
+        return false
+      }
+    }
+    return true
+  }
+
+  for (var i = 1; i <= times; i++) {
+    if (isPrime(i)) {
+      console.log(i)
+    }
+  }
+
+</script>
+
+<script type="1" id="itob">
+  // 给定一个整数,将其转换为字符串:不能使用String等现成函数,
+  // 但可以使用非此功能的其它函数，也不能利用任意运算符的自动类型转换
+  var number = +prompt('请输入一个整数')
+  var toMyString = function(number) {
+    return `${number}`
+  }
+
+  console.log(toMyString(number))
+
+</script>
+
+<script type="1" id="lcf&lcm">
+  var aNumber = +prompt('请输入第一个正整数')
+  var bNumber = +prompt('请输入第二个正整数')
+  var maxDivisor = 0
+  var minMultiple = 0
+
+  var countMaxDivisor = function(a, b) {
+    var result = 0
+
+    if (a < b) { //把a和b的值互换
+      b = b + a
+      a = b - a
+      b = b - a
+    }
+    while (a % b != 0) { //用辗转相除法求的最大公约数
+      a = a % b
+
+      b = b + a
+      a = b - a
+      b = b - a
+    }
+
+    return b
+  }
+
+  maxDivisor = countMaxDivisor(aNumber, bNumber)
+  minMultiple = aNumber * bNumber / maxDivisor
+
+  console.log(maxDivisor)
+  console.log(minMultiple)
+</script>
+
+<script type="1" id="sqrt">
+// 输入一个数,求它的平方根,精确到小数点后3位,不能使用Math.sqrt
+  var number = +prompt('请输入一个整数')
+  var toSquareRoot = function(number) {
+    return (number ** 0.5).toFixed(3)
+  }
+
+  console.log(toSquareRoot(number))
+
+</script>
