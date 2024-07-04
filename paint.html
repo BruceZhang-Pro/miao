@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>画图</title>
+  <style>
+    canvas {
+      border: 2px solid #f0f;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="1000" height="1000"></canvas>
+</body>
+<script>
+  var canvas = document.querySelector('canvas')
+  canvas.style.imageRendering = 'pixelated' //放大时的插帧方式：不插帧，直接放大像素
+  var ctx = canvas.getContext('2d')
+
+  function dot(x, y, color = 'black') {
+    x = Math.round(x)
+    y = Math.round(y)
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, 1, 1)
+  }
+  /**
+   * 你的任务：通过调用dot函数，实现：
+   * 需要注意，dot函数不能接收浮点数，如果参数为浮点数，会被转换为整数后绘制
+      * 在 坐标 (42, 42) 画出一个点
+      * 画一条水平实线，粗细为一个像素
+      * 画一条垂直实线，粗细为一个像素
+      * 画一条一个实点一个空点的虚线
+      * 画一条两个实点两个空点的虚线
+      * 画一条三个实点两个空点的虚线
+      * 画一条45度的斜线
+      * 画一条30度的斜线（与x轴的夹角呈30度）
+      * 画一条60度的斜线（与x轴的夹角呈60度）
+      * 画一条跨越画布左上角和右下角的对角线
+      * 画一个空心矩形
+      * 画一个实心矩形
+      * 画两个空心的圆，圆心在画布中心：
+        * 一个半径为50像素
+        * 一个半径为200像素
+      * 画一个实心的圆，半径至少为100像素
+      * 画一个【大小位置都合适】的sin(x)的图像
+
+      * 画出rgb色彩空间的某一面（尺寸要大于100x100）
+      * 如果做出上一题后，尝试将其每个点的坐标乘以一个矩阵（如(2,0,0,2)或(1,0.27得到新的位置，即绘制出被线性变换后的色彩空间某一面
+        可以考虑如下几种矩阵：
+           2 0
+           0 2
+           ------
+           1  0.27
+           0  1
+           ------
+           0.5    0.87
+           -0.87  0.5
+      * 画一个二阶贝塞尔曲线（即控制点一共三个）
+
+      var bezierCurve = function(x1,y1,x2,y2,x3,y3) {
+
+
+      }
+
+   */
+</script>
+<script>
+
+for (var i = 30, j = 50; i < 150; i++) {
+    if (i % 3 == 0) {
+      j--
+    }
+    dot(i, j, 'aqua')
+  }
+
+  // 不可更改上面的代码
+  // 你的代码写在这里
+
+  // * 在 坐标 (42, 42) 画出一个点
+  dot(42, 42, 'black')
+
+  // 画一条水平实线，粗细为一个像素
+  for (var i = 50; i < 200; i++) {
+    dot(i, 50, 'black')
+  }
+
+  // 画一条垂直实线，粗细为一个像素
+  for (var i = 50; i < 200; i++) {
+    dot(50, i, 'black')
+  }
+
+  // * 画一条一个实点一个空点的虚线
+  for (var i = 55; i < 200; i++) {
+    if (i % 2 == 0) {
+      dot(i, 55, 'black')
+    }
+  }
+
+  // * 画一条两个实点两个空点的虚线
+  for (var i = 54; i < 200; i++) {
+    if (i % 4 < 2) {
+      dot(i, 60, 'black')
+  }  
+  }
+  // var drawDottLine = true
+  // for (var i = 54; i < 200; i++) {
+  //   if (i % 2 == 0) {
+  //     drawDottLine = !drawDottLine
+  //   }
+  //   if (drawDottLine) {
+  //     dot(i, 60, 'black')
+  //   }
+  // }
+  
+  // * 画一条三个实点两个空点的虚线
+  for (var i = 55; i < 200; i++) {
+    if (i % 5 < 3) {
+      dot(i, 65, 'black')
+    }
+  }
+  // var count = 0
+  // for (var i = 55; i < 200; i++) {
+  //   if (i % 5 == 0) {
+  //     count = 0
+  //   }
+  //   if (count < 3) {
+  //     dot(i, 65, 'black')
+  //   }
+  //   count++
+  // }
+
+  // * 画一条45度的斜线
+  for (var i = 0; i < 150; i++) {
+    dot(i, i, 'orange')
+  }
+
+  // * 画一条30度的斜线（与x轴的夹角呈30度）
+  for (var i = 0; i < 150; i++) {
+    //dot(i, i * 0.577, 'teal')
+    dot(i, i * Math.sqrt(3) / 3, 'teal')
+  }
+
+  // * 画一条60度的斜线（与x轴的夹角呈60度）
+  for (var i = 0; i < 150; i++) {
+    dot(i * Math.sqrt(3) / 3, i, 'teal')
+  }
+
+  // * 画一条跨越画布左上角和右下角的对角线
+  for (var i = 0; i < 1414; i++) {
+    dot(i, i, 'orange')
+  }
+
+  // 画一条从任意一点到任意一点的直线
+  var drawLinePro = function  (x1, y1, x2, y2, color = 'wheat') {
+    k = (y2 - y1) / (x2 - x1)
+    if (k <= 0.5) {
+      for (var x = x1, y = y1; x <= x2; x++, y += k) {
+        dot(x, y, color)
+      }
+    } else {
+      for (var x = x1, y = y1; y <= y2; y++, x += 1 / k) {
+        dot(x, y, color)
+      }
+    }
+  }
+
+  //画线直线的函数
+  var drawLine = function(xOry, start, end, fixed, color) {
+    for (var i = start; i <= end; i++) {
+      if (xOry === 'x') {
+        dot(i, fixed, color)
+      } else if (xOry === 'y') {
+        dot(fixed, i, color)
+      }
+    }
+  }
+  // * 画一个空心矩形
+  drawLinePro(250, 50, 350, 50)
+  drawLinePro(250, 100, 350, 100)
+  drawLinePro(250, 50, 250, 100)
+  drawLinePro(350, 50, 350, 100)
+  // drawLine('x', 250, 350, 50, 'wheat')
+  // drawLine('x', 250, 350, 100, 'wheat')
+  // drawLine('y', 50, 100, 250, 'wheat')
+  // drawLine('y', 50, 100, 350, 'wheat')
+
+  // * 画一个实心矩形
+
+
+  for (var i = 10; i <= 60; i++) {
+    drawLine('x', 360, 460, i, 'wheat')
+  }
+
+  // * 画两个空心的圆，圆心在画布中心：
+  //   * 一个半径为50像素
+  //   * 一个半径为200像素
+  var x = 0
+  var y = 0
+  for (var i = 0; i <= 360;) {
+    x = 500 + (50 * Math.cos(i))
+    y = 500 + (50 * Math.sin(i))
+    dot(x, y)
+    i = i + 0.05
+  }
+
+  x = 0
+  y = 0
+  for (var i = 0; i <= 360;) {
+    
+    x = 500 + (200 * Math.cos(i))
+    y = 500 + (200 * Math.sin(i))
+    dot(x, y)
+    i = i + 0.001
+  }
+
+  // 画一个实心的圆，半径至少为100像素
+  
+
+</script>
+</html>

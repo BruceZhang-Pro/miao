@@ -1,0 +1,85 @@
+
+<script type="1" id="ch02/01">
+  // 书本第二章课后习题第1题
+  var height = +prompt('请输入行数')
+  var symbol = prompt('请输入字符')
+  var result = ''
+  var currentSymbol = symbol
+
+  for (var i = 0; i < height; i++) {
+    if (i + 1 == height) {
+      result += currentSymbol
+    } else {
+      result += currentSymbol + '\n'
+    }
+    currentSymbol += symbol
+  }
+  console.log(result)
+</script>
+
+<script type="1" id="ch02/02">
+  // 书本第二章课后习题第2题
+  var number = +prompt('请输入一个正整数')
+
+  for (var i = 1; i <= number; i++) {
+    if (i % 3 == 0 && i % 5 == 0) {
+      console.log('FizzBuzz')
+    } else if (i % 3 == 0) {
+      console.log('Fizz')
+    } else if (i % 5 == 0) {
+      console.log('Buzz')
+    } else {
+      console.log(i)
+    }
+  }
+</script>
+
+<script type="1" id="ch02/03">
+  // 书本第二章课后习题第3题
+  var height = +prompt('请输入行数')
+  var width = +prompt('请输入列数')
+  var result = ''
+
+  for (var i = 1; i <= height; i++) {
+    for (var j = 1; j <= width; j++) {
+      if ((i + j) % 2 == 0) {
+        result += ' '
+      } else {
+        result += '#'
+      }
+    }
+    result += '\n'
+  }
+  console.log(result)
+</script>
+
+<script type="" id="ch03/03">
+  let charactor = prompt('请输入一堆字母')
+  let char = prompt('请输入要计数的字母')
+  function countBs(charactor) {
+    let count = 0
+    for (var i = 0; i < charactor.length; i++) {
+      if (charactor.charAt(i) === 'B') {
+        count++
+      }
+    }
+    return count
+  }
+
+  function countChar(charactor, char) {
+    let count = 0
+    for (var i = 0; i < charactor.length; i++) {
+      if (charactor.charAt(i) === char) {
+        count++
+      }
+    }
+    return count
+  }
+
+  function countBs2(charactor) {
+    return countChar(charactor, 'B')
+  }
+
+console.log(countBs2(charactor))
+
+</script>

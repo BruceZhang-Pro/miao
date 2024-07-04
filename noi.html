@@ -1591,69 +1591,26 @@ console.log(combatant)
   console.log(sum)
 </script>
 
-<script type="1" id="ch02/01">
-  // 书本第二章课后习题第1题
-  var height = +prompt('请输入行数')
-  var symbol = prompt('请输入字符')
-  var result = ''
-  var currentSymbol = symbol
-
-  for (var i = 0; i < height; i++) {
-    if (i + 1 == height) {
-      result += currentSymbol
-    } else {
-      result += currentSymbol + '\n'
-    }
-    currentSymbol += symbol
-  }
-  console.log(result)
-</script>
-
-<script type="1" id="ch02/02">
-  // 书本第二章课后习题第2题
-  var number = +prompt('请输入一个正整数')
-
-  for (var i = 1; i <= number; i++) {
-    if (i % 3 == 0 && i % 5 == 0) {
-      console.log('FizzBuzz')
-    } else if (i % 3 == 0) {
-      console.log('Fizz')
-    } else if (i % 5 == 0) {
-      console.log('Buzz')
-    } else {
-      console.log(i)
-    }
-  }
-</script>
-
-<script type="1" id="ch02/03">
-  // 书本第二章课后习题第3题
-  var height = +prompt('请输入行数')
-  var width = +prompt('请输入列数')
-  var result = ''
-
-  for (var i = 1; i <= height; i++) {
-    for (var j = 1; j <= width; j++) {
-      if ((i + j) % 2 == 0) {
-        result += ' '
-      } else {
-        result += '#'
-      }
-    }
-    result += '\n'
-  }
-  console.log(result)
-</script>
-
 <script type="1" id="narcissistic">
   var number = +prompt('请输入一个整数')
+  function digits(number) {
+    var count = 0
+    var tempNumber = number
+    while (tempNumber > 0) {
+      tempNumber = (tempNumber - tempNumber % 10) / 10
+      count++
+    }
+    return count
+  }
 
   var isDaffodil = function(number) {
     var sum = 0
     var temp = number
-    if (number > 100 && number < 1000) {
+    var digit = 0
+    if (number > 0) {
+      digit = digits(number)
       while (temp > 0) {
-        sum += (temp % 10) ** 3
+        sum += (temp % 10) ** digit
         temp = (temp - temp % 10) / 10
       }
       if (sum == number) {
@@ -1674,23 +1631,36 @@ console.log(combatant)
 </script>
 
 <script type="1" id="narcissistics">
-  var times = 10000
+  var times = 1000
+
+  function digits(number) {
+    var count = 0
+    var tempNumber = number
+    while (tempNumber > 0) {
+      tempNumber = (tempNumber - tempNumber % 10) / 10
+      count++
+    }
+    return count
+  }
 
   var isDaffodil = function(number) {
     var sum = 0
-    var temp = 0
-    temp = number
-    sum = 0
-    while (temp > 0) {
-      sum += (temp % 10) ** 3
-      temp = (temp - temp % 10) / 10
-    }
-    if (sum == number) {
-      return true
+    var temp = number
+    var digit = 0
+    if (number > 0) {
+      digit = digits(number)
+      while (temp > 0) {
+        sum += (temp % 10) ** digit
+        temp = (temp - temp % 10) / 10
+      }
+      if (sum == number) {
+        return true
+      } else {
+        return false
+      }
     } else {
       return false
     }
-
   }
 
   for (var i = 100; i < times; i++) {
@@ -1703,23 +1673,84 @@ console.log(combatant)
 
 <script type="1" id="palindrom">
   var number = +prompt('请输入一个整数')
-  var invert = function(number) {
-    var result = 0
-    var temp = number
 
-    while (temp > 0) {
-      result *= 10
-      result += temp % 10
-      temp = (temp - temp % 10) / 10
+  function digits(number) {
+    var count = 0
+    var tempNumber = number
+    while (tempNumber > 0) {
+      tempNumber = (tempNumber - tempNumber % 10) / 10
+      count++
     }
-    return result
+    return count
+  }
+  function invert(number) {
+    var digit = 0
+    var temp = 0
+    var multiple = 0
+    digit = digits(number)
+    for (var i = digit; i > 1; i -= 2) {
+      multiple = 10 ** (i - 1)
+      temp = number - number % multiple
+      if (number % 10 != temp / multiple) {
+        return false
+      }
+      number = number - temp
+      number = (number - number % 10) / 10
+    }
+    return true
   }
 
-  if (number === invert(number)) {
+  if(invert(number)) {
     console.log('YES')
   } else {
     console.log('NO')
   }
+
+
+  // function invert(number) {
+  //   var digit = 0
+  //   var numberLeft = number
+  //   var numberRight = number
+  //   var temp = 0
+  //   var multiple = 0
+  //   digit = digits(number)
+  //   for (var i = digit; i >= digit / 2; i--) {
+  //     multiple = 10 ** (i - 1)
+  //     temp = numberLeft - numberLeft % multiple
+  //     if (numberRight % 10 != temp / multiple) {
+  //       return false
+  //     }
+  //     numberRight = (numberRight - numberRight % 10) / 10
+  //     numberLeft = numberLeft - temp
+  //   }
+  //   return true
+  // }
+
+  // if(invert(number)) {
+  //   console.log('YES')
+  // } else {
+  //   console.log('NO')
+  // }
+
+
+
+  // var invert = function(number) {
+  //   var result = 0
+  //   var temp = number
+
+  //   while (temp > 0) {
+  //     result *= 10
+  //     result += temp % 10
+  //     temp = (temp - temp % 10) / 10
+  //   }
+  //   return result
+  // }
+
+  // if (number === invert(number)) {
+  //   console.log('YES')
+  // } else {
+  //   console.log('NO')
+  // }
 
 </script>
 
@@ -1747,12 +1778,16 @@ console.log(combatant)
   // 输入一个数，判断它是否是完全数
   var number = +prompt('请输入一个正整数')
   var isPerfNum = function(number) {
-    var sum = 0
-    var halfNum = number / 2
-    for (var i = 1; i <= halfNum; i++) {
+    var sum = 1
+    var squareRootNumber = Math.sqrt(number)
+    debugger
+    for (var i = 2; i < squareRootNumber; i++) {
       if (number % i == 0) {
-        sum += i
+        sum += i + (number / i)
       }
+    }
+    if (squareRootNumber % 1 == 0) {
+      sum += squareRootNumber
     }
     if (sum === number) {
       return true
@@ -1772,12 +1807,15 @@ console.log(combatant)
   // 输出1000以内的完全数
   var times = 1000
   var isPerfNum = function(number) {
-    var sum = 0
-    var halfNum = number / 2
-    for (var i = 1; i <= halfNum; i++) {
+    var sum = 1
+    var squareRootNumber = Math.sqrt(number)
+    for (var i = 2; i < squareRootNumber; i++) {
       if (number % i == 0) {
-        sum += i
+        sum += i + (number / i)
       }
+    }
+    if (squareRootNumber % 1 == 0) {
+      sum += squareRootNumber
     }
     if (sum === number) {
       return true
@@ -1797,11 +1835,11 @@ console.log(combatant)
   // 输入一个数，判断它是否是素数
   var number = +prompt('请输入一个数')
   var isPrime = function(number) {
-    var halfNum = number / 2
+    var squareRootNumber = Math.sqrt(number)
     if (number <= 1) {
       return false
     }
-    for (var i = 2; i <= halfNum; i++) {
+    for (var i = 2; i <= squareRootNumber; i++) {
       if (number % i == 0) {
         return false
       }
@@ -1821,11 +1859,11 @@ console.log(combatant)
   // 输出100以内的素数
   var times = 100
   var isPrime = function(number) {
-    var halfNum = number / 2
+  var squareRootNumber = Math.sqrt(number)
     if (number <= 1) {
       return false
     }
-    for (var i = 2; i <= halfNum; i++) {
+    for (var i = 2; i <= squareRootNumber; i++) {
       if (number % i == 0) {
         return false
       }
@@ -1861,19 +1899,28 @@ console.log(combatant)
 
   var countMaxDivisor = function(a, b) {
     var result = 0
-
+debugger
     if (a < b) { //把a和b的值互换
       b = b + a
       a = b - a
       b = b - a
     }
-    while (a % b != 0) { //用辗转相除法求的最大公约数
-      a = a % b
-
-      b = b + a
-      a = b - a
-      b = b - a
+    while (a - b != 0) { //用辗转相减法求的最大公约数
+      a = a - b
+      if (a < b) {//把a和b的值互换
+        a = a + b
+        b = a - b
+        a = a - b
+      }
     }
+
+    // while (a % b != 0) { //用辗转相除法求的最大公约数
+    //   a = a % b
+
+    //   b = b + a
+    //   a = b - a
+    //   b = b - a
+    // }
 
     return b
   }
@@ -1887,11 +1934,43 @@ console.log(combatant)
 
 <script type="1" id="sqrt">
 // 输入一个数,求它的平方根,精确到小数点后3位,不能使用Math.sqrt
-  var number = +prompt('请输入一个整数')
-  var toSquareRoot = function(number) {
-    return (number ** 0.5).toFixed(3)
+  var number = +prompt('请输入一个整数111')
+  function toSquareRoot(number) { //牛顿法,使用迭代的方式来逼近方程的根
+    x1 = number * 0.8
+    x2 = (1 / 2) * (x1 + number / x1)
+    while (x1 - x2 >= 0.0009) {
+      x1 = x2
+      x2 = (1 / 2) * (x1 + number / x1)
+    } 
+    return x1
   }
 
-  console.log(toSquareRoot(number))
+  console.log(toSquareRoot(number).toFixed(3))
+
+
+//   var toSquareRoot = function(number) { //二分查找法
+//     var result = 0
+//     var left = 1
+//     var right = number
+//     var mid = 0
+//     var temp = 0
+// debugger
+//     while (left <= right) {
+//       mid = (left + right) / 2
+//       temp = Math.floor(mid * mid * 10000) / 10000
+//       if (temp == number) {
+//         return mid
+//       } else if (temp < number) {
+//         left = mid + 0.00001
+//       } else if (temp > number) {
+//         right = mid - 0.00001
+//       }
+//     }
+    
+//     return result
+
+//   }
+
+//   console.log(toSquareRoot(number).toFixed(3))
 
 </script>
