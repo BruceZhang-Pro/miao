@@ -152,19 +152,6 @@ for (var i = 30, j = 50; i < 150; i++) {
     dot(i, i, 'orange')
   }
 
-  // 画一条从任意一点到任意一点的直线
-  var drawLinePro = function  (x1, y1, x2, y2, color = 'wheat') {
-    k = (y2 - y1) / (x2 - x1)
-    if (k <= 0.5) {
-      for (var x = x1, y = y1; x <= x2; x++, y += k) {
-        dot(x, y, color)
-      }
-    } else {
-      for (var x = x1, y = y1; y <= y2; y++, x += 1 / k) {
-        dot(x, y, color)
-      }
-    }
-  }
 
   //画线直线的函数
   var drawLine = function(xOry, start, end, fixed, color) {
@@ -176,47 +163,150 @@ for (var i = 30, j = 50; i < 150; i++) {
       }
     }
   }
+
+   // 画一条从任意一点到任意一点的直线
+   var drawLinePro = function (x1, y1, x2, y2, color = 'wheat') {
+    k = (y2 - y1) / (x2 - x1)
+    if (k <= 1) {
+      for (var x = x1, y = y1; x <= x2; x++, y += k) {
+        dot(x, y, color)
+      }
+    } else {
+      for (var x = x1, y = y1; y <= y2; y++, x += 1 / k) {
+        dot(x, y, color)
+      }
+    }
+  }
+
+  // 画一条从任意一点到任意一点的直线,优化版
+  var drawLinePro2 = function(x1, y1, x2, y2, color = 'wheat') {
+    var xSpan = x2 - x1
+    var ySpan = y2 - y1
+    var k = ySpan / xSpan
+    var yCumulative = 0
+    var xCumulative = 0
+    if (k <= 1) {
+      for (var x = x1, y = y1; x <= x2; x++) {
+        dot(x, y, color)
+
+        yCumulative += ySpan
+        if (yCumulative >= xSpan) {
+          y++
+          yCumulative -= xSpan
+        }
+      }
+    } else {
+      for (var x = x1, y = y1; y <= y2; y++) {
+        dot(x, y, color)
+
+        xCumulative += xSpan
+        if (xCumulative >= ySpan) {
+          x++
+          xCumulative -= ySpan
+        }
+      }
+    }
+
+  }
+
   // * 画一个空心矩形
-  drawLinePro(250, 50, 350, 50)
-  drawLinePro(250, 100, 350, 100)
-  drawLinePro(250, 50, 250, 100)
-  drawLinePro(350, 50, 350, 100)
+  drawLinePro2(250, 50, 350, 50)
+  drawLinePro2(250, 100, 350, 100)
+  drawLinePro2(250, 50, 250, 100)
+  drawLinePro2(350, 50, 350, 100)
   // drawLine('x', 250, 350, 50, 'wheat')
   // drawLine('x', 250, 350, 100, 'wheat')
   // drawLine('y', 50, 100, 250, 'wheat')
   // drawLine('y', 50, 100, 350, 'wheat')
 
   // * 画一个实心矩形
-
-
-  for (var i = 10; i <= 60; i++) {
-    drawLine('x', 360, 460, i, 'wheat')
-  }
+ for (var y = 10; y <= 60; y++) {
+  drawLinePro2(360, y, 460, y)
+ }
+  // for (var i = 10; i <= 60; i++) {
+  //   drawLine('x', 360, 460, i, 'wheat')
+  // }
 
   // * 画两个空心的圆，圆心在画布中心：
   //   * 一个半径为50像素
   //   * 一个半径为200像素
-  var x = 0
-  var y = 0
-  for (var i = 0; i <= 360;) {
-    x = 500 + (50 * Math.cos(i))
-    y = 500 + (50 * Math.sin(i))
-    dot(x, y)
-    i = i + 0.05
+
+  var h = 500
+  var k = 500
+  var y = 1
+  for (var x = 0; x < y; x++) {
+    var y = Math.sqrt(2500 - x * x)
+    dot (x + h, y + k)
+    dot (-x + h, y + k)
+    dot (x + h, -y + k)
+    dot (-x + h, -y + k)
+    dot (y + h, x + k)
+    dot (-y + h, x + k)
+    dot (y + h, -x + k)
+    dot (-y + h, -x + k)
   }
 
-  x = 0
-  y = 0
-  for (var i = 0; i <= 360;) {
-    
-    x = 500 + (200 * Math.cos(i))
-    y = 500 + (200 * Math.sin(i))
-    dot(x, y)
-    i = i + 0.001
+  var y = 1
+  for (var x = 0; x < y; x++) {
+    y = Math.sqrt(40000 - x * x)
+    dot(x + h, y + k)
+    dot(-x + h, y + k)
+    dot(x + h, -y + k)
+    dot(-x + h, -y + k)
+    dot(y + h, x + k)
+    dot(-y + h, x + k)
+    dot(y + h, -x + k)
+    dot(-y + h, -x + k)
   }
+
+  // var x = 0
+  // var y = 0
+  // for (var i = 0; i <= 360;) {
+  //   x = 500 + (50 * Math.cos(i))
+  //   y = 500 + (50 * Math.sin(i))
+  //   dot(x, y)
+  //   i = i + 0.05
+  // }
+
+  // x = 0
+  // y = 0
+  // for (var i = 0; i <= 360;) {
+    
+  //   x = 500 + (200 * Math.cos(i))
+  //   y = 500 + (200 * Math.sin(i))
+  //   dot(x, y)
+  //   i = i + 0.001
+  // }
+
+
 
   // 画一个实心的圆，半径至少为100像素
-  
+  var h = 150
+  var k = 500
+  for (var x = 0; x < y; x++) {
+    //debugger
+    y = Math.sqrt(10000 - x * x)
+    dot(x + h, y + k)
+    dot(-x + h, y + k)
+    dot(x + h, -y + k)
+    dot(-x + h, -y + k)
+    dot(y + h, x + k)
+    dot(-y + h, x + k)
+    dot(y + h, -x + k)
+    dot(-y + h, -x + k)
+    drawLinePro2(-x + h, y + k, x + h, y + k)
+    drawLinePro2(-x + h, -y + k, x + h, -y + k)
+    drawLinePro2(-y + h, x + k, y + h, x + k)
+    drawLinePro2(-y + h, -x + k, y + h, -x + k)
+  }
+
+//画一个【大小位置都合适】的sin(x)的图像
+var y = 0
+
+for (let x = 0; x < 900; x++) {
+  y = 50 * Math.sin(x / 50)
+  dot(x + 100, y + 150)
+}
 
 </script>
 </html>

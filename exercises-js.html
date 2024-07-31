@@ -1,4 +1,3 @@
-
 <script type="1" id="ch02/01">
   // 书本第二章课后习题第1题
   var height = +prompt('请输入行数')
@@ -53,7 +52,8 @@
   console.log(result)
 </script>
 
-<script type="" id="ch03/03">
+<script type="1" id="ch03/03">
+    // 书本第三章课后习题第3题
   let charactor = prompt('请输入一堆字母')
   let char = prompt('请输入要计数的字母')
   function countBs(charactor) {
@@ -83,3 +83,2015 @@
 console.log(countBs2(charactor))
 
 </script>
+
+<script type="1" id="ch03/0001">
+//课后作业
+//上台阶台阶数固定,计算一共有几种方法(可以一次上两阶,可以一次上一台阶)
+function setStartCount(number) {
+  function stairClimbing (count = 0, method = '') {
+    if (count == number) {
+      console.log(method)
+      return
+    }
+    if (count > number) {
+      return
+    }
+
+    stairClimbing(count + 2, method + 2)
+    stairClimbing(count + 1, method + 1)
+  }
+  stairClimbing()
+}
+</script>
+<script type="1" id="ch03/0002">
+//课后作业
+//走网格,从左下角走到右上角一共有多少种方法(每次只能选择往右走与往上走)
+let count = 0
+function walkGrid (x, y, route = '') {
+
+  if (x == 7 && y == 7) {
+    console.log(route)
+    count++
+    return
+  }
+  if (x > 7) {
+    count++
+    return
+  }
+  if (y > 7) {
+    count++
+    return
+  }
+  walkGrid(x + 1, y, route + 'right')
+  walkGrid(x, y + 1, route + 'top')
+
+}
+</script>
+
+<script type="1" id="ch04/0000">
+//第四章的松鼠人示例
+
+var JOURNAL = [
+  {"events":["carrot","exercise","weekend"],"squirrel":false},
+  {"events":["bread","pudding","brushed teeth","weekend","touched tree"],"squirrel":false},
+  {"events":["carrot","nachos","brushed teeth","cycling","weekend"],"squirrel":false},
+  {"events":["brussel sprouts","ice cream","brushed teeth","computer","weekend"],"squirrel":false},
+  {"events":["potatoes","candy","brushed teeth","exercise","weekend","dentist"],"squirrel":false},
+  {"events":["brussel sprouts","pudding","brushed teeth","running","weekend"],"squirrel":false},
+  {"events":["pizza","brushed teeth","computer","work","touched tree"],"squirrel":false},
+  {"events":["bread","beer","brushed teeth","cycling","work"],"squirrel":false},
+  {"events":["cauliflower","brushed teeth","work"],"squirrel":false},
+  {"events":["pizza","brushed teeth","cycling","work"],"squirrel":false},
+  {"events":["lasagna","nachos","brushed teeth","work"],"squirrel":false},
+  {"events":["brushed teeth","weekend","touched tree"],"squirrel":false},
+  {"events":["lettuce","brushed teeth","television","weekend"],"squirrel":false},
+  {"events":["spaghetti","brushed teeth","work"],"squirrel":false},
+  {"events":["brushed teeth","computer","work"],"squirrel":false},
+  {"events":["lettuce","nachos","brushed teeth","work"],"squirrel":false},
+  {"events":["carrot","brushed teeth","running","work"],"squirrel":false},
+  {"events":["brushed teeth","work"],"squirrel":false},
+  {"events":["cauliflower","reading","weekend"],"squirrel":false},
+  {"events":["bread","brushed teeth","weekend"],"squirrel":false},
+  {"events":["lasagna","brushed teeth","exercise","work"],"squirrel":false},
+  {"events":["spaghetti","brushed teeth","reading","work"],"squirrel":false},
+  {"events":["carrot","ice cream","brushed teeth","television","work"],"squirrel":false},
+  {"events":["spaghetti","nachos","work"],"squirrel":false},
+  {"events":["cauliflower","ice cream","brushed teeth","cycling","work"],"squirrel":false},
+  {"events":["spaghetti","peanuts","computer","weekend"],"squirrel":true},
+  {"events":["potatoes","ice cream","brushed teeth","computer","weekend"],"squirrel":false},
+  {"events":["potatoes","ice cream","brushed teeth","work"],"squirrel":false},
+  {"events":["peanuts","brushed teeth","running","work"],"squirrel":false},
+  {"events":["potatoes","exercise","work"],"squirrel":false},
+  {"events":["pizza","ice cream","computer","work"],"squirrel":false},
+  {"events":["lasagna","ice cream","work"],"squirrel":false},
+  {"events":["cauliflower","candy","reading","weekend"],"squirrel":false},
+  {"events":["lasagna","nachos","brushed teeth","running","weekend"],"squirrel":false},
+  {"events":["potatoes","brushed teeth","work"],"squirrel":false},
+  {"events":["carrot","work"],"squirrel":false},
+  {"events":["pizza","beer","work","dentist"],"squirrel":false},
+  {"events":["lasagna","pudding","cycling","work"],"squirrel":false},
+  {"events":["spaghetti","brushed teeth","reading","work"],"squirrel":false},
+  {"events":["spaghetti","pudding","television","weekend"],"squirrel":false},
+  {"events":["bread","brushed teeth","exercise","weekend"],"squirrel":false},
+  {"events":["lasagna","peanuts","work"],"squirrel":true},
+  {"events":["pizza","work"],"squirrel":false},
+  {"events":["potatoes","exercise","work"],"squirrel":false},
+  {"events":["brushed teeth","exercise","work"],"squirrel":false},
+  {"events":["spaghetti","brushed teeth","television","work"],"squirrel":false},
+  {"events":["pizza","cycling","weekend"],"squirrel":false},
+  {"events":["carrot","brushed teeth","weekend"],"squirrel":false},
+  {"events":["carrot","beer","brushed teeth","work"],"squirrel":false},
+  {"events":["pizza","peanuts","candy","work"],"squirrel":true},
+  {"events":["carrot","peanuts","brushed teeth","reading","work"],"squirrel":false},
+  {"events":["potatoes","peanuts","brushed teeth","work"],"squirrel":false},
+  {"events":["carrot","nachos","brushed teeth","exercise","work"],"squirrel":false},
+  {"events":["pizza","peanuts","brushed teeth","television","weekend"],"squirrel":false},
+  {"events":["lasagna","brushed teeth","cycling","weekend"],"squirrel":false},
+  {"events":["cauliflower","peanuts","brushed teeth","computer","work","touched tree"],"squirrel":false},
+  {"events":["lettuce","brushed teeth","television","work"],"squirrel":false},
+  {"events":["potatoes","brushed teeth","computer","work"],"squirrel":false},
+  {"events":["bread","candy","work"],"squirrel":false},
+  {"events":["potatoes","nachos","work"],"squirrel":false},
+  {"events":["carrot","pudding","brushed teeth","weekend"],"squirrel":false},
+  {"events":["carrot","brushed teeth","exercise","weekend","touched tree"],"squirrel":false},
+  {"events":["brussel sprouts","running","work"],"squirrel":false},
+  {"events":["brushed teeth","work"],"squirrel":false},
+  {"events":["lettuce","brushed teeth","running","work"],"squirrel":false},
+  {"events":["candy","brushed teeth","work"],"squirrel":false},
+  {"events":["brussel sprouts","brushed teeth","computer","work"],"squirrel":false},
+  {"events":["bread","brushed teeth","weekend"],"squirrel":false},
+  {"events":["cauliflower","brushed teeth","weekend"],"squirrel":false},
+  {"events":["spaghetti","candy","television","work","touched tree"],"squirrel":false},
+  {"events":["carrot","pudding","brushed teeth","work"],"squirrel":false},
+  {"events":["lettuce","brushed teeth","work"],"squirrel":false},
+  {"events":["carrot","ice cream","brushed teeth","cycling","work"],"squirrel":false},
+  {"events":["pizza","brushed teeth","work"],"squirrel":false},
+  {"events":["spaghetti","peanuts","exercise","weekend"],"squirrel":true},
+  {"events":["bread","beer","computer","weekend","touched tree"],"squirrel":false},
+  {"events":["brushed teeth","running","work"],"squirrel":false},
+  {"events":["lettuce","peanuts","brushed teeth","work","touched tree"],"squirrel":false},
+  {"events":["lasagna","brushed teeth","television","work"],"squirrel":false},
+  {"events":["cauliflower","brushed teeth","running","work"],"squirrel":false},
+  {"events":["carrot","brushed teeth","running","work"],"squirrel":false},
+  {"events":["carrot","reading","weekend"],"squirrel":false},
+  {"events":["carrot","peanuts","reading","weekend"],"squirrel":true},
+  {"events":["potatoes","brushed teeth","running","work"],"squirrel":false},
+  {"events":["lasagna","ice cream","work","touched tree"],"squirrel":false},
+  {"events":["cauliflower","peanuts","brushed teeth","cycling","work"],"squirrel":false},
+  {"events":["pizza","brushed teeth","running","work"],"squirrel":false},
+  {"events":["lettuce","brushed teeth","work"],"squirrel":false},
+  {"events":["bread","brushed teeth","television","weekend"],"squirrel":false},
+  {"events":["cauliflower","peanuts","brushed teeth","weekend"],"squirrel":false}
+];
+
+// This makes sure the data is exported in node.js —
+// `require('./path/to/journal.js')` will get you the array.
+if (typeof module != "undefined" && module.exports && (typeof window == "undefined" || window.exports != exports))
+  module.exports = JOURNAL;
+if (typeof global != "undefined" && !global.JOURNAL)
+  global.JOURNAL = JOURNAL;
+
+let hasEvent = function(event, entry) {
+  return entry.events.includes(event)
+}
+
+let tableFor = function(event, journal) {
+  let eventData = [0, 0, 0, 0]
+  let entry = {}
+  let index = 0
+  for (let i = 0; i < journal.length; i++) {
+    index = 0
+    entry = journal[i]
+    if (hasEvent(event, entry)) {
+      index += 1
+    }
+    if (entry.squirrel) {
+      index += 2
+    }
+    eventData[index] += 1
+  }
+  return eventData
+}
+
+let phi = function(data) {
+  let result = 0
+
+  result = (data[3] * data[0] - data[1] * data[2]) / 
+  Math.sqrt((data[2] + data[3]) * (data[1] + data[0]) * (data[1] + data[3]) * (data[0] + data[2]))
+
+  return result
+}
+
+let oneEventsCorrelations = function(event, journal) {
+  let statisticArray = []
+  let numCorrelations = 0
+  statisticArray = tableFor(event, journal)
+  numCorrelations = phi(statisticArray)
+
+  return numCorrelations
+}
+
+function forEach(array, action) {
+  for (let i = 0; i < array.length; i++) {
+    action(array[i])
+  }
+}
+
+let gatherCorrelations = function(JOURNAL) {
+  let correlation = {}
+  let events = []
+
+  JOURNAL.forEach(entry => {
+    entry.events.forEach(event => {
+      if (event in correlation == false) {
+        correlation[event] = oneEventsCorrelations(event, JOURNAL)
+      }
+    })
+  })
+
+  return correlation
+}
+
+// let gatherCorrelations = function(JOURNAL) {
+//   let correlation = {}
+//   let events = []
+
+//   for (let entry = 0; entry < JOURNAL.length; entry++) {
+//     events = JOURNAL[entry].events
+//     for (let j = 0; j < events.length; j++) {
+//       let event = events[j]
+//       if (event in correlation == false) {
+//         correlation[event] = oneEventsCorrelations(event, JOURNAL)
+//       }
+//     }
+//   }
+
+//   return correlation
+// }
+
+let printCorrelation = function() {
+  let correlation = {}
+  correlation = gatherCorrelations(JOURNAL)
+
+  for (let key in correlation) {
+    if (correlation[key] < -0.1 || correlation[key] > 0.1) {
+      console.log(key + ': ' + correlation[key])
+    }
+  }
+}
+
+let setJournal = function() {
+  let journal = JOURNAL
+  let entry = {}
+  for (let i = 0; i < journal.length; i ++) {
+    entry = journal[i]
+    if (entry.events.includes("peanuts") && !entry.events.includes("brushed teeth")) {
+      entry.events.push("peanuts teeth")
+    }
+  }
+}
+
+printCorrelation()
+setJournal()
+console.log("peanuts teeth: " + oneEventsCorrelations("peanuts teeth", JOURNAL))
+
+</script>
+<script type="1" id="ch04/0001">
+  //课上写的
+  function index(array, index) {
+    for(let i =0; i < array.length; i++) {
+      if (array[i] == index) {
+        return i
+      }
+    }
+    return -1
+  }
+
+let slice =function(array, start = 0, end = array.length) {
+  for (let i = 0; i < end; i++) {
+    array1[i] = array[i]
+  }
+  return array1
+}
+
+function concat() {
+  let array = []
+  for (let i = 0; i < arguments.length; i++) {
+    let arg = arguments[i]
+    if(Array.isArray(arg)) {
+      for (let j = 0; j < arg.length; j++) {
+        array.push(arg[j])
+      }
+    } else {
+      array.push(arg)
+    }
+  }
+  return array
+}
+</script>
+
+<script type="1" id="ch04/0002">
+  // 深度对比两个变量是否相等
+function judgement(dataA, dataB) {
+
+  if (dataA == null || dataB == null) {
+    return dataA === dataB
+  } else if (Array.isArray(dataA) == true && Array.isArray(dataB) == true) {
+    if (dataA.length == dataB.length) {
+      for (let i = 0; i < dataA.length; i++) {
+        if (judgement(dataA[i], dataB[i]) == false) {
+          return false
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  } else if (dataA.constructor === Object && dataB.constructor === Object) {
+    let dataAKey = Object.keys(dataA)
+    let dataBKey = Object.keys(dataB)
+    if (dataAKey.length == dataBKey.length) {
+      for (let i = 0; i < dataAKey.length; i++) {
+        if (judgement(dataAKey[i], dataBKey[i]) == false) {
+          return false
+        }
+      }
+      for (let key in dataA) {
+        if (judgement(dataA[key], dataB[key]) == false) {
+            return false
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return dataA === dataB
+  }
+}
+
+  function isEqualMy(dataA, dataB) {
+    return judgement(dataA, dataB)
+  }
+  
+  var a = [1,2,3]
+  var b = [1,2,3]
+  console.log(isEqualMy(a, b))
+  
+  var a = [1,2,3,4]
+  var b = [1,2,3]
+  console.log(isEqualMy(a, b))
+  
+  var a = [1,2,3,4]
+  var b = [1,2,3,5]
+  console.log(isEqualMy(a, b))
+  
+  var a = [1,2,3,'asda']
+  var b = 3
+  console.log(isEqualMy(a, b))
+  
+  var a = null
+  var b = null
+  console.log(isEqualMy(a, b))
+  
+  var a = [1,2,3,4]
+  var b = null
+  console.log(isEqualMy(a, b))
+  
+  var a = [1,2,3,4]
+  var b = undefined
+  console.log(isEqualMy(a, b))
+  
+  var a = false
+  var b = undefined
+  console.log(isEqualMy(a, b))
+  
+  var a = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}
+  var b = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}
+  console.log(isEqualMy(a, b))
+  
+  var a = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}
+  var b = {'as':[1,2,4],'rt':'asdsad','yui':true,'fgh':98}
+  console.log(isEqualMy(a, b))
+  
+  var a = {'as':[1,2,3,4],'rw':'asdsad','yui':true,'fgh':98}
+  var b = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}
+  console.log(isEqualMy(a, b))
+  
+  var a = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98,'df':{'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}}
+  var b = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98,'df':{'as':[1,2,3,4],'rt':'asdsad','yui':false,'fgh':98}}
+  console.log(isEqualMy(a, b))
+  
+  var a = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98,'df':{'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}}
+  var b = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98,'df':{'as':[1,2,3,4],'rt':'asdsad','ui':true,'fgh':98}}
+  console.log(isEqualMy(a, b))
+
+  var a = NaN
+  var b = NaN
+  console.log(isEqualMy(a, b))
+</script>
+
+<script type="1" id="ch04/0003">
+//深度复制两个变量
+function deepCopy(a) {
+  if (a == null || a == undefined) {
+    let b = a
+    return b
+  } else if (Array.isArray(a)) {
+    let b = []
+    for (let i = 0; i < a.length; i++) {
+      b[i] = deepCopy(a[i])
+    }
+    return b
+  } else if (a.constructor == Object) {
+    let b = {}
+    for (let key in a) {
+      b[key] = deepCopy(a[key])
+    }
+    return b
+  } else {
+    let b = a
+    return b
+  }
+}
+
+var test = [1,2,3]
+var ok = deepCopy(test)
+console.log(ok)
+test.push(7)
+console.log(test)
+console.log(ok)
+
+var test = {'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98,'df':{'as':[1,2,3,4],'rt':'asdsad','yui':true,'fgh':98}}
+var ok = deepCopy(test)
+console.log(ok)
+test.as.push(45)
+console.log(test)
+console.log(ok)
+
+var test = null
+var ok = deepCopy(test)
+console.log(ok)
+console.log(test)
+
+var test = undefined
+var ok = deepCopy(test)
+console.log(ok)
+console.log(test)
+
+var test = NaN
+var ok = deepCopy(test)
+console.log(ok)
+console.log(test)
+</script>
+
+<script type="1" id="ch04/0004">
+//返回随机数
+function random() {
+  const date = new Date()
+for (let i = 0; i < 10000; i++) {
+
+}
+  return (new Date().getTime() + 500) % 1000 / 1000
+}
+</script>
+<script type="1" id="ch04/0005">
+  function range(start, end, step = 1) {
+    if (arguments.length == 1) {
+      end = start
+      start = 1
+    }
+    let data = []
+    for (let i = start; step > 0 ? i <= end : i >= end; i += step) {
+      data.push(i)
+    }
+    return data
+  }
+
+function sum (numbers) {
+  let sums = 0
+  for (let i of numbers) {
+    sums += i
+  }
+  return sums
+}
+
+</script>
+<script type="1" id="ch04/0006">
+  function reverseArray(numbers) {
+    let result = []
+    let n = numbers.length - 1
+    for (let i = n; i >= 0; i--) {
+      result.push(numbers[i])
+    }
+    return result
+  }
+
+  function reverseArrayInPlace(numbers) {
+    let n = numbers.length >> 1
+    let temp = 0
+    for (let i = 0; i < n; i++) {
+      temp = numbers[i]
+      numbers[i] = numbers[numbers.length - i - 1]
+      numbers[numbers.length - i - 1] = temp
+    }
+  }
+</script>
+
+<script type="1" id="ch05/0001">
+  var array = [1,2,3,4,5]
+  for (let i = 0; i < array.length; i++) {
+    var current = array[i]
+    console.log(current)
+  }
+
+function forEach(array, action) {
+  for (let i = 0; i < array.length; i++) {
+    action(array[i])
+  }
+}
+
+var sum = 0
+forEach(array, function(number){
+  sum += number
+})
+console.log(sum)
+</script>
+<script type="1" id="ch05/0002">
+function greaterThan(n) {
+  return function (m) {return m > n}
+}
+var greaterThan10 = greaterThan(10)
+console.log(greaterThan10(12))
+</script>
+<script type="1" id="ch05/0003">
+function noisy (f) {
+  return function (n) {
+    console.log('calling with'+ n)
+     var val = f(n)
+     console.log('calling with', n, val)
+     return
+  }
+}
+noisy(Boolean)(0)
+</script>
+<script type="1" id="ch05/0004">
+function unless(test, then) {
+  if(!test) then()
+}
+function repeat (time, body) {
+  for (let i = 0; i < time; i++) {
+    body(i)
+  }
+}
+
+repeat(3, function(n){
+  unless(n % 2, function(){
+    console.log(n, 'is even!')
+  }) 
+})
+
+</script>
+<script type="1" id="ch05/0005">
+function noisy(f) {
+  return function () {
+  //f.apply(null, arguments)
+  f(arguments)
+  //f(...arguments)
+  }
+}
+var test = noisy(function () {
+  for (let i = 0; i < arguments.length; i++) {
+    console.log(arguments[i])
+  }
+})
+test([1,2,3,4,5,6,7])
+</script>
+<script type="1" id="ch05/0006">
+function getDerivative (f) {
+  return function (x) {
+    var gap = 0.000000000001
+    var x1 = x - gap
+    var x2 = x + gap
+    var y1 = f(x1)
+    var y2 = f(x2)
+    return (y2 - y1) / (x2 - x1)
+  }
+}
+
+var derivative = getDerivative(function (x) {
+  return x * x * x
+})
+
+  derivative(2)
+
+</script>
+<script type="" id="ch05/0007">
+var ANCESTRY_FILE = JSON.stringify([{
+    "name": "Carolus Haverbeke",
+    "sex": "m",
+    "born": 1832,
+    "died": 1905,
+    "father": "Carel Haverbeke",
+    "mother": "Maria van Brussel"
+}, {
+    "name": "Emma de Milliano",
+    "sex": "f",
+    "born": 1876,
+    "died": 1956,
+    "father": "Petrus de Milliano",
+    "mother": "Sophia van Damme"
+}, {
+    "name": "Maria de Rycke",
+    "sex": "f",
+    "born": 1683,
+    "died": 1724,
+    "father": "Frederik de Rycke",
+    "mother": "Laurentia van Vlaenderen"
+}, {
+    "name": "Jan van Brussel",
+    "sex": "m",
+    "born": 1714,
+    "died": 1748,
+    "father": "Jacobus van Brussel",
+    "mother": "Joanna van Rooten"
+}, {
+    "name": "Philibert Haverbeke",
+    "sex": "m",
+    "born": 1907,
+    "died": 1997,
+    "father": "Emile Haverbeke",
+    "mother": "Emma de Milliano"
+}, {
+    "name": "Jan Frans van Brussel",
+    "sex": "m",
+    "born": 1761,
+    "died": 1833,
+    "father": "Jacobus Bernardus van Brussel",
+    "mother": null
+}, {
+    "name": "Pauwels van Haverbeke",
+    "sex": "m",
+    "born": 1535,
+    "died": 1582,
+    "father": "N. van Haverbeke",
+    "mother": null
+}, {
+    "name": "Clara Aernoudts",
+    "sex": "f",
+    "born": 1918,
+    "died": 2012,
+    "father": "Henry Aernoudts",
+    "mother": "Sidonie Coene"
+}, {
+    "name": "Emile Haverbeke",
+    "sex": "m",
+    "born": 1877,
+    "died": 1968,
+    "father": "Carolus Haverbeke",
+    "mother": "Maria Sturm"
+}, {
+    "name": "Lieven de Causmaecker",
+    "sex": "m",
+    "born": 1696,
+    "died": 1724,
+    "father": "Carel de Causmaecker",
+    "mother": "Joanna Claes"
+}, {
+    "name": "Pieter Haverbeke",
+    "sex": "m",
+    "born": 1602,
+    "died": 1642,
+    "father": "Lieven van Haverbeke",
+    "mother": null
+}, {
+    "name": "Livina Haverbeke",
+    "sex": "f",
+    "born": 1692,
+    "died": 1743,
+    "father": "Daniel Haverbeke",
+    "mother": "Joanna de Pape"
+}, {
+    "name": "Pieter Bernard Haverbeke",
+    "sex": "m",
+    "born": 1695,
+    "died": 1762,
+    "father": "Willem Haverbeke",
+    "mother": "Petronella Wauters"
+}, {
+    "name": "Lieven van Haverbeke",
+    "sex": "m",
+    "born": 1570,
+    "died": 1636,
+    "father": "Pauwels van Haverbeke",
+    "mother": "Lievijne Jans"
+}, {
+    "name": "Joanna de Causmaecker",
+    "sex": "f",
+    "born": 1762,
+    "died": 1807,
+    "father": "Bernardus de Causmaecker",
+    "mother": null
+}, {
+    "name": "Willem Haverbeke",
+    "sex": "m",
+    "born": 1668,
+    "died": 1731,
+    "father": "Lieven Haverbeke",
+    "mother": "Elisabeth Hercke"
+}, {
+    "name": "Pieter Antone Haverbeke",
+    "sex": "m",
+    "born": 1753,
+    "died": 1798,
+    "father": "Jan Francies Haverbeke",
+    "mother": "Petronella de Decker"
+}, {
+    "name": "Maria van Brussel",
+    "sex": "f",
+    "born": 1801,
+    "died": 1834,
+    "father": "Jan Frans van Brussel",
+    "mother": "Joanna de Causmaecker"
+}, {
+    "name": "Angela Haverbeke",
+    "sex": "f",
+    "born": 1728,
+    "died": 1734,
+    "father": "Pieter Bernard Haverbeke",
+    "mother": "Livina de Vrieze"
+}, {
+    "name": "Elisabeth Haverbeke",
+    "sex": "f",
+    "born": 1711,
+    "died": 1754,
+    "father": "Jan Haverbeke",
+    "mother": "Maria de Rycke"
+}, {
+    "name": "Lievijne Jans",
+    "sex": "f",
+    "born": 1542,
+    "died": 1582,
+    "father": null,
+    "mother": null
+}, {
+    "name": "Bernardus de Causmaecker",
+    "sex": "m",
+    "born": 1721,
+    "died": 1789,
+    "father": "Lieven de Causmaecker",
+    "mother": "Livina Haverbeke"
+}, {
+    "name": "Jacoba Lammens",
+    "sex": "f",
+    "born": 1699,
+    "died": 1740,
+    "father": "Lieven Lammens",
+    "mother": "Livina de Vrieze"
+}, {
+    "name": "Pieter de Decker",
+    "sex": "m",
+    "born": 1705,
+    "died": 1780,
+    "father": "Joos de Decker",
+    "mother": "Petronella van de Steene"
+}, {
+    "name": "Joanna de Pape",
+    "sex": "f",
+    "born": 1654,
+    "died": 1723,
+    "father": "Vincent de Pape",
+    "mother": "Petronella Wauters"
+}, {
+    "name": "Daniel Haverbeke",
+    "sex": "m",
+    "born": 1652,
+    "died": 1723,
+    "father": "Lieven Haverbeke",
+    "mother": "Elisabeth Hercke"
+}, {
+    "name": "Lieven Haverbeke",
+    "sex": "m",
+    "born": 1631,
+    "died": 1676,
+    "father": "Pieter Haverbeke",
+    "mother": "Anna van Hecke"
+}, {
+    "name": "Martina de Pape",
+    "sex": "f",
+    "born": 1666,
+    "died": 1727,
+    "father": "Vincent de Pape",
+    "mother": "Petronella Wauters"
+}, {
+    "name": "Jan Francies Haverbeke",
+    "sex": "m",
+    "born": 1725,
+    "died": 1779,
+    "father": "Pieter Bernard Haverbeke",
+    "mother": "Livina de Vrieze"
+}, {
+    "name": "Maria Haverbeke",
+    "sex": "m",
+    "born": 1905,
+    "died": 1997,
+    "father": "Emile Haverbeke",
+    "mother": "Emma de Milliano"
+}, {
+    "name": "Petronella de Decker",
+    "sex": "f",
+    "born": 1731,
+    "died": 1781,
+    "father": "Pieter de Decker",
+    "mother": "Livina Haverbeke"
+}, {
+    "name": "Livina Sierens",
+    "sex": "f",
+    "born": 1761,
+    "died": 1826,
+    "father": "Jan Sierens",
+    "mother": "Maria van Waes"
+}, {
+    "name": "Laurentia Haverbeke",
+    "sex": "f",
+    "born": 1710,
+    "died": 1786,
+    "father": "Jan Haverbeke",
+    "mother": "Maria de Rycke"
+}, {
+    "name": "Carel Haverbeke",
+    "sex": "m",
+    "born": 1796,
+    "died": 1837,
+    "father": "Pieter Antone Haverbeke",
+    "mother": "Livina Sierens"
+}, {
+    "name": "Elisabeth Hercke",
+    "sex": "f",
+    "born": 1632,
+    "died": 1674,
+    "father": "Willem Hercke",
+    "mother": "Margriet de Brabander"
+}, {
+    "name": "Jan Haverbeke",
+    "sex": "m",
+    "born": 1671,
+    "died": 1731,
+    "father": "Lieven Haverbeke",
+    "mother": "Elisabeth Hercke"
+}, {
+    "name": "Anna van Hecke",
+    "sex": "f",
+    "born": 1607,
+    "died": 1670,
+    "father": "Paschasius van Hecke",
+    "mother": "Martijntken Beelaert"
+}, {
+    "name": "Maria Sturm",
+    "sex": "f",
+    "born": 1835,
+    "died": 1917,
+    "father": "Charles Sturm",
+    "mother": "Seraphina Spelier"
+}, {
+    "name": "Jacobus Bernardus van Brussel",
+    "sex": "m",
+    "born": 1736,
+    "died": 1809,
+    "father": "Jan van Brussel",
+    "mother": "Elisabeth Haverbeke"
+}])
+
+// This makes sure the data is exported in node.js —
+// `require("./path/to/ancestry.js")` will get you the array.
+if (typeof module != "undefined" && module.exports) module.exports = ANCESTRY_FILE;
+
+</script>
+
+<script type="1" id="ch05/0007.5">
+//var string = JSON.stringify({name: 'X', born: 1980})
+// console.log(string)
+// console.log(JSON.parse(string).name)
+
+var ancestry = JSON.parse(ANCESTRY_FILE)
+// console.log(ancestry.length)
+
+// function filter(array, test) {
+//   let result = []
+//   for (let i = 0; i < array.length; i++) {
+//     if (test(array[i], i, array)) {
+//       result.push(array[i])
+//     }
+//   }
+//   return result
+// }
+
+//var peoples = filter(ancestry, people => {return (people.born > 1900 && people.born < 1925)})
+
+// var peoples = ancestry.filter(people => {
+//   return people.father == "Carel Haverbeke"})
+
+// for (let value of peoples) {
+//   console.log(value)
+// }
+// function map (peoples, transition) {
+//   let result = []
+//   for (let i = 0; i < peoples.length; i++) {
+//     result.push(transition(peoples[i]))
+//   }
+// }
+
+// var peoples = ancestry.filter(people => {
+//   return people.died - people.born > 90
+// })
+
+// console.log(map(peoples, people => {return people.name}))
+// function reduce(array, combine, start) {
+//   let i = 0
+//   let result = start
+//   if (start == undefined) {
+//     result = array[0]
+//     i = 1
+//   }
+//   for (; i < array.length; i++) {
+//     result = combine(result, array[i])
+//   }
+//   return result
+// }
+
+// console.log(reduce([2,2,3,4,5], (a, b) => {
+//   return a + b
+// }, 0))
+// console.log(ancestry.reduce((old, obj) => {
+//   return old.born < obj.born ? old : obj
+// }))
+
+
+// function average(array) {
+//   let result = 0
+//   for (let i = 0; i < array.length; i++) {
+//     result += array[i]
+//   }
+//   return result / array.length
+// }
+// var peopleAverage = (average, age, i) => (average * i + age) / (i + 1)
+// var male = people => people.sex == "m"
+// var female = people => people.sex == "f"
+// var age = people => people.died - people.born
+// console.log('male: ' + average(ancestry.filter(male).map(age)))
+// console.log('female: ' + average(ancestry.filter(female).map(age)))
+// console.log('male: ' + ancestry.filter(male).map(age).reduce(peopleAverage))
+// console.log('female: ' + ancestry.filter(female).map(age).reduce(peopleAverage))
+
+// var theSet = ["Carel Haverbeke", "Maria van Brussel", "Donald Duck"]
+
+// function isInSet(set, people) {
+//   return set.indexOf(people.name) > -1
+// }
+
+// let isNamePeople = ancestry.filter((people) => {
+//   return isInSet(theSet, people)
+// })
+// console.log(isNamePeople)
+
+// function bind(f, ...surplus) {
+//   return function (...surplus2) {
+//     return f(...surplus, ...surplus2)
+//   }
+// }
+
+// console.log(ancestry.filter(isInSet.bind(null, theSet)))
+// console.log(ancestry.filter(bind(isInSet, theSet)))
+
+</script>
+
+<script type="1" id="ch05/0008">
+// 课后习题第一题
+var arrays = [[1,2,3,], [4,5,6,7,8], [9,10,11,]]
+var arrayNew = arrays.reduce((arrayGather, array2) => arrayGather.concat(array2))
+console.log(arrayNew)
+
+arrayNew = arrays.reduce((arrayGather, array2) => arrayGather.concat(array2), [])
+console.log(arrayNew)
+
+arrayNew = [].concat(...arrays)
+console.log(arrayNew)
+
+function flatten (arrays) {
+  let result = []
+  // for (let i = 0; i < array.length; i++) {
+  //   for (let j = 0; j < array[i].length; j++) {
+  //     result.push(array[i][j])
+  //   }
+  // }
+  for (let array1 of array) {
+    for (let item of array1) {
+      result.push(item)
+    }
+  }
+  return result 
+}
+function flatten2 (arrays) {
+  let result = []
+  for (let array of arrays) {
+    result.push(...array)
+  }
+  return result 
+}
+function flatten3 (arrays) {
+  let result = []
+  for (let array of arrays) {
+    result = result.concat(...array)
+  }
+  return result 
+}
+function flatten4 (arrays) {
+  let result = []
+  result = arrays.reduce((result, array) => {
+    return [...result, ...array]
+  }, [])
+  return result 
+}
+
+var arrays = [[1,2,3,[4,5,['6','7'],[8,'9']]],[10,'11',[12,[13]],[14,15]]]
+function flattenDeep (arrays) {
+  // let arrayNew = []
+  // for (let array of arrays) {
+  //   if (Array.isArray(array)) {
+  //     arrayNew.push(...flatterDeep(array))
+  //   } else {
+  //     arrayNew.push(array)
+  //   }
+  // }
+  // return arrayNew
+
+  return arrays.reduce((result, array) => {
+    if (Array.isArray(array)) {
+      return [...result, ...flattenDeep(array)]
+    } else {
+      return [...result, array]
+    }
+  }, [])
+}
+
+</script>
+
+<script type="1" id="ch05/0009">
+// 课后习题第二题
+function calculateAverage () {
+  var ancestry = JSON.parse(ANCESTRY_FILE)
+  let ageDiff = []
+  let peopleName = {}
+  let average = 0
+  ancestry.forEach(people => peopleName[people.name] = people)
+  let hasMother = ancestry.filter(people => peopleName[people.mother])
+  ageDiff = hasMother.map(people => people.born - peopleName[people.mother].born)
+  var calculate = (average, age, i) => ((average * i) + age) / (i + 1)
+  average = ageDiff.reduce(calculate)
+  console.log(ageDiff)
+  console.log(peopleName)
+  return average
+}
+</script>
+
+<script type="1" id="ch05/0010">
+// 课后习题第三题
+function groupBy (array, screen) {
+  let arrayObj = {}
+  for (let i = 0; i < array.length; i++) {
+    let groupName = screen(array[i], i, array)
+    if (groupName in arrayObj) {
+      arrayObj[groupName].push(array[i])
+    } else {
+      arrayObj[groupName] = [array[i]]
+    }
+  }
+  return arrayObj
+}
+function averageLifetime() {
+  var ancestry = JSON.parse(ANCESTRY_FILE)
+  let averageLife = []
+  let centuryPeople = {}
+  // ancestry.forEach(people => {
+  //   let century = Math.ceil(people.died / 100)
+  //   if (centuryPeople[century] == undefined) {
+  //     centuryPeople[century] = [people]
+  //   } else {
+  //     centuryPeople[century].push(people)
+  //   }
+  // })
+  // for (let key in centuryPeople) {
+  //   centuryPeople[key] = centuryPeople[key].map(people => people.died - people.born)
+  //   centuryPeople[key] = centuryPeople[key].reduce((average, age, i) => (average * i + age) / (i + 1))
+  // }
+
+  centuryPeople = groupBy(ancestry, (people) => Math.ceil(people.died / 100))
+  centuryPeople = mapObj(centuryPeople, (array) => {
+    return array.map((people) => {
+      return people.died - people.born
+    }).reduce((average, age, i) => {
+      return (average * i + age) / (i + 1)
+    })
+  })
+  console.log(centuryPeople)
+}
+function mapObj(obj, mapper) {
+  let result = {}
+  for (let key in obj) {
+    result[key] = mapper(obj[key], key, obj)
+  }
+  return result
+}
+</script>
+<script type="1" id="ch05/0011">
+//课后第4题
+array = [1,2,3,4,5,6]
+var judge = (item) => item > 0
+
+function every (array, judge) {
+  for (let i = 0; i < array.length; i++) {
+    if (!judge(array[i], i, array)) {
+      return false 
+    }
+  }
+  return true
+}
+function some (array, judge) {
+  for (let i = 0; i < array.length; i++) {
+    if (judge(array[i], i, array)) {
+      return true 
+    }
+  }
+  return false
+}
+function every2 (array, judge) {
+  return array.reduce((result, item) => {
+    return result && judge(item)
+  }, true)
+}
+function some2(array, judge) {
+  return array.reduce((result, item) => {
+    return result || judge(item)
+  }, false)
+}
+
+function every3(array,judge) {
+  return !array.reduce((result, item) => {
+    return result || !judge(item)
+  }, false)
+}
+function every4(array, judge) {
+  return !some(array, (...item) => !judge(...item))
+}
+function negate (f) {
+  return function (...arg) {
+    return !f(...arg)
+  }
+}
+function every5(array,judge) {
+  return !some(array, negate(judge))
+}
+function isOdd(x) {
+  return x % 2 == 0
+}
+var isEven = negate(isOdd)
+</script>
+<script type="1" id="ch05/0012">
+//排序
+function swap(array, x, y) {
+  let temp = array[y]
+  array[y] = array[x]
+  array[x] = temp
+
+  return temp
+}
+function judgeOrder(array) {
+  for (let i = 1; i < array.length; i++) {
+    if (array[i - 1] > array[i]) {
+      return false
+    }
+  }
+  console.log(array)
+  return true
+}
+function myRandomArray(length) {
+  let array = []
+  for (let i = 0; i < length; i ++) {
+    if (i % 2 == 0) {
+      array.push(-(Math.random() * 1000 | 0))
+    } else {
+      array.push(Math.random() * 1000 | 0)
+    }
+  }
+  console.log(array)
+  return array
+}
+nums = [3,6,8,23,435,8,98,41,5,6,8,8,3,2,2435,7,85,3,24,6,785,82,21,15,3,6]
+function bubbleSort(nums) {
+  let n = nums.length - 1
+  let temp = 0
+  let end = true
+  for (let i = n; i >= 0; i--) {
+    end = true
+    for (let j = 1; j <= i; j++) {
+      if (nums[j - 1] > nums[j]) {
+        swap(nums, j - 1, j)
+        end = false
+      }
+    }
+    if (end == true) {
+      break
+    }
+  }
+  return nums
+}
+//judgeOrder(bubbleSort(myRandomArray(100)))
+function selectSort (nums) {
+  let minIndex = -1
+  for (let left = 0; left < nums.length - 1; left++) {
+    minIndex = left
+    for (let i = left + 1; i < nums.length; i++) {
+      if (nums[i] < nums[minIndex]) {
+        minIndex = i
+      }
+    }
+    if (minIndex != left) {
+      swap(nums, left, minIndex)
+    }
+  }
+  return nums
+}
+
+function insertSort(nums) {
+  let index
+  for (let i = 1; i < nums.length; i++) {
+    index = i
+    while (index >= 1 && nums[index - 1] > nums[index]) {
+      swap(nums, index, index - 1)
+      index--
+    }
+  }
+  return nums
+}
+function mergeSort (nums) {
+  if (nums.length < 2) {
+    return nums
+  }
+  let leftArray = []
+  let rightArray = []
+  let middle = nums.length >>> 1
+  leftArray = nums.slice(0, middle)
+  rightArray = nums.slice(middle)
+
+  mergeSort(leftArray)
+  mergeSort(rightArray)
+
+  let left = 0
+  let right = 0
+  let store = 0
+  while (left < leftArray.length && right < rightArray.length) {
+    if (leftArray[left] <= rightArray[right]) {
+      nums[store] = leftArray[left]
+      left++
+      store++ 
+    } else {
+      nums[store] = rightArray[right]
+      right++
+      store++
+    }
+  }
+
+  while (left < leftArray.length) {
+    nums[store] = leftArray[left]
+    left++
+    store++ 
+  }
+  while (right < rightArray.length) {
+    nums[store] = rightArray[right]
+    right++
+    store++
+  }
+  return nums
+}
+function quickSort (nums) {
+  if (nums.length < 2) {
+    return nums
+  }
+  let piquetIdx = (Math.random() * nums.length) | 0
+  let piquet = nums[piquetIdx]
+  let leftArray = []
+  let rightArray = []
+  let middleArray = []
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] < piquet) {
+      leftArray.push(nums[i])
+    } else if (nums[i] === piquet) {
+      middleArray.push(nums[i])
+    } else {
+      rightArray.push(nums[i])
+    }
+  }
+  quickSort(leftArray)
+  quickSort(rightArray)
+
+  let idx = 0
+  for (let i = 0; i < leftArray.length; i++) {
+    nums[idx++] = leftArray[i]
+  }
+  for (let i = 0; i < middleArray.length; i++) {
+    nums[idx++] = middleArray[i]
+  }
+  for (let i = 0; i < rightArray.length; i++) {
+    nums[idx++] = rightArray[i]
+  }
+  return nums
+}
+function quickSort2 (nums, left = 0, right = nums.length) {
+  if (right - left < 2) {
+    return nums
+  }
+  let piquetIdx = (Math.random() * (right - left) + left) | 0
+  let piquet = nums[piquetIdx]
+
+  swap(nums, piquetIdx, right - 1)
+  let i = left
+  for (let j = left; j < right - 1; j++) {
+    if (nums[j] < piquet) {
+      swap(nums, i, j)
+      i++
+    }
+  }
+  swap(nums, i, right - 1)
+
+  quickSort2(nums, left, i)
+  quickSort2(nums, i + 1, right)
+
+  return nums
+}
+
+function quickSortInPlace (nums, left = 0, right = nums.length) { //快速排序,但增加了等于哨兵的值的排序
+  if (right - left < 2) {
+    return nums
+  }
+  let piquetIdx = (Math.random() * (right - left) + left) | 0
+  let piquet = nums[piquetIdx]
+
+  swap(nums, piquetIdx, right - 1)
+  let i = left
+  for (let j = left; j < right - 1; j++) {
+    if (nums[j] < piquet) {
+      swap(nums, i, j)
+      i++
+    }
+  }
+
+  let n = i
+  for (let m = i; m < right - 1; m++) {
+    if (nums[m] == piquet) {
+        swap(nums, m, n)
+        n++
+    }
+  }
+
+//   swap(nums, i, right - 1)
+  swap(nums, n, right - 1)
+
+  quickSortInPlace(nums, left, i)
+  quickSortInPlace(nums, n + 1, right)
+
+  // quickSortInPlace(nums, left, i)
+  // quickSortInPlace(nums, i + 1, right)
+  return nums
+}
+</script>
+<script type="1" id="ch04/0007">
+  //上课时,临时写的,后面还有课下写的
+  function arrayToList (array) {
+    let obj = []
+    for (let i = 0; i < array.length; i++) {
+      obj[value]
+    }
+  }
+  function listToArray(head) {
+    let array = []
+    if (head.next == null) {
+      return head.val
+    }
+
+    array.push(head.val)
+    array.push(...listToArray(head.next))
+
+    return array
+  }
+  function listToArray(head) {
+    let array = []
+    if (head == null) {
+      return array
+    }
+    
+    while (head != null) {
+      array.push(head.val)
+      head = head.next
+    }
+    return array
+  }
+function prepend (val, head) {
+  if (head == null) { //不用这个if
+    return null
+  }
+  let list = {
+    value: val,
+    next:head
+  }
+  return list
+
+}
+function addpend (val, head) {
+let node = head
+  while (true){
+    if (head.next != null) {
+      head = head.next
+    } else {
+      break
+    }
+  }
+  head.val = val
+  return node
+}
+function nth(head, idx) {
+  if (idx == 0 || head == null){
+    return head.val //undefined
+  }
+  nth(head = head.next, idx--)
+  return head.val
+}
+</script>
+<script type="1" id="ch04/0008">
+//链表,课下写的
+// function arrayToList(array) {
+//   let head = {
+//     val: 0,
+//     next: null,
+//   }
+//   let node = head
+
+//   for (let value of array) {
+//     node.next = {
+//       val: value,
+//       next: null
+//     }
+//     node = node.next
+//   }
+//   return head.next
+// }
+
+function arrayToList(array){
+  if (array.length == 0) {
+    return null
+  }
+
+  let head = {
+    val: array[0],
+    next: arrayToList(array.slice(1))
+  }
+
+  return head
+}
+
+// function listToArray(head) {
+//   if (head == null) {
+//     return []
+//   }
+//   let array = []
+
+//   while(head) {
+//     array.push(head.val)
+//     head = head.next
+//   }
+
+//   return array
+// }
+
+function listToArray(head) {
+  if (head == null) {
+    return []
+  }
+  let array = []
+  if (head.next == null) {
+      array.push(head.val)
+      return array
+  }
+  //let array2 = listToArray(head.next)
+  // array.push(head.val, ...array2)
+
+  array.push(head.val, ...listToArray(head.next))
+
+  // array.push(head.val)
+  // for (let value of array2) {
+  //   array.push(value)
+  // }
+
+
+  return array
+}
+
+function prepend(val, head) {
+  let node = {
+    val: val,
+    next: head,
+  }
+
+  return node
+}
+
+// function append(val, head) {
+//   let node = head
+//   let endNode = {
+//     val: val,
+//     next: null
+//   }
+//   if (head == null) {
+//     return endNode
+//   }
+
+//   while (node.next) {
+//     node = node.next
+//   }
+//   node.next = endNode
+//   return head
+// }
+
+function append(val, head) {
+
+  if (head == null){
+      let endNode = {
+      val: val,
+      next: null,
+    }
+    return endNode
+  }
+
+  head.next = append(val, head.next)
+
+  return head
+}
+
+function nth(head, idx) {
+  while(idx > 0 && head) {
+    head = head.next
+    idx--
+  }
+  if (head != null && idx == 0) {
+    return head.val
+  } else {
+    return undefined
+  }
+}
+
+// function nth(head, idx) {
+//   if(idx < 0) {
+//     return undefined
+//   }
+//   if (head == null) {
+//     return undefined
+//   }
+//   if (idx == 0) {
+//     return head.val
+//   }
+  
+//   return nth(head.next, --idx)
+// }
+
+function insert(head, idx, value) {
+  let node = head
+  let newNode = {
+    val: value,
+    next: null,
+  }
+  if (idx < 0) {
+    return null
+  }
+  if (idx == 0) {
+    newNode.next = head
+    return newNode
+  }
+
+  while (idx > 1 && node) {
+    idx--
+    node = node.next
+  }
+  if (node != null && idx == 1) {
+    newNode.next = node.next
+    node.next = newNode
+  } else {
+    return null
+  }
+
+  return head
+} 
+
+function remove(head, idx) {
+  let node = head
+  if (idx < 0) {
+    return null
+  }
+  if(idx == 0) {
+    head = head.next
+    return head
+  }
+
+  while(idx > 1 && node.next) {
+    node = node.next
+    idx--
+  }
+  if (node.next && idx == 1) {
+    node.next = node.next.next
+  } else {
+    return null
+  }
+
+  return head
+}
+</script>
+<script type="1" id="000000">
+  //上课时写快速排序,前面有自己下课时写的
+function quickSort(array) {
+  let random = Math.random()
+  let leftArray = []
+  let rightArray = []
+  for (let value of array) {
+    if (value < random) {
+      leftArray.push(value)
+    } else {
+      rightArray.push(value)
+    }
+  }
+  leftArray = quickSort(leftArray)
+  rightArray = quickSort(rightArray)
+
+  while(){
+
+  }
+}
+</script>
+
+<script type="1" id="ch05/00013">
+  //第五章,曾曾曾祖父那一节
+
+  // function keyBy(array, test) {
+  //   let obj = {}
+  //   for (let i = 0; i < array.length; i++) {
+  //     let key = test(array[i], i, array)
+  //     obj[key] = array[i]
+  //   }
+  //   return obj
+  // }
+
+
+  var ancestry = JSON.parse(ANCESTRY_FILE)
+
+  var byName = {}
+
+  ancestry.forEach(person => {
+    byName[person.name] = person
+  })
+
+  // function reduceAncestors (person) {
+  //   if (!person) {
+  //     return 0
+  //   }
+  //   if(person.name == "Pauwels van Haverbeke") {
+  //     return 1
+  //   }
+  //   return (reduceAncestors(byName[person.father]) + reduceAncestors(byName[person.mother])) / 2
+  // }
+  // return reduceAncestors(byName["Philibert Haverbeke"])
+
+  function reduceAncestors (person, f, defaultValue) {
+    function valueFor(person) {
+      if (!person) {
+        return defaultValue
+      }
+  
+      return f(person, valueFor(byName[person.father]), 
+                        valueFor(byName[person.mother]))
+    }
+    return valueFor(person)
+
+  }
+
+  function sharedDNA (person, fother, mother) {
+    if (person.name == "Pauwels van Haverbeke") {
+      return 1
+    }
+    return (fother + mother) / 2
+  }
+
+  // var by = byName["Philibert Haverbeke"]
+  // reduceAncestors(by, sharedDNA, 0)
+
+  function countAncestors(person, test) {
+    function combine (person, fromFother, fromMother) {
+      let thisOneCount = test(person)
+      return thisOneCount + fromFother + fromMother
+    }
+
+    return reduceAncestors(person, combine, 0)
+  }
+
+  function longLivingPercentage (person) {
+    var all = countAncestors(person, (person) => true)
+    var longLiving = countAncestors(person, (person) => person.died - person.born >= 70)
+    return longLiving / all
+  }
+  console.log(longLivingPercentage(byName["Emile Haverbeke"]))
+
+</script>
+
+<script type="1" id="ch06/00001">
+  // var rabbit = {}
+  // rabbit.speak = function (line) {
+  //   console.log("The rabbit says '" + line + "'")
+  // }
+  // rabbit.speak("I'm alive.")
+
+  function speak (line) {
+    console.log("The " + this.type + " rabbit says '" + line + "'")
+  }
+
+  var whiteRabbit = {type: "white", speak: speak}
+  var fatRabbit = {type: "fat", speak: speak}
+
+  whiteRabbit.speak("Oh my ears and whiskers, " + "how late it's getting!")
+  fatRabbit.speak("I could sure usa a carrot right now.")
+
+  speak("123")
+  speak.call(whiteRabbit, "yes")
+  speak.apply({type: "old"}, ["hahaha"])
+  speak("哇偶")
+  console.log(Object.getPrototypeOf(speak.prototype))
+</script>
+
+<script type="1" id="ch06/00002">
+  var empty = {}
+  console.log(empty.toString)
+  console.log(empty.toString())
+  console.log(Object.getPrototypeOf({}) === Object.prototype)
+  console.log(Object.getPrototypeOf(Object.prototype))
+  console.log(Object.getPrototypeOf(isNaN) === Function.prototype)
+  console.log(Object.getPrototypeOf(Function.prototype))
+  console.log(Object.prototype)
+  console.log(Function.prototype)
+  console.log(Array.prototype)
+  console.log(Object.getPrototypeOf(Array.prototype))
+  console.log(String.prototype)
+  console.log(Object.getPrototypeOf(String.prototype))
+  var protoRabbit = {
+    speak: function (line) {
+      console.log("The " + this.type + " rabbit syas '" + line + "'")
+    }
+  }
+  var killerRabbit = Object.create(protoRabbit)
+  killerRabbit.type = "killer"
+  killerRabbit.speak("SKEEEE!")
+  console.log(killerRabbit.speak)
+
+  function Rabbit(type) {
+    this.type = type
+  }
+
+  var killerRabbit = new Rabbit("killer")
+  var blackRabbit = new Rabbit("black")
+  console.log(blackRabbit.type)
+  console.log(Object.getPrototypeOf(killerRabbit))
+  console.log(Object.getPrototypeOf(Rabbit) === Function.prototype)
+  Rabbit.prototype.speak = function speak (line) {
+    console.log("The " + this.type + " rabbit says '" + line + "'")
+  }
+  // protoRabbit = {
+  //   speak: function speak(link) {
+  //   console.log("The " + this.type + " rabbit says '" + line + "'")
+  //   }
+  // }
+  // Rabbit.prototype = protoRabbit
+  //killerRabbit.speak("I'm killer")
+
+  console.log(Object.getPrototypeOf(killerRabbit))
+</script>
+<script type="1" id="ch06/0003">
+  function forOwn (obj, action) {
+    for(let key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key))
+      action(key)
+    }
+  }
+  function Rabbit (type) {
+    this.type = type
+  }
+  let killerRabbit = new Rabbit("killer")
+  let blackRabbit = new Rabbit("black")
+  Rabbit.prototype.teeth = "small"
+  console.log(killerRabbit.teeth)
+  killerRabbit.teeth = "long sharp, and bloody"
+  console.log(killerRabbit.teeth)
+  console.log(blackRabbit.teeth)
+  console.log(Rabbit.prototype.teeth)
+  console.log(Object.prototype.toString.call([1,2]))
+  Rabbit.prototype.dance = function () {
+    console.log("The " + this.type +" rabbit dances a jig")
+  }
+  killerRabbit.dance()
+  console.log(killerRabbit)
+  Object.defineProperty(Rabbit.prototype, "hiddenNosense", {enumerable: false, value: "hi"})
+  for (let key in killerRabbit) {
+    console.log(key)
+  }
+  console.log(("hiddenNosense" in killerRabbit) )
+  console.log(killerRabbit.hasOwnProperty("dance"))
+  console.log(Object.prototype.hasOwnProperty.call(killerRabbit, "dance"))
+  console.log(Object.prototype.hasOwnProperty.call(killerRabbit, "teeth"))
+  var map = Object.create(null) 
+  map["pizza"] = 0.069
+  console.log("pizza" in map)
+  console.log("toString" in map)
+  console.log(map)
+</script>
+<script type="1" id="ch06/0004">
+
+var MOUNTAINS = [{
+    name: "Kilimanjaro",
+    height: 5895,
+    country: "Tanzania"
+}, {
+    name: "Everest",
+    height: 8848,
+    country: "Nepal"
+}, {
+    name: "Mount Fuji",
+    height: 3776,
+    country: "Japan"
+}, {
+    name: "Mont Blanc",
+    height: 4808,
+    country: "Italy/France"
+}, {
+    name: "Vaalserberg",
+    height: 323,
+    country: "Netherlands"
+}, {
+    name: "Denali",
+    height: 6168,
+    country: "United States"
+}, {
+    name: "Popocatepetl",
+    height: 5465,
+    country: "Mexico"
+}];
+
+function rowHeights ( rows ) {
+  return rows .map( function (row) {
+    return row. reduce ( function (max , cell ) {
+      return Math .max(max , cell . minHeight ());
+    }, 0);
+  });
+}
+
+function colWidths ( rows ) {
+  return rows [0]. map( function (_, i) {
+    return rows . reduce ( function (max , row) {
+      return Math .max(max , row[i]. minWidth ());
+    }, 0);
+  });
+}
+
+function drawTable ( rows ) {
+  var heights = rowHeights ( rows );
+  var widths = colWidths ( rows );
+  function drawLine (blocks , lineNo ) {
+    return blocks .map( function ( block ) {
+      return block [ lineNo ];
+    }). join (" ");
+  }
+  function drawRow (row , rowNum ) {
+    var blocks = row.map( function (cell , colNum ) {
+      return cell . draw ( widths [ colNum ], heights [ rowNum ]);
+  });
+    return blocks [0]. map( function (_, lineNo ) {
+      return drawLine (blocks , lineNo );
+    }). join ("\n");
+  }
+  return rows .map( drawRow ). join ("\n");
+}
+
+
+  function repeat (string, times) {
+    let result = ""
+    for (let i = 0; i < times ; i++) {
+      result += string
+    }
+    return result
+  }
+  function TextCell (text) {
+    this.text = text.split("\n")
+  }
+
+  TextCell.prototype.minWidth = function() {
+    this.text.reduce((min, line) => {
+      return Math.min(min, line.length)
+    }, 0)
+  }
+  TextCell.prototype.minHeight = function () {
+    return this.text.length
+  }
+  TextCell.prototype.draw = function (width, height) {
+    let result = []
+    for (let i = 0; i < height; i++) {
+      let line = this.text[i] || ""
+      result.push(line + repeat(" ", width - line.length))
+    }
+    return result
+  }
+
+  let rows = []
+  for (let i = 0; i < 5; i++) {
+    let row = []
+    for (let j = 0; j < 5; j++) {
+      if ((i + j) % 2 == 0) {
+        row.push(new TextCell("##"))
+      } else {
+        row.push(new TextCell("  "))
+      }
+    }
+    rows.push(row)
+  }
+  console.log(rows)
+  console.log(drawTable(rows))
+</script>
+<script type="1" id="ch06/0005">
+  function Vector (x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  Vector.prototype.plus = function (vector) {
+    return new Vector(this.x + vector.x, this.y + vector.y)
+  }
+  Vector.prototype.minus = function (vector) {
+    return new Vector(this.x - vector.x, this.y - vector.y)
+  }
+  Vector.prototype.length = function () {
+    return Math.sqrt(this.x * this.x + this.y * this.y)
+  }
+
+  var v1 = new Vector(1, 2)
+  var v2 = new Vector(3, -4)
+
+  var v3 = v1.plus(v2)
+  var v4 = v2.minus(v1)
+
+  var l = v4.length()
+  console.log(v1)
+  console.log(v2)
+  console.log(v3)
+  console.log(v4)
+  console.log(l)
+
+</script>
+<script type="1" id="ch06/0006">
+function Complex (real, imag) {
+  this.real = real
+  this.imag = imag
+}
+
+Complex.prototype.toString = function() {
+  //console.log(this.real + "+" + this.imag + "i")
+  return "" + this.real + (this.imag > 0 ? "+" : "") + this.imag + "i"
+}
+Complex.prototype.plus = function (complex) {
+  return new Complex((this.real + complex.real), (this.imag + complex.imag))
+}
+Complex.prototype.minus = function (complex) {
+  return new Complex((this.real - complex.real), (this.imag - complex.imag))
+}
+Complex.prototype.multiple = function (complex) {
+  return new Complex((this.real * complex.real - this.imag * complex.imag), (this.real * complex.imag + this.imag * complex.real))
+}
+
+Complex.prototype.div = function () {
+  
+}
+
+
+// (a + bi) - (c + di)
+// (a - c) + (b - d)i
+
+// (a + bi)(c + di)
+// ac + adi + bci + bdi^2
+// (ac - bd) + (adi + bci)
+
+var c1 = new Complex(4, 5)
+var c2 = new Complex(1, -2)
+
+var c3 = c1.plus(c2)
+var c4 = c1.minus(c2)
+var c5 = c1.multiple(c2)
+//var c6 = 
+console.log(c1)
+console.log(c2)
+console.log(c3)
+console.log(c4)
+console.log(c5)
+c5.toString()
+</script>
+<script type="1" id="0000001">
+//汉诺塔游戏的步数计算
+  var number = 6
+  function tower (num) {
+    if (num == 1) {
+      return 1
+    }
+    return  2 * tower(num - 1) + 1
+  }
+  console.log(tower(number))
+</script>
+<script src="oop.js"></script>
