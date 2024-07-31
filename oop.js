@@ -9,9 +9,12 @@ Vector.prototype.plus = function (vector) {
 Vector.prototype.minus = function (vector) {
   return new Vector(this.x - vector.x, this.y - vector.y)
 }
-Vector.prototype.length = function () {
+Object.defineProperty(Vector.prototype, "length", {
+  get: function () {
   return Math.sqrt(this.x * this.x + this.y * this.y)
-}
+  }
+})
+
 
 // var v1 = new Vector(1, 2)
 // var v2 = new Vector(3, -4)
@@ -25,6 +28,21 @@ Vector.prototype.length = function () {
 // console.log(v3)
 // console.log(v4)
 // console.log(l)
+
+// var a = new Vector(1,2)
+// var b = new Vector(2,2)
+// var c = a.plus(b)
+// var d = a.minus(b)
+// console.log(c.x)
+// console.log(c.y)
+// console.log(d.x)
+// console.log(d.y)
+// console.log(c.length)
+// assert(c.x == 3, 'a+b的x应该为3')
+// assert(c.y == 4, 'a+b的y应该为4')
+// assert(d.x == -1, 'a-b的x应为-1')
+// assert(d.y == 0, 'a-b的y应为0')
+// assert(c.length == 5,'a+b的长度应为5')
 
 
 function Complex (real, imag) {
@@ -75,6 +93,14 @@ Complex.prototype.div = function (complex) {
 // console.log(c5)
 // console.log(c6.toString())
 // console.log(c6)
+
+// var a = new Complex(1,2)
+// var b = new Complex(2,4)
+// var c = a.div(b)
+// console.log(c.real)
+// console.log(c.imag)
+// assert(c.real == 0.5, 'a/b的实部应该为0.5')
+// assert(c.imag == 0, 'a/b的虚部应该为0')
 
 
 
@@ -181,6 +207,19 @@ function LinkedListNode (val, next) {
     }
   })
   
+//   var s = new LinkedList()
+// s.append(1)
+// s.append(2)
+// s.prepend(3)
+// console.log(s.size)
+// assert(s.size == 3, '链表长度应该为3')
+// s.prepend(4)
+// console.log(s.at(0))
+// console.log(s.at(1))
+// console.log(s.at(3))
+// assert(s.at(0) == 4, '0号位置应该为4')
+// assert(s.at(1) == 3, '1号位应该为3')
+// assert(s.at(3) == 2, '3号位应该为2')
 
 
 
