@@ -1,3 +1,83 @@
+function Vector (x, y) {
+  this.x = x
+  this.y = y
+}
+
+Vector.prototype.plus = function (vector) {
+  return new Vector(this.x + vector.x, this.y + vector.y)
+}
+Vector.prototype.minus = function (vector) {
+  return new Vector(this.x - vector.x, this.y - vector.y)
+}
+Vector.prototype.length = function () {
+  return Math.sqrt(this.x * this.x + this.y * this.y)
+}
+
+// var v1 = new Vector(1, 2)
+// var v2 = new Vector(3, -4)
+
+// var v3 = v1.plus(v2)
+// var v4 = v2.minus(v1)
+
+// var l = v4.length()
+// console.log(v1)
+// console.log(v2)
+// console.log(v3)
+// console.log(v4)
+// console.log(l)
+
+
+function Complex (real, imag) {
+  this.real = real
+  this.imag = imag
+}
+
+Complex.prototype.toString = function() {
+  //console.log(this.real + "+" + this.imag + "i")
+  return "" + this.real + (this.imag > 0 ? "+" : "") + this.imag + "i"
+}
+Complex.prototype.plus = function (complex) {
+  return new Complex((this.real + complex.real), (this.imag + complex.imag))
+}
+Complex.prototype.minus = function (complex) {
+  return new Complex((this.real - complex.real), (this.imag - complex.imag))
+}
+Complex.prototype.multiple = function (complex) {
+  return new Complex((this.real * complex.real - this.imag * complex.imag), (this.real * complex.imag + this.imag * complex.real))
+}
+
+Complex.prototype.div = function (complex) {
+  complex.imag *= -1
+  let c = this.multiple(complex)
+  let real = c.real / ((complex.real ** 2) + (complex.imag ** 2))
+  return new Complex(real, c.imag)
+}
+
+
+// (a + bi) - (c + di)
+// (a - c) + (b - d)i
+
+// (a + bi)(c + di)
+// ac + adi + bci + bdi^2
+// (ac - bd) + (adi + bci)
+
+// var c1 = new Complex(4, 5)
+// var c2 = new Complex(1, -2)
+
+// var c3 = c1.plus(c2)
+// var c4 = c1.minus(c2)
+// var c5 = c1.multiple(c2)
+// var c6 = c1.div(c2)
+// console.log(c1)
+// console.log(c2)
+// console.log(c3)
+// console.log(c4)
+// console.log(c5)
+// console.log(c6.toString())
+// console.log(c6)
+
+
+
 function LinkedListNode (val, next) {
   this.val = (val === undefined ? 0 : val)
   this.next = (next === undefined ? null : next)
@@ -5,6 +85,7 @@ function LinkedListNode (val, next) {
 // 表示一个单向链表
   function LinkedList() {
     this._head = null
+    this._length = 0
   }
   // 返回链表第idx个结点的值
   LinkedList.prototype.at = function(idx) {
@@ -33,6 +114,7 @@ function LinkedListNode (val, next) {
   }
   // 在链表末尾新增一个结点，值为val
   LinkedList.prototype.append = function(val) {
+    this._length++
     if (this._head == null) {
       this._head = new LinkedListNode(val)
       return this._head
@@ -49,6 +131,7 @@ function LinkedListNode (val, next) {
     if (this._head == null) {
       return undefined
     }
+    this._length--
     let result = 0
     let p = this._head
     if (p.next == null) {
@@ -67,6 +150,7 @@ function LinkedListNode (val, next) {
   LinkedList.prototype.prepend = function(val) {
     let p = new LinkedListNode(val, this._head)
     this._head = p
+    this._length++
     return this._head
   }
   // 返回链表第一个结点的值，并删除这一个结点
@@ -74,6 +158,7 @@ function LinkedListNode (val, next) {
     if (this._head == null) {
       return undefined
     }
+    this._length--
     let result = this._head.val
     this._head = this._head.next
     return result
@@ -90,6 +175,13 @@ function LinkedListNode (val, next) {
   LinkedList.prototype.toString = function () {
     return this.toArray().join("->")
   }
+  Object.defineProperty(LinkedList.prototype, "size", {
+    get: function () {
+      return this._length
+    }
+  })
+  
+
 
 
   // 表示一个集合（集合中元素没有序，但不能重复）
