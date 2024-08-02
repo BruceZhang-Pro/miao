@@ -1956,6 +1956,7 @@ function drawTable ( rows ) {
     var blocks = row.map( function (cell , colNum ) {
       return cell . draw ( widths [ colNum ], heights [ rowNum ]);
   });
+
     return blocks [0]. map( function (_, lineNo ) {
       return drawLine (blocks , lineNo );
     }). join ("\n");
@@ -1976,8 +1977,8 @@ function drawTable ( rows ) {
   }
 
   TextCell.prototype.minWidth = function() {
-    this.text.reduce((min, line) => {
-      return Math.min(min, line.length)
+    return this.text.reduce((width, line) => {
+      return Math.max(width, line.length)
     }, 0)
   }
   TextCell.prototype.minHeight = function () {
@@ -1992,20 +1993,51 @@ function drawTable ( rows ) {
     return result
   }
 
-  let rows = []
-  for (let i = 0; i < 5; i++) {
-    let row = []
-    for (let j = 0; j < 5; j++) {
-      if ((i + j) % 2 == 0) {
-        row.push(new TextCell("##"))
-      } else {
-        row.push(new TextCell("  "))
-      }
-    }
-    rows.push(row)
+  // let rows = []
+  // for (let i = 0; i < 5; i++) {
+  //   let row = []
+  //   for (let j = 0; j < 5; j++) {
+  //     if ((i + j) % 2 == 0) {
+  //       row.push(new TextCell("##"))
+  //     } else {
+  //       row.push(new TextCell("  "))
+  //     }
+  //   }
+  //   rows.push(row)
+  // }
+  // console.log(rows)
+  // console.log(drawTable(rows))
+
+  function UnderlinedCell (inner) {
+    this.inner = inner
   }
-  console.log(rows)
-  console.log(drawTable(rows))
+  UnderlinedCell.prototype.minWidth = function () {
+    return this.inner.minWidth()
+  }
+  UnderlinedCell.prototype.minHeight = function () {
+    return this.inner.minHeight() + 1
+  }
+  UnderlinedCell.prototype.draw = function (width ,height) {
+    return (this.inner.draw(width, height - 1)
+          .concat([repeat('-', width)]))
+  }
+
+  function dataTable(data) {
+
+    let keys = Object.keys(data[0])
+    let heads = keys.map(name => {
+      return new UnderlinedCell(new TextCell(name))
+    })
+    let body = data.map(row => {
+      return keys.map(key => {
+        return new TextCell(String(row[key]))
+      })
+    })
+
+    return [heads].concat(body)
+
+  }
+  console.log(drawTable(dataTable(MOUNTAINS)))
 </script>
 <script type="1" id="ch06/0005">
   function Vector (x, y) {
@@ -2094,4 +2126,4 @@ c5.toString()
   }
   console.log(tower(number))
 </script>
-<script src="oop.js"></script>
+<!-- <script src="oop.js"></script> -->
