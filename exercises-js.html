@@ -1,3 +1,35 @@
+<script>
+  "use strict"
+function swap(array, x, y) {
+  let temp = array[y]
+  array[y] = array[x]
+  array[x] = temp
+
+  return temp
+}
+function judgeOrderBy(array, myMap = it => it) {
+  for (let i = 1; i < array.length; i++) {
+    if (myMap(array[i - 1]) > myMap(array[i])) {
+      return false
+    }
+  }
+  console.log(array)
+  return true
+}
+function myRandomArray(length, size = length) {
+  let array = []
+  for (let i = 0; i < length; i ++) {
+    if (i % 2 == 0) {
+      array.push(-(Math.random() * size | 0))
+    } else {
+      array.push(Math.random() * size | 0)
+    }
+  }
+  // console.log(array)
+  return array
+}
+</script>
+
 <script type="1" id="ch02/01">
   // 书本第二章课后习题第1题
   var height = +prompt('请输入行数')
@@ -1237,17 +1269,20 @@ function isOdd(x) {
 var isEven = negate(isOdd)
 </script>
 <script type="1" id="ch05/0012">
-//排序
-function swap(array, x, y) {
-  let temp = array[y]
-  array[y] = array[x]
-  array[x] = temp
+//各种排序
 
-  return temp
-}
 function judgeOrder(array) {
   for (let i = 1; i < array.length; i++) {
     if (array[i - 1] > array[i]) {
+      return false
+    }
+  }
+  console.log(array)
+  return true
+}
+function judgeOrderBy(array, myMap = it => it) {
+  for (let i = 1; i < array.length; i++) {
+    if (myMap(array[i - 1]) > myMap(array[i])) {
       return false
     }
   }
@@ -1258,15 +1293,15 @@ function myRandomArray(length) {
   let array = []
   for (let i = 0; i < length; i ++) {
     if (i % 2 == 0) {
-      array.push(-(Math.random() * 1000 | 0))
+      array.push(-(Math.random() * 100 | 0))
     } else {
-      array.push(Math.random() * 1000 | 0)
+      array.push(Math.random() * 100 | 0)
     }
   }
-  console.log(array)
+  // console.log(array)
   return array
 }
-nums = [3,6,8,23,435,8,98,41,5,6,8,8,3,2,2435,7,85,3,24,6,785,82,21,15,3,6]
+var nums = [3,6,8,23,435,8,98,41,5,6,8,8,3,2,2435,7,85,3,24,6,785,82,21,15,3,6]
 function bubbleSort(nums) {
   let n = nums.length - 1
   let temp = 0
@@ -1280,6 +1315,39 @@ function bubbleSort(nums) {
       }
     }
     if (end == true) {
+      break
+    }
+  }
+  return nums
+}
+function bubbleSortBy(nums, predicate = it => it) {
+  let isSort = true
+  for (let i = nums.length; i > 0; i--) {
+    isSort = true
+    for (let j = 1; j < i; j++) {
+      if (predicate(nums[j - 1]) > predicate(nums[j])) {
+        swap(nums, j - 1, j)
+        isSort = false
+      }
+    }
+    if (isSort == true) {
+      break
+    }
+  }
+  // console.log(nums)
+  return nums
+}
+function bubbleSortWith (nums, compare = (it1, it2) => {return it1 > it2}) {
+  let isSort = true
+  for (let i = nums.length; i > 0; i--) {
+    isSort = true
+    for (let j = 1; j < i; j++) {
+      if (compare(nums[j - 1], nums[j]) > 0) {
+        swap(nums, j - 1, j)
+        isSort = false
+      }
+    }
+    if (isSort == true) {
       break
     }
   }
@@ -1302,6 +1370,37 @@ function selectSort (nums) {
   return nums
 }
 
+function selectSortBy (nums, predicate = it => it) {
+  let minIndex = 0
+  for (let left = 0; left < nums.length - 1; left++) {
+    minIndex = left
+    for (let i = left + 1; i < nums.length; i++) {
+      if (predicate(nums[minIndex]) > predicate(nums[i])) {
+        minIndex = i
+      }
+    }
+    if (minIndex != left) {
+      swap(nums, minIndex, left)
+    }
+  }
+  return nums
+}
+function selectSortWith (nums, compare = (it1, it2) => it1 - it2) {
+  let minValIdx = 0
+  for (let left = 0; left < nums.length - 1; left++) {
+    minValIdx = left
+    for (let i = left + 1; i < nums.length; i++) {
+      if (compare(nums[minValIdx], nums[i]) > 0) {
+        minValIdx = i
+      }
+    }
+    if (minValIdx != left) {
+      swap(nums, minValIdx, left)
+    }
+  }
+  return nums
+}
+
 function insertSort(nums) {
   let index
   for (let i = 1; i < nums.length; i++) {
@@ -1313,6 +1412,31 @@ function insertSort(nums) {
   }
   return nums
 }
+
+function insertSortBy (nums, predicate = it => it) {
+  let index = 0
+  for (let left = 1; left < nums.length; left++) {
+    index = left
+    while (index > 0 && predicate(nums[index - 1]) > predicate(nums[index])) {
+      swap(nums, index - 1, index)
+      index--
+    }
+  }
+  return nums
+}
+
+function insertSortWith (nums, compare = (it1, it2) => it1 - it2) {
+  let index = 0
+  for (let left = 1; left < nums.length; left++) {
+    index = left
+    while (index > 0 && compare(nums[index - 1], nums[index]) > 0) {
+      swap(nums, index - 1, index)
+      index--
+    }
+  }
+  return nums
+}
+
 function mergeSort (nums) {
   if (nums.length < 2) {
     return nums
@@ -1353,6 +1477,64 @@ function mergeSort (nums) {
   }
   return nums
 }
+function mergeSortBy (nums, predicate = it1 => it1) {
+  if (nums.length < 2) {
+    return nums
+  }
+  let middle = nums.length >>> 1
+  let leftArray = nums.slice(0, middle)
+  let rightArray = nums.slice(middle)
+
+  mergeSortBy(leftArray, predicate)
+  mergeSortBy(rightArray, predicate)
+
+  let left = 0
+  let right = 0
+  let store = 0
+  while (left < leftArray.length && right < rightArray.length) {
+    if (predicate(leftArray[left]) <= predicate(rightArray[right])) {
+      nums[store++] = leftArray[left++]
+    } else {
+      nums[store++] = rightArray[right++]
+    }
+  }
+  while (left < leftArray.length) {
+    nums[store++] = leftArray[left++]
+  }
+  while (right < rightArray.length) {
+    nums[store++] = rightArray[right++]
+  }
+  return nums
+}
+function mergeSortWith (nums, compare = (it1, it2) => it1 - it2) {
+  if (nums.length < 2) {
+    return nums
+  }
+  let middle = nums.length >>> 1
+  let leftArray = nums.slice(0, middle)
+  let rightArray = nums.slice(middle)
+
+  mergeSortWith(leftArray, compare)
+  mergeSortWith(rightArray, compare)
+
+  let left = 0
+  let right = 0
+  let store = 0
+  while (left < leftArray.length && right < rightArray.length) {
+    if (compare(leftArray[left], rightArray[right]) < 0) {
+      nums[store++] = leftArray[left++]
+    } else {
+      nums[store++] = rightArray[right++]
+    }
+  }
+  while (left < leftArray.length) {
+    nums[store++] = leftArray[left++]
+  }
+  while (right < rightArray.length) {
+    nums[store++] = rightArray[right++]
+  }
+  return nums
+}
 function quickSort (nums) {
   if (nums.length < 2) {
     return nums
@@ -1386,6 +1568,41 @@ function quickSort (nums) {
   }
   return nums
 }
+function quickSortWith (nums, compare = (it1, it2) => it1 - it2) {
+  if (nums.length < 2) {
+    return nums
+  }
+  let piquetIdx = Math.random() * nums.length | 0
+  let piquet = nums[piquetIdx]
+  let leftArray = []
+  let rightArray = []
+  let piquetArray = []
+  for (let i = 0; i < nums.length; i++) {
+    if (compare(nums[i], piquet) < 0) {
+      leftArray.push(nums[i])
+    } else if (compare(nums[i], piquet) == 0) {
+      piquetArray.push(nums[i])
+    } else {
+      rightArray.push(nums[i])
+    }
+  }
+
+  quickSortWith(leftArray, compare)
+  quickSortWith(rightArray, compare)
+
+  let index = 0
+  for (let i = 0; i < leftArray.length; i++) {
+    nums[index++] = leftArray[i]
+  }
+  for (let i = 0; i < piquetArray.length; i++) {
+    nums[index++] = piquetArray[i]
+  }
+  for (let i = 0; i < rightArray.length; i++) {
+    nums[index++] = rightArray[i]
+  }
+  return nums
+}
+
 function quickSort2 (nums, left = 0, right = nums.length) {
   if (right - left < 2) {
     return nums
@@ -1405,6 +1622,42 @@ function quickSort2 (nums, left = 0, right = nums.length) {
 
   quickSort2(nums, left, i)
   quickSort2(nums, i + 1, right)
+
+  return nums
+}
+
+function quickSort2InPlaceWith (nums, compare = (it1, it2) => it1 - it2, start = 0, end = nums.length) {//快速排序,但增加了等于哨兵的值的排序,用了compare
+  if (end - start < 2) {
+    return nums
+  }
+  let piquetIdx = (Math.random() * (end - start) + start) | 0
+  let piquet = nums[piquetIdx]
+
+  nums[piquetIdx] = nums[end - 1]
+  nums[end - 1] = piquet
+  let left = start
+  for (let i = start; i < end - 1; i++) {
+    if (compare(nums[i], piquet) < 0) {
+      if (left != i) {
+        swap(nums, left, i)
+      }
+      left++
+    }
+  }
+  let equalIdx = left
+  for (let i = equalIdx; i < end - 1; i++) {
+    if (compare(nums[i], piquet) == 0) {
+      if (i != equalIdx) {
+        swap(nums, i , equalIdx)
+      }
+      equalIdx++
+    }
+  }
+
+  nums[end - 1] = nums[equalIdx]
+  nums[equalIdx] = piquet
+  quickSort2InPlaceWith(nums, compare, start, left)
+  quickSort2InPlaceWith(nums, compare, equalIdx + 1, end)
 
   return nums
 }
@@ -1442,6 +1695,66 @@ function quickSortInPlace (nums, left = 0, right = nums.length) { //快速排序
   // quickSortInPlace(nums, left, i)
   // quickSortInPlace(nums, i + 1, right)
   return nums
+}
+</script>
+<script type="1" id="ch05/0005656">
+//快速排序,原地排序,把数组分成三份
+function quickSort4(array, start = 0, end = array.length) {
+  if (end - start < 2) {
+    return false
+  }
+  let piquetIdx = (Math.random() * (end - start) + start) | 0
+  let piquet = array[piquetIdx]
+  let small = start
+  let same = start
+  swap(array, piquetIdx, end - 1)
+
+  for (let i = start; i < end - 1; i++) {
+    if (array[i] < piquet) {
+      swap(array, same, small)
+      if (same != i) {
+        swap(array, i, small)
+      }
+      small++
+      same++
+    } else if (array[i] == piquet) {
+      swap(array, i, same)
+      same++
+    }
+  }
+  swap(array, same, end - 1)
+
+  quickSort4(array, start, small)
+  quickSort4(array, same + 1, end)
+
+  return array
+}
+function quickSort5(array, start = 0, end = array.length) {
+  if (end - start < 2) {
+    return false
+  }
+  let piquetIdx = (Math.random() * (end - start) + start) | 0
+  let piquet = array[piquetIdx]
+  let small = start
+  let large = end - 2
+  swap(array, piquetIdx, end - 1)
+
+  for (let i = start; i <= large; i++) {
+    if (array[i] < piquet) {
+      swap(array, i, small)
+      small++
+    } else if (array[i] > piquet) {
+      swap(array, i, large)
+      large--
+      i--
+    }
+  }
+  swap(array, large + 1, end - 1)
+
+  quickSort5(array, start, small)
+  quickSort5(array, large + 2, end)
+
+  return array
 }
 </script>
 <script type="1" id="ch04/0007">
@@ -2126,4 +2439,513 @@ c5.toString()
   }
   console.log(tower(number))
 </script>
+<script type="1" id="ch06/0007">
+//二叉树,上课写的代码,下面有课下写的代码
+  function arrayToTree (array, pos = 0) {
+    if (array[pos] == null) {
+      return null
+    }
+    let node = new TreeNode(array[pos])
+
+    node.left = arrayToTree(array, pos * 2 + 1)
+    node.rught = arrayToTree(array, pos * 2 + 2)
+
+    return node
+  }
+  function treeToArray (root) {
+    let result = []
+
+    result.push(root.val)
+    result
+
+  }
+  function condensedArrayToTree (array) {
+
+  }
+  function treeCondensedArray(root) {
+    let array = []
+    let tempArray = []
+
+    array.push(root.val)
+    tempArray.push(root)
+
+    while (tempArray.length) {
+      node = tempArray.shift()
+      if (node.left == null) {
+        array.push(null)
+      } else {
+        array.push(node.left.val)
+        tempArray.push(node.left)
+      }
+
+      if (node.right == null) {
+        array.push(null)
+      } else {
+        array.push(node.right.val)
+        tempArray.push(node.right)
+      }
+    }
+
+    return array
+
+  }
+  遍历二叉树
+</script>
+
+<script type="1" id="ch06/0008">
+  //二叉树
+class TreeNode {
+  constructor (val, left, right) {
+    this.val = (val === undefined) ? 0 : val
+    this.left = (left === undefined) ? null : left
+    this.right = (right === undefined) ? null : right
+  }
+}
+
+function arrayToTree (array, position = 0) {
+  if (array[position] == undefined) {
+    return null
+  }
+
+  let node = new TreeNode(array[position])
+  node.left = arrayToTree(array, position * 2 + 1)
+  node.right = arrayToTree(array, position * 2 + 2)
+
+  return node
+}
+function treeToArray (tree, array = [], index = 0) {
+  if (tree == null) {
+    return null
+  }
+  array[index] = tree.val
+
+  treeToArray(tree.left, array, index * 2 + 1)
+  treeToArray(tree.right, array, index * 2 + 2)
+
+  return array
+}
+
+function condensedArrayToTree (array) {
+  if (array.length == 0) {
+    return null
+  }
+  let nodeArray = []
+  let index = 0
+  let root = new TreeNode(array[0])
+  nodeArray.push(root)
+  
+  let node = null
+  for (let i = 1; i < array.length; i += 2) {
+    node = nodeArray[index++]
+    if (array[i] == null) {
+      node.left = null
+    } else {
+      node.left = new TreeNode(array[i])
+      nodeArray.push(node.left)
+    }
+
+    if (array[i + 1] == null) {
+      node.right = null
+    } else {
+      node.right = new TreeNode(array[i + 1])
+      nodeArray.push(node.right)
+    }
+
+  }
+  return root
+}
+
+function treeToCondensedArray (tree) {
+  let array = []
+  if (tree == null) {
+    return array
+  }
+
+  let nodeArray = []
+  let index = 0
+  let node = null
+
+  nodeArray.push(tree)
+  while (nodeArray.length > index) {
+    node = nodeArray[index++]
+    if (node == null) {
+      array.push(null)
+    } else {
+      array.push(node.val)
+      nodeArray.push(node.left, node.right)
+    }
+    // if (node) {
+    //   array.push(node.val)
+    //   nodeArray.push(node.left, node.right)
+    // } else {
+    //   array.push(node)
+    // }
+  }
+
+  return array
+}
+
+function traverseTree1 (tree, func) {
+  if (tree == null) {
+    return null
+  }
+  func(tree.val)
+  traverseTree1(tree.left, func)
+  traverseTree1(tree.right, func)
+}
+
+function traverseTree2 (tree, func) {
+  if (tree == null) {
+    return null
+  }
+  traverseTree2(tree.left, func)
+  func(tree.val)
+  traverseTree2(tree.right, func)
+}
+
+function traverseTree3 (tree, func) {
+  if (tree == null) {
+    return null
+  }
+  traverseTree3(tree.left, func)
+  traverseTree3(tree.right, func)
+  func(tree.val)
+}
+
+function traverseTree4 (tree) {
+  if (tree == null) {
+    return []
+  }
+  let value = tree.val
+  let left = traverseTree4(tree.left)
+  let right = traverseTree4(tree.right)
+
+  return [value, ...left, ...right]
+}
+</script>
+<script type="1" id="ch08/0001">
+  //递归层数
+var count = 0
+function describe(description, func) {
+  let result = ""
+  for (let i = 0; i < count; i++) {
+    result += "  "
+  }
+  console.log(result + description)
+
+  count++
+  func()
+  count--
+}
+
+<!-- 实现以上函数，已让下面的调用能够输出最后的效果 -->
+describe('foo', () => {
+  describe('bar', () => {})
+  describe('bar', () => {
+    describe('bar1', () => {})
+    describe('bar1', () => {})
+    describe('bar1', () => {})
+  })
+  describe('bar', () => {})
+})
+
+// foo
+//   bar
+//   bar
+//     bar1
+//     bar1
+//     bar1
+//   bar
+
+</script>
+<script type="1" id="ch08/0002">
+  var context = null
+  function withContext (newContext, body) {
+    var oldContext = context
+    context = newContext
+    try {
+      return body()
+    } finally {
+      context = oldContext
+    }
+  }
+
+  try{
+    withContext (5, () => {
+      if (context < 10) {
+        throw new Error("Not enough context!")
+      }
+    })
+  } catch (e) {
+    console.log("Ignoting: " + e)
+  }
+  console.log(context)
+
+</script>
+<script type="1" id="ch08/0003">
+  function InputError (message) {
+    this.message = message
+    this.stack = (new Error()).stack
+  }
+  InputError.prototype = Object.create(Error.prototype)
+  InputError.prototype.name = "InputError"
+
+  function promptDirection (question) {
+    var result = prompt(question, "")
+    if (result.toLowerCase() == "left") return "L"
+    if (result.toLowerCase() == "right") return "R"
+    throw new InputError("Invalid direction: " + result)
+  }
+
+</script>
+<script type="1" id="ch08/0004">
+  //课后作业
+  // function MultiplicationUnitFailure (text) {
+  //   this.message = text
+  //   this.stack = (new Error()).stack
+  // }
+  // MultiplicationUnitFailure.prototype = Object.create(Error.prototype)
+  // MultiplicationUnitFailure.prototype.name = "MultiplicationUnitFailure"
+
+  class MultiplicationUnitFailure extends Error {
+    constructor (text) {
+      super(text)
+    }
+  }
+
+  function primitiveMultiply (x, y) {
+    if (Math.random() > 0.5) {
+      return x * y
+    } else {
+      throw new MultiplicationUnitFailure("计算出错了,请重试")
+    }
+  }
+
+  function tryMultiply(x, y) {
+    // for (;;) {
+      try{
+        return primitiveMultiply(x, y)
+      } catch (e) {
+        if (e instanceof MultiplicationUnitFailure) {
+          console.log(e.message)
+          return tryMultiply(x, y)
+        } else {
+          throw e
+        }
+      }
+    // }
+  }
+
+var box = {
+  locked: true,
+  unlock: function () {this.locked = false},
+  lock: function () {this.locked = true},
+  _content: [1,2],
+  get content() {
+    if (this.locked) {
+      return new Error("Locked!")
+    } else {
+      return this._content
+    }
+
+  }
+}
+
+function withBoxUnlocked(func) {
+  box.unlock()
+  console.log(box.locked)
+  try{
+    func(box)
+    console.log(1111)
+  } finally {
+    box.lock()
+  }
+}
+
+function tryUnlock() {
+  try{
+    withBoxUnlocked((box) => {
+      console.log(box.content)
+    })
+  } catch (e) {
+      console.log(e.message)
+  }
+  console.log(box.locked)
+}
+
+function openFile(...arg) {
+  let func = arg.pop()
+  try{
+    func(...arg)
+  } finally {
+    arg.forEach(it => it.__colse__())
+  }
+}
+
+operationFile(open("a"), open("b"), (a, b) => {
+
+})
+</script>
+<script type="1" id="ch08/0005">
+  //二叉数,二叉搜索树或二叉排序数
+  function insertInToBST(root, val) {
+    if (root == null) {
+      return new TreeNode(val)
+    }
+    if (root.val > val) {
+      root.left = insertInToBST(root.left, val)
+    }else {
+      root.right = insertToInBST(root.right, val)
+    }
+    return root
+  }
+</script>
+<script type="1" ch08/0006>
+  //上课写的堆相关的,后面有课下写的
+  {
+      向下调整(idx) {
+          while (idx < num.length - 1) {
+              if (num[idx] < num[idx * 2 + 1]) {
+                  swap()
+              } else if (num[idx] < num[idx * 2 + 2]) {
+                  swap()
+              } else {
+                  break
+              }
+          }
+      }
+  }
+</script>
+<script type="1" id="ch08/0007">
+// 堆 数据结构
+class PriorityQueue {
+  #items = null
+  #predicate = null
+  constructor (array = [], predicate = it => it) {
+    this.#items = []
+    this.#predicate = predicate
+    if (array.length > 0) {
+      array.forEach(item => {
+        this.push(item)
+      })
+    }
+  }
+  push (val) {
+    this.#items.push(val)
+    this.heapUp(this.#items.length - 1)
+    return this.#items.length
+  }
+  pop (val) {
+    if (this.#items.length < 3) {
+      return this.#items.shift()
+    }
+
+    let result = this.#items[0]
+    this.#items[0] = this.#items[this.#items.length - 1]
+    this.#items.pop()
+    this.heapDown(0)
+    return result
+  }
+  peek () {
+    return this.#items[0]
+  }
+  heapUp (idx) {
+    let fatherIdx = 0
+    while (idx > 0) {
+      fatherIdx = (idx - 1) >>> 1
+      if (this.#predicate(this.#items[fatherIdx]) < this.#predicate(this.#items[idx])) {
+        this.swap(fatherIdx, idx)
+      } else {
+        break
+      }
+      idx = fatherIdx
+    }
+  }
+  heapDown (idx) {
+    let maxValIdx = idx
+    while(true) {
+      let leftChildren = idx * 2 + 1
+      let rightChildren = leftChildren + 1
+      if (leftChildren < this.#items.length && this.#predicate(this.#items[leftChildren]) > this.#predicate(this.#items[maxValIdx])) {
+        maxValIdx = leftChildren
+      }
+      if (rightChildren < this.#items.length && this.#predicate(this.#items[rightChildren]) > this.#predicate(this.#items[maxValIdx])) {
+        maxValIdx = rightChildren
+      }
+      if (maxValIdx != idx) {
+        this.swap(maxValIdx, idx)
+        idx = maxValIdx
+      } else {
+
+        break
+      }
+
+    }
+
+  }
+  get size () {
+    return this.#items.length
+  }
+  swap(i, j) {
+    let temp = 0
+    temp = this.#items[i] 
+    this.#items[i] = this.#items[j]
+    this.#items[j] = temp
+  }
+
+}
+</script>
+<script type="1" id="ch08/0008">
+  //堆排序
+function heapDown (items, idx, predicate = it => it, length = items.length) {
+  let maxValIdx = idx
+  // let count = 0
+  while(true) {
+    // count++
+    let leftChildren = idx * 2 + 1
+    let rightChildren = leftChildren + 1
+    if (leftChildren < length && predicate(items[leftChildren]) > predicate(items[maxValIdx])) {
+      maxValIdx = leftChildren
+    }
+    if (rightChildren < length && predicate(items[rightChildren]) > predicate(items[maxValIdx])) {
+      maxValIdx = rightChildren
+    }
+    if (maxValIdx != idx) {
+      swap(items, maxValIdx, idx)
+      idx = maxValIdx
+    } else {
+
+      break
+    }
+
+  }
+  // console.log(count)
+  // return count
+
+}
+function heapify (array, predicate = it => it) {
+  // let count = 0
+  let times = (array.length - 2) >>> 1
+  for (let i = times; i >= 0; i--) {
+    // count += heapDown(array, i, predicate)
+    heapDown(array, i, predicate)
+  }
+  // return count
+}
+
+function heapSortInPlaceBy (array, predicate = it => it) {
+  // let count = 0
+  // count = heapify(array, predicate)
+  // console.log(count)
+  heapify(array, predicate)
+  // console.log(array)
+
+  for (let i = array.length - 1; i > 0; i--) {
+    swap(array, 0, i)
+    heapDown(array, 0, predicate, i)
+  }
+  return array
+}
+</script>
 <!-- <script src="oop.js"></script> -->
+

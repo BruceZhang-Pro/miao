@@ -481,195 +481,148 @@ class Complex {
   // c.delete(9)
   // console.log(c.size) // 1
 
-
-
-  // // 表示一个映射
-  // // 这个映射中，可以把任何值映射到任何值，映射的key不限于字符串
-  // function MyMap(initPairs = []) {
-  //   this._pairs = []
-
-  //   for (var pair of initPairs) {
-  //     var key = pair[0]
-  //     var val = pair[1]
-  //     this.set(key, val)
-  //   }
-  // }
-  // MyMap.prototype = {
-  //   constructor: MyMap,
-  //   // 设置映射中的key所对应的值为val
-  //   set: function(key, val) {
-  //     for (let i = 0; i < this._pairs.length; i += 2) {
-  //       if (this._pairs[i] === key) {
-  //         this._pairs[i + 1] = val
-  //         return this
-  //       }
-  //     }
-
-  //     this._pairs.push(key, val)
-  //     return this
-  //   },
-  //   // 获取这个映射中key所对应的val
-  //   get: function(key) {
-  //     for (let i = 0; i < this._pairs.length; i += 2) {
-  //       if (this._pairs[i] === key) {
-  //         return this._pairs[i + 1]
-  //       }
-  //     }
-      
-  //     return undefined
-  //   },
-  //   // 判断这个映射中是否存在这个key的映射
-  //   has: function(key) {
-  //     for (let i = 0; i < this._pairs.length; i += 2) {
-  //       if (this._pairs[i] === key) {
-  //         return true
-  //       }
-  //     }
-  //     return false
-  //   },
-  //   // 删除这个映射中key及其映射的值的这一对儿
-  //   delete: function(key) {
-  //     for (let i = 0; i < this._pairs.length; i += 2) {
-  //       if (this._pairs[i] === key) {
-  //         this._pairs.splice(i, 2)
-  //         return true
-  //       }
-  //     }
-  //     return false
-  //   },
-  //   // 清空这个映射中所有的映射对儿
-  //   clear: function() {
-  //     this._pairs = []
-  //   },
-  //   // 获取这个映射中映射对儿的数量
-  //   get size() {
-  //     return this._pairs.length >>> 1
-  //   },
-  //   // 遍历这个映射中所有的映射对儿
-  //   forEach(iterator) {
-  //     for (let i = 0; i < this._pairs.length; i += 2) {
-  //         iterator(this._pairs[i], i, this._pairs[i + 1])
-  //     }
-  //   },
-  // }
-
-// 表示一个映射
-// 这个映射中，可以把任何值映射到任何值，映射的key不限于字符串
 class MyMap {
-  #pairs = null
-  constructor (initPairs = []) {
-    this.#pairs = []
-  
-    for (var pair of initPairs) {
-      var key = pair[0]
-      var val = pair[1]
-      this.set(key, val)
-    }
+  #lists = null
+  #size = null
+  #volumeFraction = null 
+  #minCapacity = null //最小容量
+  constructor(volumeFraction = 0.75) { //容积率默认0.75
+    this.#minCapacity = 16 //转化成二进制后,最好是只有一个1,这样语言底层会对取余操作进行优化
+    this.#lists = new Array(this.#minCapacity).fill(null) //都设置为空值
+    this.#size = 0
+    this.#volumeFraction = volumeFraction
   }
-  // 设置映射中的key所对应的值为val
   set (key, val) {
-    for (let i = 0; i < this.#pairs.length; i += 2) {
-      if (this.#pairs[i] === key) {
-        this.#pairs[i + 1] = val
+    let hashVal = this.calculateHash(key)
+    let node = this.#lists[hashVal]
+    while(node) {
+      if (node.key === key) {
+        node.val = val
         return this
       }
+      node = node.next
+    }
+    node = {
+      key: key,
+      val: val,
+      next: this.#lists[hashVal]
+    }
+    this.#lists[hashVal] = node
+    this.#size++
+    if (this.#size / this.#lists.length > this.#volumeFraction) {
+      this.changeCapacity(this.#lists.length * 2)
     }
 
-    this.#pairs.push(key, val)
     return this
   }
-  // 获取这个映射中key所对应的val
   get (key) {
-    for (let i = 0; i < this.#pairs.length; i += 2) {
-      if (this.#pairs[i] === key) {
-        return this.#pairs[i + 1]
+    let hashVal = this.calculateHash(key)
+    let node = this.#lists[hashVal]
+    while (node) {
+      if (node.key === key) {
+        return node.val
       }
+      node = node.next
     }
-    
     return undefined
   }
-  // 判断这个映射中是否存在这个key的映射
-  has (key) {
-    for (let i = 0; i < this.#pairs.length; i += 2) {
-      if (this.#pairs[i] === key) {
-        return true
-      }
-    }
-    return false
-  }
-  // 删除这个映射中key及其映射的值的这一对儿
   delete (key) {
-    for (let i = 0; i < this.#pairs.length; i += 2) {
-      if (this.#pairs[i] === key) {
-        this.#pairs.splice(i, 2)
+    let hashVal = this.calculateHash(key)
+    let node = {next: this.#lists[hashVal]}
+    let dummy = node
+    while (node.next) {
+      if (node.next.key === key) {
+        node.next = node.next.next
+        this.#lists[hashVal] = dummy.next
+        this.#size--
+        if (this.#size / this.#lists.length < this.#volumeFraction / 4) { //容积率小于4倍时才缩容,防止反复横条
+          if ((this.#lists.length >>> 1) >= this.#minCapacity) {
+            this.changeCapacity(this.#lists.length >>> 1)
+          }
+        }
         return true
       }
+      node = node.next
     }
     return false
   }
-  // 清空这个映射中所有的映射对儿
-  clear () {
-    return this.#pairs = []
+  calculateHash (key) {
+    let seed = 13131
+    let hash = 0
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * seed + key.charCodeAt(i)) >>> 0
+    }
+    return hash % this.#lists.length
   }
-  // 获取这个映射中映射对儿的数量
-  get size() {
-    return this.#pairs.length >>> 1
+  has(key) {
+    let hashVal = this.calculateHash(key)
+    let node = this.#lists[hashVal]
+    while (node) {
+      if (node.key === key) {
+        return true
+      }
+      node = node.next
+    }
+    return false
   }
-  // 遍历这个映射中所有的映射对儿
-  forEach(iterator) {
-    for (let i = 0; i < this.#pairs.length; i += 2) {
-        iterator(this.#pairs[i], i, this.#pairs[i + 1])
+  clear() {
+    this.#lists = Array(this.#minCapacity).fill(null)
+    this.#size = 0
+    return true
+  }
+  changeCapacity (size) {
+    let oldLists = this.#lists
+    this.#lists = new Array(size).fill(null)
+    let node = null
+    this.#size = 0
+    for (let i = 0; i < oldLists.length; i++) {
+      node = oldLists[i]
+      while (node) {
+        this.set(node.key, node.val)
+        node = node.next
+      }
     }
   }
+  forEach(func) {
+    for (let i = 0; i < this.#lists.length; i++) {
+      let node = this.#lists[i]
+      while (node) {
+        func(node.key, node.val, i, node)
+        node = node.next
+      }
+    }
+  }
+  repetitionFraction() {
+    if (this.#size == 0) {
+      return 1
+    }
+    let count = 0
+    for (let i = 0; i < this.#lists.length; i++) {
+      if (this.#lists[i] != null) {
+        count++
+      }
+    }
+    return this.#size / count
+  }
+  get size() {
+    return this.#size
+  }
+
 }
 
-  // var myarray1 = [3,4,5,76,8,9]
-  // var myarray2 = ['asfea', 235, [23,46,1]]
-  // var myarray3 = [myObject1, myFunction1]
-  // var myObject1 = {1:[4,5]}
-  // var myObject2 = {1:[4,5], '45': myFunction1}
-  // var myObject3 = {1:[4,5], 'ert': [87,34,12]}
-  // var myFunction1 = function () {return true}
-  // var myFunction2 = function () {return false}
-  // var myFunction3 = function () {return 42}
+//测试代码
+// for (let i = 0; i < 100; i++) {
+//   myMap.set(Math.random().toString().slice(2), (Math.random() * 10000))
+// }
 
-  // var myarray1 = [3,4,5,76,8,9]
-  // var myarray2 = ['asfea', 235, [23,46,1]]
-  // var myarray3 = [myObject1, myFunction1]
-  // var myObject1 = {1:[4,5]}
-  // var myObject2 = {1:[4,5], '45': myFunction1}
-  // var myObject3 = {1:[4,5], 'ert': [87,34,12]}
-  // var myFunction1 = function () {return true}
-  // var myFunction2 = function () {return false}
-  // var myFunction3 = function () {return 42}
+// var count = 0
+// myMap.forEach(it => {
+//   count++
+//   if (count % 3 == 0) {
+//     myMap.delete(it)
+//   }
+// })
 
-  // var map1 = new MyMap()
-  // console.log(map1)
-  // console.log(map1.set(2, 1))
-  // console.log(map1.set('fdg', 345))
-  // console.log(map1.set('ghjkl', myFunction1))
-  // console.log(map1.set(myObject1, [1,2,5]))
-  // console.log(map1.set(myFunction1, myarray1))
-  // console.log(map1.set(myFunction2, [1,2,9]))
-  // console.log(map1.set(myarray2, myObject2))
-  // console.log(map1.set(myarray3, myObject1))
-  // console.log(map1)
-  // console.log(map1.get('fdg'))
-  // console.log(map1.get(myObject1))
-  // console.log(map1.get(myFunction1))
-  // console.log(map1.has('ghjkl'))
-  // console.log(map1.has(function () {return false})) //myFunction2
-  // console.log(map1.has(myObject1))
-  // console.log(map1.has(2))
-  // console.log(map1.delete(2))
-  // console.log(map1.delete(myObject1))
-  // console.log(map1.size)
-  // console.log(map1.clear())
-  // console.log(map1.size)
-  // console.log(map1.forEach((key, _, val) => {
-  //   console.log(key + "  " + val)
-  // }))
-  
 
 
   // // 表示一个栈：即后进先出，先进后出
