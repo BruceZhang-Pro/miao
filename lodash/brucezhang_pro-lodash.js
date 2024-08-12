@@ -1,4 +1,6 @@
-"use strict"
+
+var brucezhang_pro = function() {
+  "use strict"
 //用于判断基础类型的值是否为falsey的函数
 function isFalsey (item) {
   if (item === false || item === null || item === 0 || item === "" || item === undefined || item === NaN) {
@@ -27,7 +29,6 @@ function myMap(array, func) {
 function isArray(item) {
   return Object.prototype.toString.call(item) === '[object Array]'
 }
-var brucezhang_pro = function() {
   //Creates an array with all falsey values removed. The values false, null, 0, "", undefined, and NaN are false
   function compact(array) {
     var result = []
