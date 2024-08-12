@@ -2948,4 +2948,43 @@ function heapSortInPlaceBy (array, predicate = it => it) {
 }
 </script>
 <!-- <script src="oop.js"></script> -->
+<script type="">
+  "use strict"
+  //用js画表格,实现类似console.table的功能
+function consoleTable(array) {
+  let heads = [...new Set(array.map(obj => {
+    return Object.keys(obj)
+  }).flat())]
 
+  let result = "<table border=1>"
+    result += "<tr>"
+      for (let i = 0; i < heads.length; i++) {
+        result += "<td>"
+          result += heads[i]
+        result += "</td>"
+      }
+    result += "</tr>"
+    array.forEach(obj => {
+      result += "<tr>"
+      for (let head of heads) {
+        if (head in obj) {
+          result += "<td>" + obj[head] + "</td>"
+        } else {
+          result += "<td></td>"
+        }
+      }
+      result += "</tr>"
+    })
+
+  result += "</table>"
+
+  return result
+}
+function showTable(array) {
+  let html = consoleTable(array)
+  show123.innerHTML = html
+}
+// showTable([{a:234124, b:777},{a:4444, b:3333}])
+</script>
+<!-- <div id="show123"></div> -->
+<script src="lodash/brucezhang_pro-lodash.js"></script>
