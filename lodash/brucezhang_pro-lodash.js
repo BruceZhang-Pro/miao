@@ -359,14 +359,138 @@ function isArray(item) {
         result.push([key, val])
       })
     } else { //如果是Set 或 Map ,返回传入的值
-      return object 
+      return object
     }
     return result
   }
   function head(array) {
     return array[0]
   }
+  function indexOf(array, value, fromIndex = 0) {
+    for (let i = fromIndex; i < array.length; i++) {
+      if (array[i] === value) {
+        return i
+      }
+    }
+    return -1
+  }
+  function lastIndexOf(array, value ,fromIndex = array.length - 1) {
+    for (let i = fromIndex; i >= 0; i--) {
+      if (array[i] === value) {
+        return i
+      }
+    }
+    return -1
+  }
+  function initial(array) {
+    return array.slice(0, array.length - 1)
+  }
+  function join(array, separator = ",") {
+    let result = ""
+    for (let i = 0; i < array.length - 1; i++) {
+      result += array[i] + separator
+    }
+    result += array[array.length - 1]
+    return result
+  }
+  function last(array) {
+    return array[array.length - 1]
+  }
+  function pull(array, value) {
+    if(value === undefined) {
+      return []
+    }
+    return filter(array, item => {
+      return item !== value
+    })
+  }
+  function reverse(array) {
+    let result = []
+    for (let i = array.length - 1; i >= 0; i--) {
+      result.push(array[i])
+    }
+    return result
+  }
+  function every(collection, predicate = identity) {
+    
+
+  }
+  //string null number boolean object array 
+  function parseJSON(JSON) {
+    let i = 0
+    return parseType()
+    function parseType() {
+      if (JSON[i] === "{") {
+        return parseObject()
+      } else if (JSON[i] === "[") {
+        return parseArray()
+      } else if (JSON[i] === '"') {
+        return parseString()
+      } else if ((JSON[i] - "0") >= 0 && (JSON[i] - "0") <= 9) {
+        return parseNumber()
+      } else if (JSON[i] === "t") {
+        if (JSON.slice(i, i + 4) === "true") {
+          i += 4
+          return true
+        } else {
+          i += 4
+          throw new SyntaxError("error")
+        }
+      } else if (JSON[i] === "f") {
+        if (JSON.slice(i, i + 4) === "false") {
+          i += 5
+          return false
+        } else {
+          i += 4
+          throw new SyntaxError("error")
+        }
+      } else { //还有最后一种情况,null
+        i += 4
+        return null
+      }
+    }
+
+    function parseObject() {
+      let obj = {}
+      i++ // skip this "{"
+      let key = null
+      let value = null
+      if (JSON[i] === "}") {
+        i++ // skip this "}"
+        return obj
+      }
+      while (i < JSON.length) {
+        if (JSON[i] === "}") {
+          i++
+          break
+        } else if (JSON[i] === ",") {
+          i++
+        } else if (JSON[i] === '"') {
+          i++
+          key = parseString()
+          if (JSON[i] === ":") {
+            i++
+            value = parseType()
+          }
+          obj[key] = value
+        } else {
+          throw new SyntaxError("error")
+        }
+      }
+
+      return obj
+    }
+  }
   return {
+    // parseJSON: parseJSON,
+    // every: every,
+    reverse: reverse,
+    pull: pull,
+    last: last,
+    join: join,
+    initial: initial,
+    lastIndexOf: lastIndexOf,
+    indexOf: indexOf, // lodash要求 按照 SameValueZero 判断值, https://262.ecma-international.org/7.0/#sec-samevaluezero  但我没做
     head: head,
     toPairs: toPairs,
     fromPairs: fromPairs,
