@@ -29,6 +29,9 @@ function myRandomArray(length, size = length) {
   return array
 }
 </script>
+<!-- <script src="oop.js"></script> -->
+
+<script src="lodash/brucezhang_pro-lodash.js"></script>
 
 <script type="1" id="ch02/01">
   // 书本第二章课后习题第1题
@@ -2947,8 +2950,8 @@ function heapSortInPlaceBy (array, predicate = it => it) {
   return array
 }
 </script>
-<!-- <script src="oop.js"></script> -->
-<script type="">
+<!-- <div id="show123"></div> -->
+<script type="1">
   "use strict"
   //用js画表格,实现类似console.table的功能
 function consoleTable(array) {
@@ -2986,5 +2989,184 @@ function showTable(array) {
 }
 // showTable([{a:234124, b:777},{a:4444, b:3333}])
 </script>
-<!-- <div id="show123"></div> -->
-<script src="lodash/brucezhang_pro-lodash.js"></script>
+<script type="1">
+  //实现 String.raw`sfseion${2+3}skljvnsdv\seku${8+9}vhso\svgkjbw` 的函数
+  function raw(a, ...b) {
+    let result = ""
+    for (let i = 0; i < b.length; i++) {
+      result += a.raw[i] + b[i]
+    }
+    result += a.raw[a.raw.length - 1]
+    return result
+  }
+</script>
+<script type="1">
+//String.prototype的正则相关函数实现
+String.prototype.myserach = function(regexp) {
+  let match = regexp.exec(this)
+  if (match !== null) {
+    return match.index
+  } else {
+    return -1
+  }
+}
+String.prototype.mysplit = function(regexp) {
+  let match = null
+  let strArray = []
+  let str = ""
+  let lastLastIndex = 0
+  let regExp = null
+
+  if (regexp.global === false) {
+    regExp = new RegExp(regexp.source, regexp.flags + "g")
+  }
+  while(match = regExp.exec(this)) {
+    str = this.slice(lastLastIndex, match.index)
+    if (match[0].length !== 0 || str.length !== 0) {
+      strArray.push(str)
+    }
+    for (let i = 1; i < match.length; i++) {
+      strArray.push(match[i])
+    }
+    lastLastIndex = regExp.lastIndex
+    if (match[0].length === 0) {
+      regExp.lastIndex++
+    }
+  }
+  str = this.slice(lastLastIndex)
+  strArray.push(str)
+  return strArray
+}
+String.prototype.mymatch = function(regexp) {
+  if (regexp.global === false) {
+    return regexp.exec(this)
+  }
+  let strArray = []
+  let match = null
+  let regExp = new RegExp(regexp.source, regexp.flags)
+  while(match = regExp.exec(this)) {
+    strArray.push(match[0])
+    if(match[0].length === 0) {
+      regExp.lastIndex++
+    }
+  }
+  return strArray
+}
+
+// String.prototype.myreplace = function(regexp, predicate) { //predicate 默认等于一个你给它传啥,它直接回传给你的函数
+//   let result = ""
+//   let regExp = new RegExp(regexp.source, regexp.flags)
+//   let match = null
+//   let lastLastIndex = 0
+
+//   if(typeof predicate === "function") {
+//     if (regExp.global === false) {
+//       match = regExp.exec(this)
+//       if (match === null) {
+//         return this
+//       }
+//       result += this.slice(lastLastIndex, match.index)
+//       result += predicate(...match)
+//       lastLastIndex = match.index + match[0].length
+//     } else {
+//       while(match = regExp.exec(this)) {
+//         result += this.slice(lastLastIndex, match.index)
+//         result += predicate(...match)
+//         lastLastIndex = regExp.lastIndex
+//         if (match[0].length === 0) {
+//           regExp.lastIndex++
+//         }
+//       }
+//     }
+//     result += this.slice(lastLastIndex)
+
+//   } else {
+
+//     if (regExp.global === false) {
+//       match = regExp.exec(this)
+//       if (match === null) {
+//         return this
+//       }
+//       result += this.slice(lastLastIndex, match.index)
+//       result += matchMapReplace(match, predicate)
+//       lastLastIndex = match.index + match[0].length
+//     } else {
+//       while(match = regExp.exec(this)) {
+//         result += this.slice(lastLastIndex, match.index)
+//         result += matchMapReplace(match, predicate)
+//         lastLastIndex = regExp.lastIndex
+//         if (match[0].length === 0) {
+//           regExp.lastIndex++
+//         }
+//       }
+//     }
+//     result += this.slice(lastLastIndex)
+//   }
+
+//   return result
+// }
+
+String.prototype.myreplace = function(regexp, predicate) { //predicate 默认等于一个你给它传啥,它直接回传给你的函数
+  let result = null
+  if(typeof predicate === "function") {
+    result = implementReplace(this, regexp, predicate)
+    
+  } else {
+    result = implementReplace(this, regexp, matchMapReplace(predicate))
+
+  }
+  return result
+}
+function implementReplace(string, regexp, func) {
+  let result = ""
+  let regExp = new RegExp(regexp.source, regexp.flags)
+  let match = null
+  let lastLastIndex = 0
+
+  if (regExp.global === false) {
+    match = regExp.exec(string)
+    if (match === null) {
+      return string
+    }
+    result += string.slice(lastLastIndex, match.index)
+    result += func(...match)
+    lastLastIndex = match.index + match[0].length
+  } else {
+    while(match = regExp.exec(string)) {
+      result += string.slice(lastLastIndex, match.index)
+      result += func(...match)
+      lastLastIndex = regExp.lastIndex
+      if (match[0].length === 0) {
+        regExp.lastIndex++
+      }
+    }
+  }
+  result += string.slice(lastLastIndex)
+  return result
+}
+function matchMapReplace(predicate) {
+  return function(...matchData) {
+    let matchMap = {}
+    let regExp = /\$[123456789&]/g
+    let result = ""
+    let match = null
+    let lastLastIndex = 0
+    let str = ""
+    matchMap["$&"] = matchData[0]
+    for(let i = 1; i < matchData.length; i++) {
+      matchMap[`$${i}`] = matchData[i]
+    }
+    while(match = regExp.exec(predicate)) {
+      result += predicate.slice(lastLastIndex, match.index)
+      if (matchMap[match[0]] === undefined) {
+        result += match[0]
+      } else {
+        result += matchMap[match[0]]
+      }
+      lastLastIndex = regExp.lastIndex
+    }
+    result += predicate.slice(lastLastIndex)
+    return result
+  }
+}
+</script>
