@@ -14,16 +14,17 @@ function forEach(array, iteratee = identity) {
   if (array.length === undefined) { // 说明是个纯对象,没有length属性
     for (let key in array) {
       if (iteratee(array[key], key, array) === false) {
-        return false
+        return array
       }
     }
   } else {
     for (var i = 0; i < array.length; i++) {
       if (iteratee(array[i], i, array) === false) {
-        return false
+        return array
       }
     }
   }
+  return array
 }
 //map映射
 function myMap(array, func) {
@@ -183,35 +184,42 @@ function isArray(item) {
       return value.source === other.source && value.flags === other.flags
     }
 
-    let valArray = []
-    let othArray = []
     let isFalse = false
-    for (let key in value) {//取得对象的key
-      valArray.push(key)
-    }
-    for (let key in other) {//取得对象的key
-      othArray.push(key)
-    }
-    if (valArray.length !== othArray.length) {
-      return false
-    }
-    forEach(valArray, (key, i) => {
-      if (key !== othArray[i]) {
-        isFalse = true
+    if (Object.prototype.toString.call(value) === "[object Object]") {
+      let valArray = []
+      let othArray = []
+      forOwn (value, (_, key) =>{ //取得对象的Key
+        valArray.push(key)
+      })
+      forOwn (other, (_, key) =>{ //取得对象的Key
+        othArray.push(key)
+      })
+      if (valArray.length !== othArray.length) {
         return false
       }
-    })
-    if (isFalse) {
-      return false
-    }
-    forEach(valArray, key => {
-      if(isEqual(value[key], other[key]) === false) {
-        isFalse = true
+      forEach(valArray, key => {
+        if(isEqual(value[key], other[key]) === false) {
+          isFalse = true
+          return false
+        }
+      })
+      if (isFalse === true) {
         return false
       }
-    })
-    if (isFalse) {
-      return false
+
+    } else { // Array,Set,Map 会到这里
+      if (value.length !== other.length) {
+        return false
+      }
+      forEach(value, (_, i) => {
+        if(isEqual(value[i], other[i]) === false) {
+          isFalse = true
+          return false
+        }
+      })
+      if (isFalse === true) {
+        return false
+      }
     }
 
     return true
@@ -322,22 +330,24 @@ function isArray(item) {
   function forIn(object, iteratee = identity) {
     for (let key in object) {
       if (iteratee(object[key], key, object) === false) {
-        return false
+        return object
       }
     }
+    return object
   }
   function forOwn(object, iteratee = identity) {
     for (let key in object) {
       if (Object.prototype.hasOwnProperty.call(object, key) === true) {
         if (iteratee(object[key], key, object) === false) {
-          return false
+          return object
         }
       }
     }
+    return object
   }
   function fromPairs(pairs) {
     let result = {}
-    
+
 
   }
   return {
