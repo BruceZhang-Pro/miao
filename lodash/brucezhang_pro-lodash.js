@@ -347,10 +347,28 @@ function isArray(item) {
   }
   function fromPairs(pairs) {
     let result = {}
-
-
+    forEach(pairs, array => {
+      result[array[0]] = array[1]
+    })
+    return result
+  }
+  function toPairs(object) {
+    let result = []
+    if (Object.prototype.toString.call(object) === "[object Object]") {
+      forOwn(object, (val, key) => {
+        result.push([key, val])
+      })
+    } else { //如果是Set 或 Map ,返回传入的值
+      return object 
+    }
+    return result
+  }
+  function head(array) {
+    return array[0]
   }
   return {
+    head: head,
+    toPairs: toPairs,
     fromPairs: fromPairs,
     forOwn: forOwn,
     forIn: forIn,
