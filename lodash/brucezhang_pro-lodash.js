@@ -1,6 +1,10 @@
 
 var brucezhang_pro = function() {
   "use strict"
+  const ARRAY = '[object Array]'
+  const OBJECT = '[object Object]'
+  const EVERY = true
+  const SOME = false
 //用于判断基础类型的值是否为falsey的函数
 function isFalsey (item) {
   if (item === false || item === null || item === 0 || item === "" || item === undefined || item !== item) {
@@ -411,9 +415,105 @@ function isArray(item) {
     }
     return result
   }
+  function isNullObject(object) {
+    for (let key in object) {
+      if (Object.prototype.hasOwnProperty.call(object, key) === true) {
+        return false
+      }
+    }
+    return true
+  }
+  function judgeObjectType(object) {
+    return Object.prototype.toString.call(object)
+  }
+  // function everyOrSome(collection, predicate = identity, isEvery = true) {
+  //   let func = selectMatchObjectFunc(predicate)
+  //   let isTrue = true
+  //   if (judgeObjectType(collection) === OBJECT) {
+  //     if (isNullObject(collection) === true) { //空对象返回true
+  //       return true
+  //     } else {
+  //       forOwn(collection, (val, key) => {
+  //         let obj = {}
+  //         obj[key] = val
+  //         if (func(obj) === !isEvery) {
+  //           isTrue = !isEvery
+  //           return false // 提前结束循环
+  //         }
+  //       })
+  //     }
+  //   } else { //collection 为 Array
+  //     forEach(collection, val => {
+  //       if (func(val) === !isEvery) {
+  //         isTrue = !isEvery
+  //         return false // 提前结束循环
+  //       }
+  //     })
+  //   }
+  //   if (isEvery) {
+  //     return isTrue
+  //   } else {
+  //     return !isTrue
+  //   }
+  // }
+  // function every(collection, predicate = identity) {
+  //   return everyOrSome(collection, predicate, EVERY)
+  // }
+  // function some(collection, predicate = identity) {
+  //   return everyOrSome(collection, predicate, SOME)
+  // }
   function every(collection, predicate = identity) {
-    
-
+    let func = selectMatchObjectFunc(predicate)
+    let isFalse = false
+    if (judgeObjectType(collection) === OBJECT) {
+      if (isNullObject(collection) === true) { //空对象返回true
+        return true
+      } else {
+        forOwn(collection, (val, key) => {
+          let obj = {}
+          obj[key] = val
+          if (func(obj) === false) {
+            isFalse = true
+            return false
+          }
+        })
+        return true
+      }
+    } else { //collection 为 Array
+      forEach(collection, val => {
+        if (func(val) === false) {
+          isFalse = true
+          return false // 提前结束循环
+        }
+      })
+    }
+    return !isFalse
+  }
+  function some(collection, predicate = identity) {
+    let func = selectMatchObjectFunc(predicate)
+    let isTrue = false
+    if (judgeObjectType(collection) === OBJECT) {
+      if (isNullObject(collection) === true) { //空对象返回true
+        return true
+      } else {
+        forOwn(collection, (val, key) => {
+          let obj = {}
+          obj[key] = val
+          if (func(obj) === true) {
+            isTrue = true
+            return false // 提前结束循环
+          }
+        })
+      }
+    } else { //collection 为 Array
+      forEach(collection, val => {
+        if (func(val) === true) {
+          isTrue = true
+          return false // 提前结束循环
+        }
+      })
+    }
+    return isTrue
   }
   //string null number boolean object array 
   function parseJSON(JSON) {
@@ -426,7 +526,7 @@ function isArray(item) {
         return parseArray()
       } else if (JSON[i] === '"') {
         return parseString()
-      } else if ((JSON[i] - "0") >= 0 && (JSON[i] - "0") <= 9) {
+      } else if ((JSON[i] >= 0 && JSON[i] <= 9) || JSON[i] === "-" || JSON[i] === ".") {
         return parseNumber()
       } else if (JSON[i] === "t") {
         if (JSON.slice(i, i + 4) === "true") {
@@ -437,11 +537,11 @@ function isArray(item) {
           throw new SyntaxError("error")
         }
       } else if (JSON[i] === "f") {
-        if (JSON.slice(i, i + 4) === "false") {
+        if (JSON.slice(i, i + 5) === "false") {
           i += 5
           return false
         } else {
-          i += 4
+          i += 5
           throw new SyntaxError("error")
         }
       } else { //还有最后一种情况,null
@@ -466,24 +566,108 @@ function isArray(item) {
         } else if (JSON[i] === ",") {
           i++
         } else if (JSON[i] === '"') {
-          i++
           key = parseString()
           if (JSON[i] === ":") {
             i++
             value = parseType()
+          } else {
+            throw new SyntaxError("error")
           }
           obj[key] = value
         } else {
           throw new SyntaxError("error")
         }
       }
-
       return obj
+    }
+    function parseArray() {
+      i++ //skip this "["
+      let result = []
+      let value = null
+      while (i < JSON.length - 1) {
+        if (JSON[i] === "]") {
+          i++
+          break
+        } else if (JSON[i] === ",") {
+          i++
+        } else {
+          value = parseType()
+          result.push(value)
+        }
+      }
+      return result
+    }
+    function parseString() {
+      i++ //skip this '"'
+      let result = ""
+      while (JSON[i] !== '"') {
+        result += JSON[i++]
+      }
+      i++
+      return result
+    }
+    function parseNumber() {
+      let result = ""
+      while ((JSON[i] >= "0" && JSON[i] <= "9") || JSON[i] == "." || JSON[i] == "-") {
+        result += JSON[i++]
+      }
+      let array = result.split("")
+      if (indexOf(array, ".") > -1) {
+        return parseFloat(result) 
+      } else {
+        return parseInt(result) 
+      }
+    }
+  }
+  //把 undefined NaN(类型为number) 都转为null,function和symbols转为空字符串,对array和object和string做前后处理,特别在处理string时,要加' \" ',boolean和number和bigint不用处理
+  function stringifyJSON(object) {
+    let objectType = Object.prototype.toString.call(object)
+
+    if (typeof object === "string") {
+      return "\"" + object + "\""
+    }else if (typeof object === "bigint" || typeof object === "boolean") {
+      return object.toString()
+    } else if (typeof object === "number") {
+      let str = object.toString()
+      if (str === "NaN") {
+        return "null"
+      } else {
+        return str
+      }
+    } else if (objectType === "[object Array]") {
+      return stringifyArray(object)
+    } else if (objectType === "[object Object]") {
+      return stringifyObject(object)
+    } else if (objectType === "[object Null]" || typeof object === "undefined") {
+      return "null"
+    } else { 
+      return ""
+    }
+
+    function stringifyObject(object) {
+      let result = ""
+      forOwn(object, (value, key) => {
+        result += stringifyJSON(key) + ":" + stringifyJSON(value) + ","
+      })
+      return "{" + result.slice(0, result.length - 1) + "}"
+    }
+
+    function stringifyArray(array) {
+      let result = ""
+      forEach(array, item => {
+        result += stringifyJSON(item) + ","
+      })
+      return "[" + result.slice(0, result.length - 1) + "]"
     }
   }
   return {
-    // parseJSON: parseJSON,
-    // every: every,
+    // slice: slice,
+    // split: split,
+    // parseInt: parseInt,
+    stringifyJSON: stringifyJSON,
+    parseJSON: parseJSON,
+    some: some,
+    every: every,
     reverse: reverse,
     pull: pull,
     last: last,
