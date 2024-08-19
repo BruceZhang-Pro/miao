@@ -392,20 +392,20 @@ function isArray(item) {
   function join(array, separator = ",") {
     let result = ""
     for (let i = 0; i < array.length - 1; i++) {
-      result += array[i] + separator
+      result = result + array[i] + separator
     }
-    result += array[array.length - 1]
+    result = result + array[array.length - 1]
     return result
   }
   function last(array) {
     return array[array.length - 1]
   }
-  function pull(array, value) {
-    if(value === undefined) {
+  function pull(array, ...values) {
+    if(values.length === 0) {
       return []
     }
     return filter(array, item => {
-      return item !== value
+        return !some(values, val => val === item)
     })
   }
   function reverse(array) {
