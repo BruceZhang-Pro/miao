@@ -714,8 +714,8 @@ function isArray(item) {
     let key = null
     let func = selectMatchObjectFunc(iteratee)
     if (judgeObjectType(collection) === ARRAY) {
-      forEach(collection, val => {
-        key = func(val)
+      forEach(collection, (val, i, array) => {
+        key = func(val, i, array)
         result.push(key)
       })
     } else { // else is Object
@@ -726,7 +726,6 @@ function isArray(item) {
     }
     return result
   }
-
   return {
     map: map,
     keyBy: keyBy,
