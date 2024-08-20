@@ -281,7 +281,7 @@ function isArray(item) {
     return function(object) {
       let obj = object
       for (let key of keyArray) {
-        if (typeof obj !== "object" || obj === null) {
+        if (obj === null) {
           return obj
         }
         obj = obj[key]
@@ -422,6 +422,13 @@ function isArray(item) {
       }
     }
     return true
+  }
+  function isHasOwnProperty(object, key) {
+    if (Object.prototype.hasOwnProperty.call(object, key) === true) {
+      return true
+    } else {
+      return false
+    }
   }
   function judgeObjectType(object) {
     return Object.prototype.toString.call(object)
@@ -660,7 +667,71 @@ function isArray(item) {
       return "[" + result.slice(0, result.length - 1) + "]"
     }
   }
+  function calculateKeyBy(collection, iteratee, action) {
+    let key = null
+    let func = selectMatchObjectFunc(iteratee)
+    if (judgeObjectType(collection) === ARRAY) {
+      forEach(collection, val => {
+        key = func(val)
+        action(key, val)
+      })
+    } else { // else is Object
+      forOwn(collection, (val, k) => {
+        let obj = {}
+        obj[k] = val
+        key = func(obj)
+        action(key, obj)
+      })
+    }
+  }
+  function countBy(collection, iteratee = identity) {
+    let result = {}
+    calculateKeyBy(collection, iteratee, key => {
+      result[key] = (result[key] || 0) + 1
+    })
+    return result
+  }
+  function groupBy(collection, iteratee = identity) {
+    let result = {}
+    calculateKeyBy(collection, iteratee, (key, val) => {
+      if (result[key] !== undefined) {
+        result[key].push(val)
+      } else {
+        result[key] = [val]
+      }
+    })
+    return result
+  }
+  function keyBy(collection, iteratee = identity) {
+    let result = {}
+    calculateKeyBy(collection, iteratee, (key, val) => {
+      result[key] = val
+    })
+    return result
+  }
+  function map(collection, iteratee = identity) {
+    let result = []
+    let key = null
+    let func = selectMatchObjectFunc(iteratee)
+    if (judgeObjectType(collection) === ARRAY) {
+      forEach(collection, val => {
+        key = func(val)
+        result.push(key)
+      })
+    } else { // else is Object
+      forOwn(collection, (val) => {
+        key = func(val)
+        result.push(key)
+      })
+    }
+    return result
+  }
+
   return {
+    map: map,
+    keyBy: keyBy,
+    groupBy: groupBy,
+    countBy: countBy,
     // slice: slice,
     // split: split,
     // parseInt: parseInt,
