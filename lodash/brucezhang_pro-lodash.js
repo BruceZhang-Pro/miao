@@ -910,9 +910,58 @@ function isArray(item) {
      }
     }
   }()
+  function sample(collection) {
+    let index = 0
+    if (judgeObjectType(collection) === ARRAY) {
+      index = random(collection.length)
+      return collection[index]
+    } else {
+      let keys = getKeys(collection)
+      index = random(keys.length)
+      return collection[keys[index]]
+    }
+  }
+  function isUndefined(value) {
+    return value === undefined
+  }
+  function isNull(value) {
+    return value === null
+  }
+  function isNil(value) {
+    return (value === null || value === undefined)
+  }
+  function max(array) {
+    if (array.length === 0) {
+      return undefined
+    }
+    let maximum = -Infinity
+    forEach(array, val => {
+      if (val > maximum) {
+        maximum = val
+      }
+    })
+    return maximum
+  }
+  function min(array) {
+    if (array.length === 0) {
+      return undefined
+    }
+    let minimum = Infinity
+    forEach(array, val => {
+      if (val < minimum) {
+        minimum = val
+      }
+    })
+    return minimum
+  }
   return {
+    min: min,
+    max: max,
+    isNil: isNil,
+    isNull: isNull,
+    isUndefined: isUndefined,
+    sample: sample,
     random: random,
-    getKeys: getKeys,
     sortBy: sortBy,
     size: size,
     reduceRight: reduceRight,
