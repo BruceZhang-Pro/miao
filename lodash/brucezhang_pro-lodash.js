@@ -30,13 +30,12 @@ function forEach(array, iteratee = identity) {
   }
   return array
 }
-//map映射
-function myMap(array, func) {
-  var result = []
-  for (var i = 0; i < array.length; i++) {
-    result.push(func(array[i]))
+function forEachStartIndex(array, fromIndex = 0, iteratee = identity) {
+  if (fromIndex !== 0) {
+    return forEach(array.slice(fromIndex), iteratee)
+  } else {
+    return forEach(array, iteratee)
   }
-  return result
 }
 //判断是否为数组
 function isArray(item) {
@@ -726,7 +725,191 @@ function isArray(item) {
     }
     return result
   }
+  function reduce(collection, iteratee = identity, accumulator) {
+    let result = accumulator
+    let start = 0
+    if (judgeObjectType(collection) === ARRAY) {
+      if (accumulator === undefined) {
+        result = collection[0]
+        start = 1
+      }
+      for (let i = start; i < collection.length; i++) {
+        result = iteratee(result, collection[i], i, collection)
+      }
+    } else {
+      let keys = getKeys(collection)
+      if (accumulator === undefined) {
+        result = {}
+        result[keys[0]] = collection[keys[0]]
+        start = 1
+      }
+      forEachStartIndex(keys, start, key => {
+        result = iteratee(result, collection[key], key, collection)
+      })
+    }
+    return result
+  }
+  function reduceRight(collection, iteratee = identity, accumulator) {
+    let result = accumulator
+    let start = null
+    if (judgeObjectType(collection) === ARRAY) {
+      start = collection.length - 1
+      if (accumulator === undefined) {
+        result = collection[start]
+        start--
+      }
+      for (let i = start; i >= 0; i--) {
+        result = iteratee(result, collection[i], i, collection)
+      }
+    } else {
+      let keys = Object.keys(collection)
+      start = keys.length - 1
+      if (accumulator === undefined) {
+        result = {}
+        result[keys[start]] = collection[keys[start]]
+        start--
+      }
+      for (let i = start; i >= 0; i--) {
+        result = iteratee(result, collection[keys[i]], keys[i], collection)
+      }
+    }
+    return result
+  }
+  function size(collection) {
+    if (judgeObjectType(collection) === OBJECT) {
+      let count = 0
+      forOwn(collection, _ => ++count)
+      return count
+    } else {
+      return collection.length
+    }
+  }
+  function sortBy(collection, iteratee = [identity]) {
+    let result = collection
+    forEach(iteratee, item => {
+      result = sortOneBy(result, item)
+    })
+
+    function sortOneBy(collection, iteratee) {
+      let map = groupBy(collection, iteratee)
+      let sortKeys = getKeys(map)
+      sortKeys = quickSort(sortKeys)
+      let result = []
+      forEach(sortKeys, key => {
+        result.push(...map[key])
+      })
+      return result
+    }
+    function quickSort(array, start = 0, end = array.length) {
+      if (end - start < 2) {
+        return undefined
+      }
+      let pivotIndex = (Math.random() * (end - start) + start) | 0
+      let pivot = array[pivotIndex]
+      swap(array, pivotIndex, end - 1)
+      let i = start
+      let j = start
+      while (j < end - 1) {
+        if (array[j] < pivot) {
+          swap(array, i, j)
+          i++
+        }
+        j++
+      }
+      swap(array, i, end - 1)
+      quickSort(array, start, i)
+      quickSort(array, i + 1, end)
+
+      return array
+    }
+
+    return result
+  }
+  function swap(array, i, j) {
+    let temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+  function getKeys(object) {
+    let result = []
+    forOwn(object, (_, key) => {
+      result.push(key)
+    })
+    return result
+  }
+  // function Random() {
+  //   this.myX = 5
+  //   this.myC = 19
+  //   this.myA = 23
+  //   this.myM = 32
+  // }
+  // Random.prototype = {
+  //   get x() {
+  //     return this.myX
+  //   },
+  //   get c() {
+  //     return this.myC
+  //   },
+  //   get a() {
+  //     return this.myA
+  //   },
+  //   get m() {
+  //     return this.myM
+  //   },
+  //   set x(val) {
+  //     this.myX = val
+  //   }
+  // }
+  class Random {
+    #myX = null
+    #myC = null
+    #myA = null
+    #myM = null
+    constructor() {
+      this.#myX = Date.now() % 4096 //获得随机数种子
+      this.#myC = 9973 //别人写的是 12345 ,我改成了素数
+      this.#myA = 1103515245 //A减1后能被M的所有质因数整除, 如果M能被4整除那么A减1也能被4整除
+      this.#myM = 0x80000000 // 2^31
+    }
+    get x() {
+      return this.#myX
+    }
+    get c() {
+      return this.#myC
+    }
+    get a() {
+      return this.#myA
+    }
+    get m() {
+      return this.#myM
+    }
+    set x(val) {
+      this.#myX = val
+    }
+  }
+  let random = function() {
+    let myRandom = new Random()
+    return function(lower = 0, upper = 1, floating) {
+      if (arguments.length === 1) {
+        upper = arguments[0]
+        lower = 0
+      }
+     //multiplier * current + addend) % modul
+     myRandom.x = ((myRandom.a * myRandom.x + myRandom.c) % myRandom.m)
+     if (parseInt(lower) !== lower || parseInt(upper) !== upper || floating === true) {
+       return myRandom.x / myRandom.m * (upper - lower) + lower
+      } else {
+       return (myRandom.x / myRandom.m * (upper - lower) + lower) | 0
+     }
+    }
+  }()
   return {
+    random: random,
+    getKeys: getKeys,
+    sortBy: sortBy,
+    size: size,
+    reduceRight: reduceRight,
+    reduce: reduce,
     map: map,
     keyBy: keyBy,
     groupBy: groupBy,
