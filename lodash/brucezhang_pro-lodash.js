@@ -16,7 +16,7 @@ function isFalsey (item) {
 //遍历数组,并可以提前返回
 function forEach(array, iteratee = identity) {
   if (array.length === undefined) { // 说明是个纯对象,没有length属性
-    for (let key in array) {
+    for (var key in array) {
       if (iteratee(array[key], key, array) === false) {
         return array
       }
@@ -90,8 +90,8 @@ function isArray(item) {
   }
   //This method is like _.find except that it returns the index of the first element predicate returns truthy for instead of the element itself.
   function findIndex(array, predicate = identity, fromIndex = 0) {
-    let func = selectMatchObjectFunc(predicate)
-    for (let i = fromIndex; i < array.length; i++) {
+    var func = selectMatchObjectFunc(predicate)
+    for (var i = fromIndex; i < array.length; i++) {
       if (func(array[i]) === true) {
         return i
       }
@@ -104,8 +104,8 @@ function isArray(item) {
   }
   //This method is like _.findIndex except that it iterates over elements of collection from right to left.
   function findLastIndex(array, predicate = identity, fromIndex = array.length - 1) {
-    let func = selectMatchObjectFunc(predicate)
-    for (let i = fromIndex; i >= 0; i--) {
+    var func = selectMatchObjectFunc(predicate)
+    for (var i = fromIndex; i >= 0; i--) {
       if (func(array[i]) === true) {
         return i
       }
@@ -128,7 +128,7 @@ function isArray(item) {
   }
   //Recursively flattens array.
   function flattenDeep(array) {
-    let result = []
+    var result = []
     forEach(array, item => {
       if(isArray(item) === true) {
         var smallArray = flattenDeep(item)
@@ -146,10 +146,10 @@ function isArray(item) {
     var count = 0
     function recursivelyFlatten(array, depth) {
       count++
-      let result = []
+      var result = []
       forEach(array, item => {
         if (isArray(item) === true) {
-          let smallArray = item
+          var smallArray = item
           if(depth > count) {
             smallArray = recursivelyFlatten(smallArray, depth)
             count--
@@ -176,8 +176,8 @@ function isArray(item) {
     }
     if (typeof value !== 'object') {
       if (typeof value === 'function') {
-        let valueString = value.toString()
-        let otherString = other.toString()
+        var valueString = value.toString()
+        var otherString = other.toString()
         return valueString === otherString
       }else {
         return value === other
@@ -187,10 +187,10 @@ function isArray(item) {
       return value.source === other.source && value.flags === other.flags
     }
 
-    let isFalse = false
+    var isFalse = false
     if (Object.prototype.toString.call(value) === "[object Object]") {
-      let valArray = []
-      let othArray = []
+      var valArray = []
+      var othArray = []
       forOwn (value, (_, key) =>{ //取得对象的Key
         valArray.push(key)
       })
@@ -231,10 +231,10 @@ function isArray(item) {
   //   if (typeof separator !== 'string') {
   //     return []
   //   }
-  //   let result = []
-  //   // let course = []
-  //   let str = ""
-  //   for (let i = 0; i < string.length; i++) {
+  //   var result = []
+  //   // var course = []
+  //   var str = ""
+  //   for (var i = 0; i < string.length; i++) {
   //     if(string[i] !== separator) {
   //       str += string[i]
   //     } else {
@@ -246,7 +246,7 @@ function isArray(item) {
   // }
   //Performs a partial deep comparison between object and source to determine if object contains equivalent property values.
   function isMatch(object, source) {
-    for (let key in source) {
+    for (var key in source) {
       if (key in object) {
         if(isEqual(object[key], source[key]) === false) {
           return false
@@ -265,21 +265,21 @@ function isArray(item) {
   }
   function matchesProperty(path, srcValue) {
     return function(object) {
-      let func = property(path)
+      var func = property(path)
       return isEqual(func(object), srcValue)
     }
   }
   //Creates a function that returns the value at path of a given object.
   function property(path) {
-    let keyArray = []
+    var keyArray = []
     if(typeof path === "string") {
       keyArray = path.split(".")
     } else {
       keyArray = path
     }
     return function(object) {
-      let obj = object
-      for (let key of keyArray) {
+      var obj = object
+      for (var key of keyArray) {
         if (obj === null) {
           return obj
         }
@@ -302,8 +302,8 @@ function isArray(item) {
     }
   }
   function filter(collection, predicate = identity) {
-    let result = []
-    let func = selectMatchObjectFunc(predicate)
+    var result = []
+    var func = selectMatchObjectFunc(predicate)
     if (func === undefined) {
       return result
     }
@@ -331,7 +331,7 @@ function isArray(item) {
     }
   }
   function forIn(object, iteratee = identity) {
-    for (let key in object) {
+    for (var key in object) {
       if (iteratee(object[key], key, object) === false) {
         return object
       }
@@ -339,7 +339,7 @@ function isArray(item) {
     return object
   }
   function forOwn(object, iteratee = identity) {
-    for (let key in object) {
+    for (var key in object) {
       if (Object.prototype.hasOwnProperty.call(object, key) === true) {
         if (iteratee(object[key], key, object) === false) {
           return object
@@ -349,14 +349,14 @@ function isArray(item) {
     return object
   }
   function fromPairs(pairs) {
-    let result = {}
+    var result = {}
     forEach(pairs, array => {
       result[array[0]] = array[1]
     })
     return result
   }
   function toPairs(object) {
-    let result = []
+    var result = []
     if (Object.prototype.toString.call(object) === "[object Object]") {
       forOwn(object, (val, key) => {
         result.push([key, val])
@@ -370,7 +370,7 @@ function isArray(item) {
     return array[0]
   }
   function indexOf(array, value, fromIndex = 0) {
-    for (let i = fromIndex; i < array.length; i++) {
+    for (var i = fromIndex; i < array.length; i++) {
       if (array[i] === value) {
         return i
       }
@@ -378,7 +378,7 @@ function isArray(item) {
     return -1
   }
   function lastIndexOf(array, value ,fromIndex = array.length - 1) {
-    for (let i = fromIndex; i >= 0; i--) {
+    for (var i = fromIndex; i >= 0; i--) {
       if (array[i] === value) {
         return i
       }
@@ -389,8 +389,8 @@ function isArray(item) {
     return array.slice(0, array.length - 1)
   }
   function join(array, separator = ",") {
-    let result = ""
-    for (let i = 0; i < array.length - 1; i++) {
+    var result = ""
+    for (var i = 0; i < array.length - 1; i++) {
       result = result + array[i] + separator
     }
     result = result + array[array.length - 1]
@@ -404,7 +404,7 @@ function isArray(item) {
       return []
     }
     return filter(array, item => {
-      let equal = false
+      var equal = false
       forEach(values, val => {
         if (item === val) {
           equal = true
@@ -415,14 +415,14 @@ function isArray(item) {
   })
   }
   function reverse(array) {
-    let result = []
-    for (let i = array.length - 1; i >= 0; i--) {
+    var result = []
+    for (var i = array.length - 1; i >= 0; i--) {
       result.push(array[i])
     }
     return result
   }
   function isNullObject(object) {
-    for (let key in object) {
+    for (var key in object) {
       if (Object.prototype.hasOwnProperty.call(object, key) === true) {
         return false
       }
@@ -440,14 +440,14 @@ function isArray(item) {
     return Object.prototype.toString.call(object)
   }
   // function everyOrSome(collection, predicate = identity, isEvery = true) {
-  //   let func = selectMatchObjectFunc(predicate)
-  //   let isTrue = true
+  //   var func = selectMatchObjectFunc(predicate)
+  //   var isTrue = true
   //   if (judgeObjectType(collection) === OBJECT) {
   //     if (isNullObject(collection) === true) { //空对象返回true
   //       return true
   //     } else {
   //       forOwn(collection, (val, key) => {
-  //         let obj = {}
+  //         var obj = {}
   //         obj[key] = val
   //         if (func(obj) === !isEvery) {
   //           isTrue = !isEvery
@@ -476,14 +476,14 @@ function isArray(item) {
   //   return everyOrSome(collection, predicate, SOME)
   // }
   function every(collection, predicate = identity) {
-    let func = selectMatchObjectFunc(predicate)
-    let isFalse = false
+    var func = selectMatchObjectFunc(predicate)
+    var isFalse = false
     if (judgeObjectType(collection) === OBJECT) {
       if (isNullObject(collection) === true) { //空对象返回true
         return true
       } else {
         forOwn(collection, (val, key) => {
-          let obj = {}
+          var obj = {}
           obj[key] = val
           if (func(obj) === false) {
             isFalse = true
@@ -503,14 +503,14 @@ function isArray(item) {
     return !isFalse
   }
   function some(collection, predicate = identity) {
-    let func = selectMatchObjectFunc(predicate)
-    let isTrue = false
+    var func = selectMatchObjectFunc(predicate)
+    var isTrue = false
     if (judgeObjectType(collection) === OBJECT) {
       if (isNullObject(collection) === true) { //空对象返回true
         return true
       } else {
         forOwn(collection, (val, key) => {
-          let obj = {}
+          var obj = {}
           obj[key] = val
           if (func(obj) === true) {
             isTrue = true
@@ -530,7 +530,7 @@ function isArray(item) {
   }
   //string null number boolean object array 
   function parseJSON(JSON) {
-    let i = 0
+    var i = 0
     return parseType()
     function parseType() {
       if (JSON[i] === "{") {
@@ -564,10 +564,10 @@ function isArray(item) {
     }
 
     function parseObject() {
-      let obj = {}
+      var obj = {}
       i++ // skip this "{"
-      let key = null
-      let value = null
+      var key = null
+      var value = null
       if (JSON[i] === "}") {
         i++ // skip this "}"
         return obj
@@ -595,8 +595,8 @@ function isArray(item) {
     }
     function parseArray() {
       i++ //skip this "["
-      let result = []
-      let value = null
+      var result = []
+      var value = null
       while (i < JSON.length - 1) {
         if (JSON[i] === "]") {
           i++
@@ -612,7 +612,7 @@ function isArray(item) {
     }
     function parseString() {
       i++ //skip this '"'
-      let result = ""
+      var result = ""
       while (JSON[i] !== '"') {
         result += JSON[i++]
       }
@@ -620,11 +620,11 @@ function isArray(item) {
       return result
     }
     function parseNumber() {
-      let result = ""
+      var result = ""
       while ((JSON[i] >= "0" && JSON[i] <= "9") || JSON[i] == "." || JSON[i] == "-") {
         result += JSON[i++]
       }
-      let array = result.split("")
+      var array = result.split("")
       if (indexOf(array, ".") > -1) {
         return parseFloat(result) 
       } else {
@@ -634,14 +634,14 @@ function isArray(item) {
   }
   //把 undefined NaN(类型为number) 都转为null,function和symbols转为空字符串,对array和object和string做前后处理,特别在处理string时,要加' \" ',boolean和number和bigint不用处理
   function stringifyJSON(object) {
-    let objectType = Object.prototype.toString.call(object)
+    var objectType = Object.prototype.toString.call(object)
 
     if (typeof object === "string") {
       return "\"" + object + "\""
     }else if (typeof object === "bigint" || typeof object === "boolean") {
       return object.toString()
     } else if (typeof object === "number") {
-      let str = object.toString()
+      var str = object.toString()
       if (str === "NaN") {
         return "null"
       } else {
@@ -658,7 +658,7 @@ function isArray(item) {
     }
 
     function stringifyObject(object) {
-      let result = ""
+      var result = ""
       forOwn(object, (value, key) => {
         result += stringifyJSON(key) + ":" + stringifyJSON(value) + ","
       })
@@ -666,7 +666,7 @@ function isArray(item) {
     }
 
     function stringifyArray(array) {
-      let result = ""
+      var result = ""
       forEach(array, item => {
         result += stringifyJSON(item) + ","
       })
@@ -674,8 +674,8 @@ function isArray(item) {
     }
   }
   function calculateKeyBy(collection, iteratee, action) {
-    let key = null
-    let func = selectMatchObjectFunc(iteratee)
+    var key = null
+    var func = selectMatchObjectFunc(iteratee)
     if (judgeObjectType(collection) === ARRAY) {
       forEach(collection, val => {
         key = func(val)
@@ -683,7 +683,7 @@ function isArray(item) {
       })
     } else { // else is Object
       forOwn(collection, (val, k) => {
-        let obj = {}
+        var obj = {}
         obj[k] = val
         key = func(obj)
         action(key, obj)
@@ -691,14 +691,14 @@ function isArray(item) {
     }
   }
   function countBy(collection, iteratee = identity) {
-    let result = {}
+    var result = {}
     calculateKeyBy(collection, iteratee, key => {
       result[key] = (result[key] || 0) + 1
     })
     return result
   }
   function groupBy(collection, iteratee = identity) {
-    let result = {}
+    var result = {}
     calculateKeyBy(collection, iteratee, (key, val) => {
       if (result[key] !== undefined) {
         result[key].push(val)
@@ -709,16 +709,16 @@ function isArray(item) {
     return result
   }
   function keyBy(collection, iteratee = identity) {
-    let result = {}
+    var result = {}
     calculateKeyBy(collection, iteratee, (key, val) => {
       result[key] = val
     })
     return result
   }
   function map(collection, iteratee = identity) {
-    let result = []
-    let key = null
-    let func = selectMatchObjectFunc(iteratee)
+    var result = []
+    var key = null
+    var func = selectMatchObjectFunc(iteratee)
     if (judgeObjectType(collection) === ARRAY) {
       forEach(collection, (val, i, array) => {
         key = func(val, i, array)
@@ -733,18 +733,18 @@ function isArray(item) {
     return result
   }
   function reduce(collection, iteratee = identity, accumulator) {
-    let result = accumulator
-    let start = 0
+    var result = accumulator
+    var start = 0
     if (judgeObjectType(collection) === ARRAY) {
       if (accumulator === undefined) {
         result = collection[0]
         start = 1
       }
-      for (let i = start; i < collection.length; i++) {
+      for (var i = start; i < collection.length; i++) {
         result = iteratee(result, collection[i], i, collection)
       }
     } else {
-      let keys = getKeys(collection)
+      var keys = getKeys(collection)
       if (accumulator === undefined) {
         result = {}
         result[keys[0]] = collection[keys[0]]
@@ -757,26 +757,26 @@ function isArray(item) {
     return result
   }
   function reduceRight(collection, iteratee = identity, accumulator) {
-    let result = accumulator
-    let start = null
+    var result = accumulator
+    var start = null
     if (judgeObjectType(collection) === ARRAY) {
       start = collection.length - 1
       if (accumulator === undefined) {
         result = collection[start]
         start--
       }
-      for (let i = start; i >= 0; i--) {
+      for (var i = start; i >= 0; i--) {
         result = iteratee(result, collection[i], i, collection)
       }
     } else {
-      let keys = Object.keys(collection)
+      var keys = Object.keys(collection)
       start = keys.length - 1
       if (accumulator === undefined) {
         result = {}
         result[keys[start]] = collection[keys[start]]
         start--
       }
-      for (let i = start; i >= 0; i--) {
+      for (var i = start; i >= 0; i--) {
         result = iteratee(result, collection[keys[i]], keys[i], collection)
       }
     }
@@ -784,7 +784,7 @@ function isArray(item) {
   }
   function size(collection) {
     if (judgeObjectType(collection) === OBJECT) {
-      let count = 0
+      var count = 0
       forOwn(collection, _ => ++count)
       return count
     } else {
@@ -792,16 +792,16 @@ function isArray(item) {
     }
   }
   function sortBy(collection, iteratee = [identity]) {
-    let result = collection
+    var result = collection
     forEach(iteratee, item => {
       result = sortOneBy(result, item)
     })
 
     function sortOneBy(collection, iteratee) {
-      let map = groupBy(collection, iteratee)
-      let sortKeys = getKeys(map)
+      var map = groupBy(collection, iteratee)
+      var sortKeys = getKeys(map)
       sortKeys = quickSort(sortKeys)
-      let result = []
+      var result = []
       forEach(sortKeys, key => {
         result.push(...map[key])
       })
@@ -811,11 +811,11 @@ function isArray(item) {
       if (end - start < 2) {
         return undefined
       }
-      let pivotIndex = (Math.random() * (end - start) + start) | 0
-      let pivot = array[pivotIndex]
+      var pivotIndex = (Math.random() * (end - start) + start) | 0
+      var pivot = array[pivotIndex]
       swap(array, pivotIndex, end - 1)
-      let i = start
-      let j = start
+      var i = start
+      var j = start
       while (j < end - 1) {
         if (array[j] < pivot) {
           swap(array, i, j)
@@ -833,12 +833,12 @@ function isArray(item) {
     return result
   }
   function swap(array, i, j) {
-    let temp = array[i]
+    var temp = array[i]
     array[i] = array[j]
     array[j] = temp
   }
   function getKeys(object) {
-    let result = []
+    var result = []
     forOwn(object, (_, key) => {
       result.push(key)
     })
@@ -894,8 +894,8 @@ function isArray(item) {
       this.#myX = val
     }
   }
-  let random = function() {
-    let myRandom = new Random()
+  var random = function() {
+    var myRandom = new Random()
     return function(lower = 0, upper = 1, floating) {
       if (arguments.length === 1) {
         upper = arguments[0]
@@ -911,12 +911,12 @@ function isArray(item) {
     }
   }()
   function sample(collection) {
-    let index = 0
+    var index = 0
     if (judgeObjectType(collection) === ARRAY) {
       index = random(collection.length)
       return collection[index]
     } else {
-      let keys = getKeys(collection)
+      var keys = getKeys(collection)
       index = random(keys.length)
       return collection[keys[index]]
     }
@@ -934,7 +934,7 @@ function isArray(item) {
     if (array.length === 0) {
       return undefined
     }
-    let maximum = -Infinity
+    var maximum = -Infinity
     forEach(array, val => {
       if (val > maximum) {
         maximum = val
@@ -946,7 +946,7 @@ function isArray(item) {
     if (array.length === 0) {
       return undefined
     }
-    let minimum = Infinity
+    var minimum = Infinity
     forEach(array, val => {
       if (val < minimum) {
         minimum = val
@@ -955,7 +955,7 @@ function isArray(item) {
     return minimum
   }
   function maxBy(array, iteratee = identity) {
-    let func = selectMatchObjectFunc(iteratee)
+    var func = selectMatchObjectFunc(iteratee)
     return reduce(array, (result, val) => {
       if(func(result) < func(val)) {
         return val
@@ -965,7 +965,7 @@ function isArray(item) {
     })
   }
   function minBy(array, iteratee = identity) {
-    let func = selectMatchObjectFunc(iteratee)
+    var func = selectMatchObjectFunc(iteratee)
     return reduce(array, (result, val) => {
       if (func(result) > func(val)) {
         return val
@@ -975,7 +975,7 @@ function isArray(item) {
     })
   }
   function sumBy(array, iteratee = identity) {
-    let func = selectMatchObjectFunc(iteratee)
+    var func = selectMatchObjectFunc(iteratee)
     return reduce(array, (result, val) => {
       return result += func(val)
     },0)
