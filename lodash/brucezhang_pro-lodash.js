@@ -404,8 +404,15 @@ function isArray(item) {
       return []
     }
     return filter(array, item => {
-        return !some(values, val => val === item)
-    })
+      let equal = false
+      forEach(values, val => {
+        if (item === val) {
+          equal = true
+          return false
+        }
+      })
+      return equal === false
+  })
   }
   function reverse(array) {
     let result = []
