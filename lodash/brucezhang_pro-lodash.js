@@ -954,7 +954,40 @@ function isArray(item) {
     })
     return minimum
   }
+  function maxBy(array, iteratee = identity) {
+    let func = selectMatchObjectFunc(iteratee)
+    return reduce(array, (result, val) => {
+      if(func(result) < func(val)) {
+        return val
+      } else {
+        return result
+      }
+    })
+  }
+  function minBy(array, iteratee = identity) {
+    let func = selectMatchObjectFunc(iteratee)
+    return reduce(array, (result, val) => {
+      if (func(result) > func(val)) {
+        return val
+      } else {
+        return result
+      }
+    })
+  }
+  function sumBy(array, iteratee = identity) {
+    let func = selectMatchObjectFunc(iteratee)
+    return reduce(array, (result, val) => {
+      return result += func(val)
+    },0)
+  }
+  // function round() {
+
+  // }
   return {
+    sumBy: sumBy,
+    // round: round,
+    minBy: minBy,
+    maxBy: maxBy,
     min: min,
     max: max,
     isNil: isNil,
