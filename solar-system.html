@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>solar system</title>
+  <style>
+    div {
+      position: fixed;
+      border-radius: 9999px;
+      /* border: 1px solid; */
+    }
+    #sun {
+      width: 50px;
+      height:50px;
+      background-color: gold;
+    }
+    #earth {
+      width: 30px;
+      height:30px;
+      background-color: blue;
+    }
+    #moon {
+      width: 20px;
+      height:20px;
+      background-color: darkgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="sun"></div>
+  <div id="moon"></div>
+  <div id="earth">1</div>
+  <script>
+    function test() {
+      let winWidth = window.innerWidth
+      let winHeight = window.innerHeight
+      let sun = document.querySelector("#sun")
+      let earth = document.querySelector("#earth")
+      let moon = document.querySelector("#moon")
+      let x1 = (winWidth >>> 1)
+      let y1 = (winHeight >>> 1)
+      sun.style.left = x1 - 25 + "px"
+      sun.style.top = y1 - 25 + "px"
+      function animate(time) {
+        let dateTime = Date.now()
+        let angle1 = dateTime / 1024
+        let angle2 = dateTime / 256
+        let x2 = (Math.cos(angle1) * 200) + x1
+        let y2 = (Math.sin(angle1) * 200) + y1
+        earth.style.left = x2 - 15 + "px"
+        earth.style.top = y2 - 15 + "px"
+        earth.style.transform = `rotate(${angle1 * 80}deg)`
+        moon.style.left = x2 - 10 + (Math.cos(angle2) * 35) + "px"
+        moon.style.top = y2 - 10 + (Math.sin(angle2) * 35) + "px"
+
+        requestAnimationFrame(animate)
+      }
+      requestAnimationFrame(animate)
+    }
+    test()
+  </script>
+</body>
+</html>
