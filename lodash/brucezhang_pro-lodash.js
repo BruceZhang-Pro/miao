@@ -868,30 +868,26 @@ function isArray(item) {
   //   }
   // }
   class Random {
-    #myX = null
-    #myC = null
-    #myA = null
-    #myM = null
     constructor() {
-      this.#myX = Date.now() % 4096 //获得随机数种子
-      this.#myC = 9973 //别人写的是 12345 ,我改成了素数
-      this.#myA = 1103515245 //A减1后能被M的所有质因数整除, 如果M能被4整除那么A减1也能被4整除
-      this.#myM = 0x80000000 // 2^31
+      this.myX = Date.now() % 4096 //获得随机数种子
+      this.myC = 9973 //别人写的是 12345 ,我改成了素数
+      this.myA = 1103515245 //A减1后能被M的所有质因数整除, 如果M能被4整除那么A减1也能被4整除
+      this.myM = 0x80000000 // 2^31
     }
     get x() {
-      return this.#myX
+      return this.myX
     }
     get c() {
-      return this.#myC
+      return this.myC
     }
     get a() {
-      return this.#myA
+      return this.myA
     }
     get m() {
-      return this.#myM
+      return this.myM
     }
     set x(val) {
-      this.#myX = val
+      this.myX = val
     }
   }
   var random = function() {
@@ -903,7 +899,7 @@ function isArray(item) {
       }
      //multiplier * current + addend) % modul
      myRandom.x = ((myRandom.a * myRandom.x + myRandom.c) % myRandom.m)
-     if (parseInt(lower) !== lower || parseInt(upper) !== upper || floating === true) {
+     if (Number.isInteger(lower) !== true || Number.isInteger(upper) !== true || floating === true) {
        return myRandom.x / myRandom.m * (upper - lower) + lower
       } else {
        return (myRandom.x / myRandom.m * (upper - lower) + lower) | 0
@@ -980,10 +976,16 @@ function isArray(item) {
       return result += func(val)
     },0)
   }
-  // function round() {
-
-  // }
+  function round(number, precision = 0) {
+    debugger
+    let strNumber = number.toString()
+    let index = strNumber.lastIndexOf(".")
+    let value = strNumber[index + precision + 1]
+    strNumber = strNumber.slice(0, index + precision + 1)
+    return Number(strNumber) + (value >= "5" ? 1 : 0) // 5.0被Number转换为5
+  }
   return {
+    // isInteger: isInteger,
     sumBy: sumBy,
     // round: round,
     minBy: minBy,
