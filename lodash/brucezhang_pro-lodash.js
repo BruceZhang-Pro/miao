@@ -273,14 +273,16 @@ function isArray(item) {
   function property(path) {
     var keyArray = []
     if(typeof path === "string") {
-      keyArray = path.split(".")
+      let regexp = /\[(\d+)\]/g
+      let str = path.replaceAll(regexp, ".$1")
+      keyArray = str.split(".")
     } else {
       keyArray = path
     }
     return function(object) {
       var obj = object
       for (var key of keyArray) {
-        if (obj === null) {
+        if (obj === null || obj === undefined) {
           return obj
         }
         obj = obj[key]
@@ -844,29 +846,6 @@ function isArray(item) {
     })
     return result
   }
-  // function Random() {
-  //   this.myX = 5
-  //   this.myC = 19
-  //   this.myA = 23
-  //   this.myM = 32
-  // }
-  // Random.prototype = {
-  //   get x() {
-  //     return this.myX
-  //   },
-  //   get c() {
-  //     return this.myC
-  //   },
-  //   get a() {
-  //     return this.myA
-  //   },
-  //   get m() {
-  //     return this.myM
-  //   },
-  //   set x(val) {
-  //     this.myX = val
-  //   }
-  // }
   class Random {
     constructor() {
       this.myX = Date.now() % 4096 //获得随机数种子
@@ -976,18 +955,61 @@ function isArray(item) {
       return result += func(val)
     },0)
   }
+  // function round(number, precision = 0) { //可以尝试用字符串的方式写写
+  //   debugger
+  //   let strNumber = number.toString()
+  //   let index = strNumber.lastIndexOf(".")
+  //   let value = strNumber[index + precision + 1]
+  //   strNumber = strNumber.slice(0, index + precision + 1)
+  //   return Number(strNumber) + (value >= "5" ? 1 : 0) // 5.0被Number转换为5
+  // }
+
   function round(number, precision = 0) {
-    debugger
-    let strNumber = number.toString()
-    let index = strNumber.lastIndexOf(".")
-    let value = strNumber[index + precision + 1]
-    strNumber = strNumber.slice(0, index + precision + 1)
-    return Number(strNumber) + (value >= "5" ? 1 : 0) // 5.0被Number转换为5
+    let assist = 1
+    let num = number
+    let prec = (precision >= 0 ? precision : -precision)
+    while(prec > 0) {
+      assist *= 10
+      prec--
+    }
+    if(precision >= 0) {
+      num *= assist
+      num += 0.5
+      num -= num % 1
+      num /= assist
+    } else {
+      num /= assist
+      num += 0.5
+      num -= num % 1
+      num *= assist
+    }
+    return num
+  }
+  function flatMap(collection, iterator = identity) {
+    let result = map(collection, iterator)
+    return flatten(result)
+  }
+  function flatMapDepth(collection, iterator = identity, depth = 1) {
+    let result = map(collection, iterator)
+    return flattenDepth(result, depth)
+  }
+  function flatMapDeep(collection, iterator = identity) {
+    let result = map(collection, iterator)
+    return flattenDeep(result)
+  }
+  function get(object, path, defaultValue) {
+    let func = property(path)
+    let result = func(object)
+    return result ?? defaultValue
   }
   return {
+    get: get,
+    flatMapDeep: flatMapDeep,
+    flatMapDepth: flatMapDepth,
+    flatMap: flatMap,
     // isInteger: isInteger,
     sumBy: sumBy,
-    // round: round,
+    round: round,
     minBy: minBy,
     maxBy: maxBy,
     min: min,
