@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>mini-RegExp</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+   <script src="lib/tailwindcss.js"></script>
   <style>
     input, button {
       outline: none;
@@ -83,6 +84,7 @@
     <div>REGULAR EXPRESSION</div>
     <input class="border" type="text" id="reInput" onkeyup="run()"value=".(.(.)(.))(..)">
     <button class="border" onclick="run()">RUN</button>
+    <span id="matchState"></span>
     <div id="tips"></div>
     <div>FLAGS</div>
     <label><input type="checkbox" id="flag-g" checked> g</label>
@@ -96,7 +98,7 @@
     
     <div>TEST STRING</div>
     <div id="output">
-      <div style="border border-red-500" id="result" onscroll="syncScroll2()"></div>
+      <div style="border: border-red-500" id="result" onscroll="syncScroll2()"></div>
       <textarea class="border" oninput="run()" id="testStringInput" onscroll="syncScroll()">
         An explanation of your regex will be automatically generated as you type.
         An explanation of your regex will be automatically generated as you type.
@@ -134,30 +136,109 @@
       tips.innerHTML = ""
       let testString = testStringInput.value
 
-      let match = null
       let lastLastIndex = 0
       let html = ""
-
       let matchIndex = 0
-      while (match = re.exec(testString)) {
-        html += testString.slice(lastLastIndex, match.index)
-        html += heightLightRegExp(match, matchIndex)
-        // html += `<strong>${match[0]}</strong>`
-        lastLastIndex = re.lastIndex
 
-        if (match[0].length == 0) {
-          re.lastIndex++
+      getMatchesFromWorker(re, testString, matches => {
+        matches.forEach(match => {
+          html += testString.slice(lastLastIndex, match.index)
+          html += heightLightRegExp(match, matchIndex)
+          lastLastIndex = match.indices[0][1]
+          matchIndex++
+        })
+        html += testString.slice(lastLastIndex)
+        result.innerHTML = html // 这里用的不是value属性,而是innerHTML
+      }, () => {
+        matchState.textContent = "timeout"
+      })
+
+      // let isAction = false
+      // let matchState = document.querySelector("#match-state")
+
+      // let worker = new Worker("regexp-match-worker.js")
+      // worker.postMessage({
+      //   regexp: re,
+      //   string:testString
+      // })
+      // let matchs = null
+      // worker.addEventListener("message", e => {
+      //   matchs = e.data
+      //   matchs.forEach(match => {
+      //     html += testString.slice(lastLastIndex, match.index)
+      //     html += heightLightRegExp(match, matchIndex)
+      //     lastLastIndex = match.indices[0][1]
+      //     matchIndex++
+      //   })
+      //   html += testString.slice(lastLastIndex)
+      //   result.innerHTML = html // 这里用的不是value属性,而是innerHTML
+      //   worker.terminate()
+      //   isAction = true
+      //   matchState.textContent = "okk"
+      // })
+
+      // setTimeout(() => {
+      //   if (isAction == false) {
+      //     matchState.textContent = "loading..."
+      //   }
+      // },500)
+
+      // setTimeout(() => {
+      //   if (isAction == false) {
+      //     worker.terminate()
+      //     matchState.textContent = "timeout"
+      //   }
+      // },4000)
+
+      // while (match = re.exec(testString)) {
+      //   html += testString.slice(lastLastIndex, match.index)
+      //   html += heightLightRegExp(match, matchIndex)
+      //   // html += `<strong>${match[0]}</strong>`
+      //   lastLastIndex = re.lastIndex
+
+      //   if (match[0].length == 0) {
+      //     re.lastIndex++
+      //   }
+
+      //   if (re.global === false) {
+      //     break
+      //   }
+      //   matchIndex++
+      // }
+      // html += testString.slice(lastLastIndex)
+
+      // result.innerHTML = html // 这里用的不是value属性,而是innerHTML
+
+    }
+    function getMatchesFromWorker(re, textString, func, timeoutFunc) {
+      let isAction = false
+      let worker = new Worker("regexp-match-worker.js")
+      worker.postMessage({
+        regexp: re,
+        string:textString
+      })
+
+      let matches = null
+      worker.addEventListener("message", e => {
+        worker.terminate()
+        matches = e.data
+        func(matches)
+        isAction = true
+        matchState.textContent = "okk"
+      })
+
+      setTimeout(() => {
+        if (isAction == false) {
+          matchState.textContent = "loading..."
         }
+      },500)
 
-        if (re.global === false) {
-          break
+      setTimeout(() => {
+        if (isAction == false) {
+          worker.terminate()
+          timeoutFunc()
         }
-        matchIndex++
-      }
-      html += testString.slice(lastLastIndex)
-
-      result.innerHTML = html // 这里用的不是value属性,而是innerHTML
-
+      },4000)
     }
     function heightLightRegExp(match, matchIndex) {
       let info = null

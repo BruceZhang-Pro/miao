@@ -1,5 +1,9 @@
 <script>
   "use strict"
+</script>
+<script src="lodash/brucezhang_pro-lodash.js"></script>
+<!-- <script src="oop.js"></script> -->
+<script type="1">
 function swap(array, x, y) {
   let temp = array[y]
   array[y] = array[x]
@@ -29,10 +33,6 @@ function myRandomArray(length, size = length) {
   return array
 }
 </script>
-<!-- <script src="oop.js"></script> -->
-
-<script src="lodash/brucezhang_pro-lodash.js"></script>
-
 <script type="1" id="ch02/01">
   // 书本第二章课后习题第1题
   var height = +prompt('请输入行数')
@@ -2212,8 +2212,8 @@ function quickSort(array) {
   console.log("toString" in map)
   console.log(map)
 </script>
-<script type="1" id="ch06/0004">
-
+<script>
+  //画表格需要用到
 var MOUNTAINS = [{
     name: "Kilimanjaro",
     height: 5895,
@@ -2243,7 +2243,8 @@ var MOUNTAINS = [{
     height: 5465,
     country: "Mexico"
 }];
-
+</script>
+<script type="1" id="ch06/0004">
 function rowHeights ( rows ) {
   return rows .map( function (row) {
     return row. reduce ( function (max , cell ) {
@@ -3169,4 +3170,1366 @@ function matchMapReplace(predicate) {
     return result
   }
 }
+</script>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <a class="a b c" href="https://bing.com">book1</a>
+  <a class="a" href="https://www.nocode.com">无码科技</a>
+  <p>My </p>
+  <em>One</em>
+  <em>Two</em>
+  <em>Three</em>
+  <p>The <img src="image/Rockets.webp" alt="Cat"> in the 
+    <img id="asd" src="image/Earth.webp" alt="hat">.</p>
+  <p><button onclick="replaceImages()">Replace</button></p>
+  <p>asd<p>ghj<p>rty<p>jkl<p id="qwe"><p id="zxc">
+    zxcvbnm
+  </p></p></p></p></p></p>
+  <script>
+    function replaceImages() {
+      var img = document.body.getElementsByTagName("img")
+      for (let i = img.length - 1; i >= 0;i--) {
+        if (img[i].alt) {
+          var text = document.createTextNode(img[i].alt)
+          img[i].parentNode.replaceChild(text, img[i])
+        }
+      }
+    }
+    function getElementById(id, node = document.body) {
+      if (node.id === id) {
+        return node
+      }
+      let nodes = node.childNodes
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].nodeType == document.ELEMENT_NODE) {
+          let result = getElementById(id, nodes[i])
+          if (result !== false) {
+            return result
+          }
+        }
+      }
+      return false
+    }
+    function getElementsByTagName(node, tagName) {
+      let result = []
+      if (node.nodeType !== document.ELEMENT_NODE) {
+        return result
+      }
+      let name = tagName.toUpperCase()
+      for(let i = 0; i < node.children.length; i++) {
+        child = node.children[i]
+        if (child.tagName.toUpperCase() === name) {
+          result.push(child)
+        }
+        result.push(...getElementsByTagName(child, tagName))
+      }
+      return result
+    }
+  </script>
+</body>
+</html> -->
+<script type="1">
+
+  function talksAbout(node, string) {
+    if (node.nodeType == document.ELEMENT_NODE) {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        if (talksAbout(node.childNodes[i], string)) {
+          return true
+        }
+      }
+      return false
+    } else if (node.nodeType == document.TEXT_NODE) {
+      return node.nodeValue.indexOf(string) > -1
+    }
+  }
+</script>
+
+<!-- 创建DOM节点及其子节点的工具函数 elt -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <blockquote id="quote"> 
+    No book can ever.
+  </blockquote>
+  <script>
+    function elt(type) {
+      let node = document.createElement(type)
+      for (let i = 1; i < arguments.length; i++) {
+        child = arguments[i]
+        if (typeof child === "string") {
+          child = document.createTextNode(child)
+        }
+        node.appendChild(child)
+      }
+      return node
+    }
+    document.getElementById("quote").appendChild(
+      elt("footer", 
+      "--", elt("strong", "Karl Popper"),
+      ", preface to the second edition of ",
+      elt("em", "The Open Society and Its Enemies"),
+      ", 1950"
+      )
+    )
+  </script>
+</body>
+</html> -->
+
+<!-- 自己写的html的属性的访问方法 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p data-classified="secret">The lanuch code is 00000000.</p>
+  <p data-classified="unclassified">I have two feet.</p>
+  <script>
+    // let nodes = document.body.getElementsByTagName("p")
+    // for (let i = nodes.length - 1; i >= 0; i--) {
+    //   if(nodes[i].getAttribute("data-classified") == "secret") {
+    //     nodes[i].parentNode.removeChild(nodes[i])
+    //   }
+    // }
+    let nodes = document.body.getElementsByTagName("p")
+    Array.prototype.forEach.call(nodes, node => {
+      if(node.getAttribute("data-classified") == "secret") {
+        node.parentNode.removeChild(node)
+      }
+    })
+
+  </script>
+</body>
+</html> -->
+
+<!-- 高亮代码 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p>Here it is, the identity function:</p>
+  <pre data-language="javascript">
+    function id(x) {return x}
+  </pre>
+  <script>
+    languages = {
+      "javascript": /\b(?:function|var|return)\b/g,
+    }
+    function highLightCode(node, keyword) {
+      let match = null
+      let pos = 0
+      let text = node.textContent
+      node.textContent = ""
+      while (match = keyword.exec(text)) {
+        let before = text.slice(pos, match.index)
+        node.appendChild(document.createTextNode(before))
+        let strong = document.createElement("strong")
+        strong.appendChild(document.createTextNode(match[0]))
+        node.appendChild(strong)
+        pos = keyword.lastIndex
+      }
+      let after = document.createTextNode(text.slice(pos))
+      node.appendChild(after)
+      return node
+    }
+    function highLightAllCode() {
+      let nodes = document.body.getElementsByTagName("pre")
+      Array.prototype.forEach.call(nodes, node => {
+        let lang = node.getAttribute("data-language")
+        if (languages.hasOwnProperty(lang) === true) {
+          highLightCode(node, languages[lang])
+        }
+      })
+    }
+    highLightAllCode()
+  </script>
+</body>
+</html> -->
+
+<!-- performance -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p><span id="one"></span></p>
+  <p><span id="two"></span></p>
+  <script>
+    function naive() {
+      let target = document.getElementById("one")
+      while(target.offsetWidth < 2000) {
+        target.appendChild(document.createTextNode("X"))
+      }
+    }
+    function clever() {
+      let target = document.getElementById("two")
+      target.appendChild(document.createTextNode("XXXXX"))
+      let total = Math.ceil(2000 / (target.offsetWidth / 5))
+      for (let i = 5; i < total; i++) {
+        target.appendChild(document.createTextNode("X"))
+      }
+    }
+    naive()
+    clever()
+  </script>
+</body>
+</html> -->
+
+<!-- 查询选择器 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p id="para" style="color: purple; font-family: Consolas">
+    Pretty text
+  </p>
+  <script>
+    var para = document.querySelector("para")
+    console.log(para.style.color)
+    para.style.color = "magenta"
+    console.log(para.style["font-family"])
+    console.log(para.style.fontFamily)
+  </script>
+</body>
+</html> -->
+
+
+<!-- 太阳系旋转1 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      position: relative;
+      width: 30px;
+      height:10px;
+      border-radius: 9999px;
+      /* border: 1px solid; */
+    }
+  </style>
+</head>
+<body>
+  <div id="sun">Sun</div>
+  <div id="moon">Moon</div>
+  <div id="earth">Earth</div>
+  <script>
+    function test() {
+      let sun = document.querySelector("#sun")
+      let earth = document.querySelector("#earth")
+      let moon = document.querySelector("#moon")
+      let angle = 0
+      let lastTime = null
+      sun.style.left = "300px"
+      sun.style.top = "300px"
+      function animate(time) {
+        if (lastTime !== null) {
+          angle += (time - lastTime) * 0.001
+        }
+        lastTime = time
+        let left = (Math.cos(angle) * 200) + parseInt(sun.style.left)
+        let top1 = (Math.sin(angle) * 200) + parseInt(sun.style.top)
+        earth.style.left = left + "px"
+        earth.style.top = top1 + "px"
+        earth.style.transform = `rotate(${angle * 800}deg)`
+        moon.style.left = left + (Math.cos(angle * 360) * 50) + "px"
+        moon.style.top = top1 + (Math.sin(angle * 360) * 50) + "px"
+
+        requestAnimationFrame(animate)
+      }
+      requestAnimationFrame(animate)
+    }
+    test()
+  </script>
+</body>
+</html> -->
+
+
+<!-- 太阳系旋转2 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      position: fixed;
+      border-radius: 9999px;
+      /* border: 1px solid; */
+    }
+    #sun {
+      width: 50px;
+      height:50px;
+      background-color: gold;
+    }
+    #earth {
+      width: 30px;
+      height:30px;
+      background-color: blue;
+    }
+    #moon {
+      width: 20px;
+      height:20px;
+      background-color: darkgray;
+    }
+  </style>
+</head>
+<body>
+  <div id="sun"></div>
+  <div id="moon"></div>
+  <div id="earth">1</div>
+  <script>
+    function test() {
+      let winWidth = window.innerWidth
+      let winHeight = window.innerHeight
+      let sun = document.querySelector("#sun")
+      let earth = document.querySelector("#earth")
+      let moon = document.querySelector("#moon")
+      let x1 = (winWidth >>> 1)
+      let y1 = (winHeight >>> 1)
+      sun.style.left = x1 - 25 + "px"
+      sun.style.top = y1 - 25 + "px"
+      function animate(time) {
+        let dateTime = Date.now()
+        let angle1 = dateTime / 1024
+        let angle2 = dateTime / 256
+        let x2 = (Math.cos(angle1) * 200) + x1
+        let y2 = (Math.sin(angle1) * 200) + y1
+        earth.style.left = x2 - 15 + "px"
+        earth.style.top = y2 - 15 + "px"
+        earth.style.transform = `rotate(${angle1 * 80}deg)`
+        moon.style.left = x2 - 10 + (Math.cos(angle2) * 35) + "px"
+        moon.style.top = y2 - 10 + (Math.sin(angle2) * 35) + "px"
+
+        requestAnimationFrame(animate)
+      }
+      requestAnimationFrame(animate)
+    }
+    test()
+  </script>
+</body>
+</html> -->
+
+<!-- 
+<body id="myBody">
+</body>
+<script>
+//用DOM画表格
+//深度复制DOM节点
+function buildTable(mountains) {
+  let header = Object.keys(mountains[0])
+  let body = document.getElementById("myBody")
+  let table = document.createElement("table")
+  body.appendChild(table)
+  let tr = document.createElement("tr")
+  table.appendChild(tr)
+  header.forEach(head => {
+    let th = document.createElement("th")
+    tr.appendChild(th)
+    let text = document.createTextNode(head)
+    th.appendChild(text)
+  })
+  mountains.forEach(obj => {
+    tr = document.createElement("tr")
+    table.appendChild(tr)
+    header.forEach(head => {
+      let td = document.createElement("td")
+      tr.appendChild(td)
+      let text = document.createTextNode(obj[head])
+      td.appendChild(text)
+    })
+  })
+}
+function format(node = document.querySelector("table")) {
+  let children = null
+  if (node.nodeType === document.ELEMENT_NODE) {
+    children = node.children
+  } else {
+    return undefined
+  }
+  for (let i = 0; i < children.length; i++) {
+    if (children[i].tagName.toUpperCase() === "TD") {
+      children[i].style.textAlign = "right"
+    }
+    format(children[i])
+  }
+}
+
+function deepClone(node) {
+  let result = null
+  if (node.nodeType === document.ELEMENT_NODE) {
+    result = document.createElement(node.tagName)
+  } else {
+    result = document.createTextNode(node.nodeValue)
+  }
+  if (node.style !== undefined) {
+    result.style = node.style.cssText
+  }
+
+  for (let i = 0; i < node.childNodes.length; i++) {
+    result.appendChild(deepClone(node.childNodes[i]))
+  }
+  return result
+}
+buildTable(MOUNTAINS)
+format()
+document.body.appendChild(deepClone(document.querySelector("table")))
+</script> -->
+
+<!-- 事件处理器 -->
+<!-- <p>sgdr</p>
+<button>Act One Button</button> -->
+<script type="1">
+  let button = document.querySelector("button")
+  function once(event) {
+    if (event.which === 1) {
+      console.log("left")
+    } else if (event.which === 2) {
+      console.log("middle")
+    } else if (event.which === 3) {
+      console.log("right")
+    } else {
+      console.log("except")
+    }
+  }
+  button.addEventListener("mousedown", once)
+</script>
+
+<!-- 传播 -->
+<!-- <p>paragraph <button>button</button> </p>
+<button>123</button>
+<button>456</button> -->
+<script type="1">
+  // let para = document.querySelector("p")
+  // let button = document.querySelector("button")
+  // para.addEventListener("mousedown", () => {
+  //   console.log("paragraph")
+  // })
+  // button.addEventListener("mousedown", (event) => {
+  //   console.log("button")
+  //   if (event.which === 3) {
+  //     event.stopPropagation()
+  //   }
+  // })
+  //--------------
+  document.body.addEventListener("click", (event) => {
+    if (event.target.nodeName === "BUTTON") {
+      console.log("button")
+    }
+  })
+</script>
+
+
+<!-- 面试题 如何判断被点击的元素是其父元素的第几个子元素-->
+<!-- <ul>
+  <li>1111111111111</li>
+  <li>2222222222222</li>
+  <li>3333333333333</li>
+</ul> -->
+
+<script type="1">
+  // let lis = document.querySelectorAll("ul li")
+
+  // for (var i = 0; i <lis.length; i++) {  //var 不行, let 可以
+  //   lis[i].addEventListener("click", (e) => {
+  //     console.log(i)
+  //   })
+  // }
+ 
+  // for (var i = 0; i < lis.length; i++) {
+  //   (function(i) {
+  //     lis[i].addEventListener("click", () => {
+  //       console.log(i)
+  //     })
+  //   })(i)
+  // }
+
+  // lis.forEach((li, i) => {
+  //   li.addEventListener("click", (e) => {
+  //     console.log(i)
+  //   })
+  // }) 
+
+  // let ul = document.querySelector("ul")
+  // ul.addEventListener("click", (event) => {
+  //   if (event.target.matches("body ul li")) {
+  //     console.log([...ul.children].indexOf(event.target))
+  //   }
+  // })
+</script>
+
+<!-- 默认动作 -->
+<!-- <a href="https://cn.bing.com">bing</a>
+<script>
+  let link = document.querySelector("a")
+  link.addEventListener("click", event => {
+    console.log("取消点击效果")
+    event.preventDefault()
+  })
+</script> -->
+
+<!-- 按键事件 -->
+<!-- <p>key event</p>
+<script>
+  addEventListener("keydown", event => {
+    console.dir(event)
+    if (event.key === "V") {
+      document.body.style.background = "blue"
+    }
+  })
+  addEventListener("keyup", event => {
+    if(event.key == "V") {
+      document.body.style.background = ""
+    }
+  })
+  addEventListener("keydown", event => {
+    if (event.key === "Alt" && event.shiftKey === true) {
+      console.log("ok")
+    }
+  })
+  addEventListener("keypress", event => { //功能键的没有这个事件
+    console.log(String.fromCharCode(event.charCode))
+  })
+</script> -->
+
+<!-- 鼠标点击事件 -->
+<!-- <style>
+  html, body {
+    height: 100%;
+    width: 100%;
+    background: beige;
+  }
+  .div {
+    background: red;
+    height: 8px;
+    width: 8px;
+    position: absolute;
+    }
+</style>
+<script>
+  addEventListener("click", event => {
+    let dot = document.createElement("div")
+    dot.className = "div"
+    dot.style.left = (event.clientX - 4) + "px"
+    dot.style.top = (event.clientY - 4) + "px"
+    console.dir(event)
+    document.body.appendChild(dot)
+  })
+</script> -->
+
+<!-- 鼠标移动 -->
+<!-- <style>
+  div {
+    background: orange;
+    width: 60px;
+    height: 20px;
+  }
+</style>
+<p>srfsoiwnlavsds</p>
+<div></div>
+<script>
+  let lastX = null
+  let rect = document.querySelector("div")
+  rect.addEventListener("mousedown", event => {
+    lastX = event.pageX
+    addEventListener("mousemove", move)
+    event.preventDefault()
+  })
+  function move(event) {
+    if (event.which !== 1) {
+      removeEventListener("mousemove", move)
+    } else {
+      let dist = event.pageX - lastX
+      lastX = event.pageX
+      rect.style.width = Math.max(10, rect.offsetWidth + dist) + "px"
+    }
+  }
+</script> -->
+
+<!-- 键盘输入阻止和黏贴阻止特殊字符 -->
+<!-- 输入 ,黏贴, 脱拽, 控制台修改属性的value, 输入法的直接回车没办法 -->
+<!-- <textarea name="" id="input"></textarea>
+<script>
+let input = document.querySelector("textarea")
+input.addEventListener("keydown", event => {
+  if (event.keyCode === 81 || event.keyCode === 87 || event.keyCode === 88) {
+    event.preventDefault()
+  }
+})
+
+input.onpaste = event => {
+  event.preventDefault()
+  console.log(event)
+  let strVal = event.clipboardData.getData("text")
+  let textElement = document.getElementById("input")
+  let regexp = /[QWX]/g
+  let result = strVal.replaceAll(regexp, "*")
+  let cursorStart = textElement.selectionStart
+  let cursorEnd = textElement.selectionEnd
+  let text = textElement.value.slice(0, cursorStart) + result + textElement.value.slice(cursorEnd)
+  textElement.value = text
+  textElement.setSelectionRange(cursorStart + result.length, cursorStart + result.length)
+}
+
+input.ondrop = event => {
+  let text = event.dataTransfer.getData("text")
+  let re = /[QWX]/g
+  if (re.test(text) == true) {
+    event.preventDefault()
+  }
+}
+
+input.addEventListener("compositionend", event => {
+  console.dir(event)
+  console.log(input.value) // value 已经是输入后的值了,想要正则匹配到很难了,因为文本很多匹配耗时
+  let re = /[QWX]/g
+  let str = input.value.replaceAll(re, "*")
+  input.value = str
+})
+
+let valueDescription = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), "value")
+
+Object.defineProperty(input, "value", {
+  get: function() {
+    return valueDescription.get.call(input)
+  },
+  set: function(val) {
+    let regexp = /[QWX]/g
+    let value = val.replaceAll(regexp, "*")
+    console.log(value)
+    valueDescription.set.call(input, value)
+  }
+})
+
+</script> -->
+
+<!-- 游戏角色移动 -->
+<!-- <style>
+  html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+  }
+  #moveman {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+  }
+</style>
+<div id="moveman"></div>
+<script>
+  let X = 0
+  let Y = 0
+  let pressedKeys = {}
+  let rateValue = 2
+  let rate = 1
+  let speedUp = 2
+
+  requestAnimationFrame(function move() {
+    moveman.style.left = moveman.offsetLeft + (X * rate) + "px"
+    moveman.style.top = moveman.offsetTop + (Y * rate) + "px"
+    // console.log(moveman.getBoundingClientRect().left)
+
+    requestAnimationFrame(move)
+  })
+
+  onkeydown = event => {
+    // console.dir(event)
+    if (event.key === "Shift") {
+      event.preventDefault()
+      rate = rateValue
+    } else if (event.key === "ArrowUp") {
+      pressedKeys[event.key] = true
+      Y = -speedUp
+    } else if (event.key === "ArrowDown") {
+      pressedKeys[event.key] = true
+      Y = speedUp
+    } else if (event.key === "ArrowLeft") {
+      pressedKeys[event.key] = true
+      X = -speedUp
+    } else if (event.key === "ArrowRight"){
+      pressedKeys[event.key] = true
+      X = speedUp
+    }
+  }
+
+  onkeyup = event => {
+    if (event.key === "Shift") {
+      rate = 1
+    } else if (event.key === "ArrowUp") {
+      pressedKeys[event.key] = false
+      if (pressedKeys["ArrowDown"] !== true) {
+        Y = 0
+      } else {
+        Y = speedUp
+      }
+    } else if (event.key === "ArrowDown") {
+      pressedKeys[event.key] = false
+      if (pressedKeys["ArrowUp"] !== true) {
+        Y = 0
+      } else {
+        Y = -speedUp
+      }
+    } else if (event.key === "ArrowLeft") {
+      pressedKeys[event.key] = false
+      if (pressedKeys["ArrowRight"] !== true) {
+        X = 0
+      } else {
+        X = speedUp
+      }
+    } else if (event.key === "ArrowRight"){
+      pressedKeys[event.key] = false
+      if (pressedKeys["ArrowLeft"] !== true) {
+        X = 0
+      } else {
+        X = -speedUp
+      }
+    }
+  }
+</script> -->
+
+<!-- 窗口拖动 -->
+<!-- <style>
+  .movable {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    background-color: rgb(200, 255, 100);
+    user-select: none; /*这个属性设置元素的内容无法被选中*/
+
+    /* resize: both;
+    overflow: hidden; */
+
+    > .window-title {
+      background-color: gray;
+      font-size: 10px;
+      margin: 0px;
+    }
+    > .resize {
+      width: 5px;
+      height: 5px;
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      /* background-color: blue; */
+      cursor: nwse-resize;
+    }
+  }
+
+</style>  
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum ab voluptate quisquam doloribus porro aspernatur aut perferendis, facere temporibus illo, fuga asperiores exercitationem ratione sed atque fugiat quod modi similique.</p>
+<div class="movable">
+  <h1 class="window-title">窗口1</h1>
+  <span class="resize"></span>
+</div>
+<div class="movable">
+  <h1 class="window-title">窗口2</h1>
+  <span class="resize"></span>
+</div>
+<div class="movable">
+  <h1 class="window-title">窗口3</h1>
+  <span class="resize"></span>
+</div>
+<script>
+  let adsorbDist = 30 //磁吸效果的距离
+  let selElement
+  let elStartX
+  let elStartY
+  let elStartWidth
+  let elStartHeight
+  let mouseStartX
+  let mouseStartY
+  let maxZIndex = 10
+
+  window.addEventListener("mousedown", e => {
+    if(e.target.matches(".movable, .movable *")) {
+      selElement = e.target.closest(".movable")
+      selElement.style.zIndex = maxZIndex++
+    }
+
+    if (e.target.matches(".resize")) {
+      selElement = e.target.closest(".movable")
+      readPosition(e)
+      window.addEventListener("mousemove", resize)
+    }
+
+    if (e.target.matches(".window-title")) {
+      selElement = e.target.closest(".movable")
+      readPosition(e)
+      window.addEventListener("mousemove", move)
+    }
+  })
+
+  function readPosition(e) {
+    elStartX = selElement.offsetLeft
+    elStartY = selElement.offsetTop
+    elStartHeight = selElement.offsetHeight
+    elStartWidth = selElement.offsetWidth
+    mouseStartX = e.clientX
+    mouseStartY = e.clientY
+  }
+
+  function resize(e) {
+    if(e.which !== 1 || e.buttons !== 1) {
+      window.removeEventListener("mousemove", resize)
+    } else {
+      let moveX = e.clientX - mouseStartX
+      let moveY = e.clientY - mouseStartY
+      let targetWidth = elStartWidth + moveX
+      let targetHeight = elStartHeight + moveY
+      if (targetWidth < 40) {
+        targetWidth = 40
+      }
+      if (targetHeight < 40) {
+        targetHeight = 40
+      }
+      selElement.style.width = targetWidth + "px"
+      selElement.style.height = targetHeight + "px"
+    }
+  }
+
+  function move(e) {
+    if(e.which !== 1 || e.buttons !== 1) {
+      window.removeEventListener("mousemove", move)
+    } else {
+      let moveX = e.clientX - mouseStartX
+      let moveY = e.clientY - mouseStartY
+      let elMoveX = elStartX + moveX
+      let elMoveY = elStartY + moveY
+      if(elMoveX < adsorbDist) {
+        elMoveX = 0
+      } else if(elMoveX > window.innerWidth - selElement.offsetWidth - adsorbDist) {
+        elMoveX = window.innerWidth - selElement.offsetWidth
+      }
+      if(elMoveY < adsorbDist) {
+        elMoveY = 0
+      } else if(elMoveY > window.innerHeight - selElement.offsetHeight - adsorbDist) {
+        elMoveY = window.innerHeight - selElement.offsetHeight
+      }
+
+      selElement.style.left = elMoveX + "px"
+      selElement.style.top = elMoveY + "px"
+    }
+  }
+</script> -->
+
+
+
+<!-- 鼠标幻影/鼠标跟踪器1 -->
+<!-- <style>
+  div {
+    width: 8px;
+    height:8px;
+    position: fixed;
+    border-radius: 9999px;
+  }
+  #rainbow1 {
+    background-color: rgb(255, 0, 0);
+  }
+  #rainbow2 {
+    background-color: rgb(255, 165, 0);
+  }
+  #rainbow3 {
+    background-color: rgb(255, 255, 0);
+  }
+  #rainbow4 {
+    background-color: rgb(0, 255, 0);
+  }
+  #rainbow5 {
+    background-color: rgb(0, 255, 255);
+  }
+  #rainbow6 {
+    background-color: rgb(0, 0, 255);
+  }
+  #rainbow7 {
+    background-color: rgb(255, 0, 255);
+  }
+</style>
+
+<div id="rainbow1"></div>
+<div id="rainbow2"></div>
+<div id="rainbow3"></div>
+<div id="rainbow4"></div>
+<div id="rainbow5"></div>
+<div id="rainbow6"></div>
+<div id="rainbow7"></div>
+
+<script>
+  (function() {
+    let lastTime = 0
+    let count = 0
+    let delay = 16
+    let mouseX = 0
+    let mouseY = 0
+    let isRequest = false
+    let rainbows = document.querySelectorAll("div")
+    addEventListener("mousemove", move)
+  
+    function move(event) {
+      if (Date.now() - lastTime >= delay) {
+        mouseX = event.clientX
+        mouseY = event.clientY
+        changeRainbow(mouseX, mouseY)
+        
+        lastTime = Date.now()
+        count = rainbows.length
+        if (isRequest === false) {
+          requestAnimationFrame(stopRainbow)
+          isRequest = true
+        }
+      } else {
+        mouseX = event.clientX
+        mouseY = event.clientY
+      }
+    }
+
+    function stopRainbow() {
+      if (Date.now() - lastTime > delay) { //判断认为鼠标停止了
+        lastTime = Date.now()
+        isRequest = false
+        if (count > 0) {
+          changeRainbow(mouseX, mouseY)
+          requestAnimationFrame(stopRainbow)
+          count--
+        }
+     } else {
+        requestAnimationFrame(stopRainbow)
+      }
+    }
+  
+    function changeRainbow(x, y) {
+      for (let i = rainbows.length - 1; i > 0; i--) {
+        rainbows[i].style.left = rainbows[i - 1].style.left
+        rainbows[i].style.top = rainbows[i - 1].style.top
+      }
+      rainbows[0].style.left = x - 4 + "px"
+      rainbows[0].style.top = y - 4 + "px"
+    }
+  })()
+
+</script> -->
+
+<!-- 鼠标幻影/鼠标跟踪器2-->
+<!-- <style>
+  div {
+    width: 8px;
+    height:8px;
+    position: fixed;
+    border-radius: 9999px;
+  }
+  #rainbow1 {
+    background-color: rgb(255, 0, 0);
+  }
+  #rainbow2 {
+    background-color: rgb(255, 165, 0);
+  }
+  #rainbow3 {
+    background-color: rgb(255, 255, 0);
+  }
+  #rainbow4 {
+    background-color: rgb(0, 255, 0);
+  }
+  #rainbow5 {
+    background-color: rgb(0, 255, 255);
+  }
+  #rainbow6 {
+    background-color: rgb(0, 0, 255);
+  }
+  #rainbow7 {
+    background-color: rgb(255, 0, 255);
+  }
+</style>
+
+<div id="rainbow1"></div>
+<div id="rainbow2"></div>
+<div id="rainbow3"></div>
+<div id="rainbow4"></div>
+<div id="rainbow5"></div>
+<div id="rainbow6"></div>
+<div id="rainbow7"></div>
+
+<script>
+  (function() {
+    let lastTime = 0
+    let count = 0
+    let delay = 16
+    // let mouseX = 0
+    // let mouseY = 0
+    let isRequest = false
+    let rainbows = document.querySelectorAll("div")
+    let runDelay = 50
+    let mouseX
+    let mouseY
+
+    addEventListener("mousemove", move((event) => {
+      mouseX = event.clientX
+      mouseY = event.clientY
+      changeRainbow(mouseX, mouseY)
+    }, runDelay))
+    
+    addEventListener("mousemove", stop(event => {
+      for (let i = 0; i < rainbows.length; i++) {
+        setTimeout(() => {
+          changeRainbow(mouseX, mouseY)
+        }, runDelay * i)
+      }
+    }, runDelay))
+  
+    function move(func, delay) {
+      let scheduled = false
+      let lastEvent
+      return function(...arg) {
+        //节流
+        lastEvent = arg
+        if (!scheduled) {
+          scheduled = true
+          setTimeout(() => {
+          scheduled = false
+            func(...lastEvent)
+          }, delay)
+        }
+      }
+    }
+
+    function stop(func, delay) {
+      let timeout
+      return function(...arg) {
+        //防抖
+        clearTimeout(timeout)
+          timeout = setTimeout(() => {
+            func(...arg)
+          }, delay)
+      }
+    }
+
+    function changeRainbow(x, y) {
+      for (let i = rainbows.length - 1; i > 0; i--) {
+        rainbows[i].style.left = rainbows[i - 1].style.left
+        rainbows[i].style.top = rainbows[i - 1].style.top
+      }
+      rainbows[0].style.left = x - 4 + "px"
+      rainbows[0].style.top = y - 4 + "px"
+    }
+  })()
+
+</script> -->
+
+<!-- 鼠标幻影/鼠标跟踪器3-->
+ <!-- <style>
+  .span-shadow {
+    width: 16px;
+    height: 16px;
+    position: fixed;
+    background-image: url(https://pic.616pic.com/ys_img/00/42/67/D7oGcPkqe3.jpg);
+    background-size: contain;
+  }
+ </style>
+<script>
+  (function() {
+    let runDelay = 20
+    let number = 10
+
+    function throttle(func, delay) {
+      let lastEvent
+      let scheduled = false
+      return function(...arg) {
+        lastEvent = arg
+        if (!scheduled) {
+          scheduled = true
+          setTimeout(() => {
+            scheduled = false
+            func(...lastEvent)
+          }, delay)
+        }
+      }
+    }
+  
+    addEventListener("mousemove", throttle((event) => {
+      let myspan = document.createElement("span")
+      myspan.className = "span-shadow"
+      myspan.style.left = event.clientX + "px"
+      myspan.style.top = event.clientY + "px"
+      document.body.append(myspan)
+  
+      setTimeout(() => {
+        document.body.removeChild(myspan)
+      }, runDelay * number)
+
+    }, runDelay))
+
+  })()
+</script> -->
+
+<!-- 滚动事件 -->
+<!-- <style>
+  .progress {
+    border: 1px solid blue;
+    width: 100px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+  }
+  .progress > div {
+    height: 12px;
+    background: blue;
+    width: 0%;
+  }
+  body {
+    height: 2000px;
+  }
+
+</style>
+<div class="progress"><div></div></div>
+<p>Scroll me...</p>
+<script>
+let bar = document.querySelector(".progress div")
+addEventListener("scroll", _ => {
+  let max = document.body.scrollHeight - window.innerHeight
+  let progress = (pageYOffset / max) * 100
+  bar.style.width = progress + "%"
+})
+</script> -->
+
+<!-- 焦点事件 -->
+<!-- <p>Name:<input type="text" data-help="Your full name"></p>
+<p>Age: <input type="text" data-help="Age in years"></p>
+<p id="help"></p>
+<script>
+  let help = document.querySelector("#help")
+  let fields = document.querySelectorAll("p > input")
+  fields.forEach(field => {
+    field.addEventListener("focus", event => {
+      // console.dir(event)
+      let text = event.target.getAttribute("data-help")
+      help.textContent = text
+    })
+    field.addEventListener("blur", event => {
+      help.textContent = ""
+    })
+  })
+</script> -->
+
+<script type="1">
+  // worker 多线程
+  let myworker = new Worker("code/squareworker.js")
+  myworker.postMessage(10)
+  myworker.postMessage(20)
+  myworker.addEventListener("message", event => {
+    console.log("The worker responded:" + event.data)
+  })
+</script>
+<script type="1">
+  //上课时写的
+  function e (f, time) {
+    last = false
+    return function (...arg) {
+      lastEvent = 
+      if (!last) {
+        last = true
+        f(...arg)
+
+      }
+    }
+  }
+  </script>
+<script type="1">
+//高频面试题
+//降频之防抖
+function debounce(func, delay) {
+  let timeout
+  return function(...arg) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func(...arg)
+    }, delay)
+  }
+}
+
+addEventListener("keydown", debounce((event) => {
+  console.log(event)
+}, 500))
+
+</script>
+<script type="1">
+//高频面试题
+//降频之节流
+function throttle(func, delay) {
+  let scheduled = false
+  let lastEvent
+  return function(...arg) {
+    lastEvent = arg
+    if (!scheduled) {
+      scheduled = true
+      setTimeout(() => {
+        scheduled = false
+        func(...lastEvent)
+      }, delay)
+    }
+  }
+}
+
+addEventListener("keydown", throttle((event) => {
+  console.log(event)
+}, 500))
+
+</script>
+
+<!-- as-tabs 1 -->
+<!-- <div>
+  <div data-tabname="Foo">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis esse quae nisi porro quam maiores rem molestiae cupiditate nam culpa.</div>
+  <div data-tabname="Bar">Rerum illum quae, vitae minus vel enim architecto totam voluptate iusto, ratione nulla impedit adipisci. Ipsa ex possimus rerum illum!</div>
+  <div data-tabname="Baz">Iure veritatis optio consequatur eos neque, non iste laboriosam culpa modi autem! Dolor quos at aliquam sapiente explicabo voluptatum dolorum!</div>
+</div>
+
+<script>
+
+  asTabs(document.querySelector('div'))
+  
+  function asTabs(node) {
+    let = oneDiv = document.createElement("div")
+    let children = [...node.children]
+    children.forEach(child => {
+      let button = document.createElement("button")
+      button.style.display = "inline-block"
+      let text = child.getAttribute("data-tabname")
+      button.append(document.createTextNode(text))
+      oneDiv.append(button)
+    })
+    node.prepend(oneDiv)
+    let buttons = [...oneDiv.children]
+    buttons.forEach((button, j) => {
+      button.onmousedown = event => {
+        (function(j) {
+          for (let i = 0; i < buttons.length; i++) {
+            buttons[i].style.backgroundColor = "transparent"
+            children[i].style.display = "none"
+          }
+           button.style.backgroundColor = "red"
+           children[j].style.display = "block"
+        })(j)
+      }
+    })
+
+  }
+</script> -->
+
+<!-- as-tabs 2 -->
+<!-- <div>
+  <div data-tabname="Foo">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis esse quae nisi porro quam maiores rem molestiae cupiditate nam culpa.</div>
+  <div data-tabname="Bar">Rerum illum quae, vitae minus vel enim architecto totam voluptate iusto, ratione nulla impedit adipisci. Ipsa ex possimus rerum illum!</div>
+  <div data-tabname="Baz">Iure veritatis optio consequatur eos neque, non iste laboriosam culpa modi autem! Dolor quos at aliquam sapiente explicabo voluptatum dolorum!</div>
+</div>
+
+<script>
+  asTabs(document.querySelector('div'))
+  
+  function asTabs(node) {
+    let buttonContainer = document.createElement("div")
+    let dataContainer = document.createElement("div")
+    let dataChildren = Array.from(node.children)
+    let currentIndex = 0
+
+    for (let i = 0; i < dataChildren.length; i++) {
+      let dataChild = dataChildren[i]
+      let button = document.createElement("button")
+      button.textContent = dataChild.dataset.tabname
+      buttonContainer.append(button)
+      dataChild.style.display = "none"
+      dataContainer.append(dataChild)
+      button.addEventListener("mousedown", e => {
+        buttonContainer.children[currentIndex].style.color = "black"
+        dataContainer.children[currentIndex].style.display = "none"
+
+        currentIndex = i
+        button.style.color = "red"
+        dataChild.style.display = "block"
+      })
+    }
+    node.append(buttonContainer, dataContainer)
+    buttonContainer.children[currentIndex].style.color = "red"
+    dataContainer.children[currentIndex].style.display = "block"
+  }
+</script> -->
+
+<!-- 图片按需加载渐显 -->
+<!-- <style>
+  img {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    transition: 3s;
+  }
+</style>
+<div>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia voluptate aliquam nam, molestiae necessitatibus alias cupiditate dolor porro rerum. Facere perferendis molestias nemo enim dolorum modi fuga illum voluptate voluptates?</p>
+  <img data-src="https://s1.chu0.com/src/img/jpg/0f/0f2c702a60294e4a93def90b86c818bc.jpg?imageMogr2/auto-orient/thumbnail/!240x320r/gravity/Center/crop/240x320/quality/85/&e=1735488000&token=1srnZGLKZ0Aqlz6dk7yF4SkiYf4eP-YrEOdM1sob:paW1Gl5usQbSpuZfTEHf-gwZJXo=">
+  <img data-src="https://tse3-mm.cn.bing.net/th/id/OIP-C.zPGuX60FmqTgVtQaXqA1uAHaEM?rs=1&pid=ImgDetMain">
+</div>
+<script>
+  let imgs = document.querySelectorAll("img")
+  imgs.forEach(img => {
+    window.addEventListener("scroll", function show(e) {
+      let imgRect = img.getBoundingClientRect()
+      console.dir(imgRect)
+      if (imgRect.top < window.innerHeight) {
+        img.src = img.dataset.src
+        window.removeEventListener("scroll", show)
+      }
+    })
+
+    img.onload = e => {
+      img.style.opacity = 1
+    }
+  })
+</script> -->
+
+<script type="1">
+  //使数值可以被 iterable
+  Number.prototype[Symbol.iterator] = function * () {
+      for (let i = 0; i < this; i++) {
+        yield i
+      }
+    }
+
+    for (var x of 9) {
+      console.log(x)
+    }
+  
 </script>
