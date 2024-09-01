@@ -273,8 +273,8 @@ function isArray(item) {
   function property(path) {
     var keyArray = []
     if(typeof path === "string") {
-      let regexp = /\[(\d+)\]/g
-      let str = path.replaceAll(regexp, ".$1")
+      var regexp = /\[(\d+)\]/g
+      var str = path.replaceAll(regexp, ".$1")
       keyArray = str.split(".")
     } else {
       keyArray = path
@@ -282,13 +282,24 @@ function isArray(item) {
     return function(object) {
       var obj = object
       for (var key of keyArray) {
-        if (obj === null || obj === undefined) {
-          return obj
+        if (Object.hasOwn(obj, key) === true) {
+          obj = obj[key]
+        } else {
+          return null
         }
-        obj = obj[key]
       }
       return obj
     }
+    // return function(object) {
+    //   var obj = object
+    //   for (var key of keyArray) {
+    //     if (obj === null || obj === undefined) {
+    //       return obj
+    //     }
+    //     obj = obj[key]
+    //   }
+    //   return obj
+    // }
   }
   function selectMatchObjectFunc(predicate = identity) {
     if (typeof predicate === "string") {
@@ -957,17 +968,17 @@ function isArray(item) {
   }
   // function round(number, precision = 0) { //可以尝试用字符串的方式写写
   //   debugger
-  //   let strNumber = number.toString()
-  //   let index = strNumber.lastIndexOf(".")
-  //   let value = strNumber[index + precision + 1]
+  //   var strNumber = number.toString()
+  //   var index = strNumber.lastIndexOf(".")
+  //   var value = strNumber[index + precision + 1]
   //   strNumber = strNumber.slice(0, index + precision + 1)
   //   return Number(strNumber) + (value >= "5" ? 1 : 0) // 5.0被Number转换为5
   // }
 
   function round(number, precision = 0) {
-    let assist = 1
-    let num = number
-    let prec = (precision >= 0 ? precision : -precision)
+    var assist = 1
+    var num = number
+    var prec = (precision >= 0 ? precision : -precision)
     while(prec > 0) {
       assist *= 10
       prec--
@@ -986,23 +997,163 @@ function isArray(item) {
     return num
   }
   function flatMap(collection, iterator = identity) {
-    let result = map(collection, iterator)
+    var result = map(collection, iterator)
     return flatten(result)
   }
   function flatMapDepth(collection, iterator = identity, depth = 1) {
-    let result = map(collection, iterator)
+    var result = map(collection, iterator)
     return flattenDepth(result, depth)
   }
   function flatMapDeep(collection, iterator = identity) {
-    let result = map(collection, iterator)
+    var result = map(collection, iterator)
     return flattenDeep(result)
   }
   function get(object, path, defaultValue) {
-    let func = property(path)
-    let result = func(object)
+    var func = property(path)
+    var result = func(object)
     return result ?? defaultValue
   }
+  function has(object, path) {
+    var func = property(path)
+    if (func(object) !== null) {
+      return true
+    } else {
+      return false
+    }
+  }
+  function mapValues(object, iterator = identity) {
+    var result = {}
+    var func = selectMatchObjectFunc(iterator)
+    forOwn(object, (val, key) => {
+      result[key] = func(val)
+    })
+    return result
+  }
+  function mapKeys(object, iterator = identity) {
+    var result = {}
+    forOwn(object, (val, key) => {
+      var k = iterator(val, key)
+      result[k] = val
+    })
+    return result
+  }
+  function abs(val) {
+    let result = 0
+    if (val < 0){
+      result = -val
+    } else {
+      result = val
+    }
+    return result
+  }
+  function range() {
+    let start
+    let end
+    let step
+    let result = []
+    if (arguments.length === 0) {
+      return result
+    } else if (arguments.length === 1) {
+      start = 0
+      end = arguments[0]
+      if (end < 0) {
+        step = -1
+      } else {
+        step = 1
+      }
+    } else if (arguments.length === 2) {
+      start = arguments[0]
+      end = arguments[1]
+      if (start < end) {
+        step = 1
+      } else {
+        step = -1
+      }
+    } else {
+      start = arguments[0]
+      end = arguments[1]
+      step = arguments[2]
+    }
+
+    let time = abs((end - start)) / (abs(step) !== 0 ? abs(step) : 1)
+    let val = start
+    while(time >= 1) {
+      time--
+      result.push(val)
+      val += step
+    }
+
+    return result
+  }
+  function concat(array, ...arg) {
+    let result = []
+    forEach(array, val => {
+      result.push(val)
+    })
+    forEach(arg, val => {
+      if (isArray(val) === true) {
+        result.push(...val)
+      } else {
+        result.push(val)
+      }
+    })
+    return result
+  }
+  function repeat(string = "", n = 1) {
+    let result = ""
+    for (let i = 0; i < n; i++) {
+      result += string
+    }
+    return result
+  }
+  function repeatChar(char = " ", n = 1) {
+    let result = ""
+    for (let i = 0; i < n; i++) {
+      result += char[i % char.length]
+    }
+    return result
+  }
+  function pad(string = "", length = 0, char = " ") {
+    let result = ""
+    if (string.length >= length) {
+      return result = string
+    }
+    let headLength = (length - string.length) >>> 1
+    result = padStart(string, headLength + string.length, char)
+    result = padEnd(result, length, char)
+    return result
+  }
+  function padStart(string = "", length = 0, char = " ") {
+    let result = ""
+    if (string.length >= length) {
+      return result = string
+    }
+    let headLength = length - string.length
+    result += repeatChar(char, headLength)
+    result += string
+    return result
+  }
+  function padEnd(string = "", length = 0, char = " ") {
+    let result = ""
+    if (string.length >= length) {
+      return result = string
+    }
+    let tailLength = length - string.length
+    result += string
+    result += repeatChar(char, tailLength)
+    return result
+  }
+
   return {
+    padEnd: padEnd,
+    padStart: padStart,
+    pad: pad,
+    repeat: repeat,
+    concat: concat,
+    range: range,
+    mapKeys: mapKeys,
+    mapValues: mapValues,
+    has: has,
     get: get,
     flatMapDeep: flatMapDeep,
     flatMapDepth: flatMapDepth,
