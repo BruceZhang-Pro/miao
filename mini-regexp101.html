@@ -35,6 +35,9 @@
         background-color: transparent;
       }
     }
+    div[contenteditable] {
+      /*-webkit-spellcheck: false;*/
+    }
     #result > em:nth-of-type(odd) {
 
     }
@@ -82,8 +85,8 @@
 <body>
   <div>
     <div>REGULAR EXPRESSION</div>
-    <input class="border" type="text" id="reInput" onkeyup="run()"value=".(.(.)(.))(..)">
-    <button class="border" onclick="run()">RUN</button>
+    <input class="border" type="text" id="reInput" value=".(.(.)(.))(..)">
+    <button class="border" id="runInput" onclick="run()">RUN</button>
     <span id="matchState"></span>
     <div id="tips"></div>
     <div>FLAGS</div>
@@ -98,8 +101,7 @@
     
     <div>TEST STRING</div>
     <div id="output">
-      <div style="border: border-red-500" id="result" onscroll="syncScroll2()"></div>
-      <textarea class="border" oninput="run()" id="testStringInput" onscroll="syncScroll()">
+      <div contenteditable id="result" spellcheck="false">
         An explanation of your regex will be automatically generated as you type.
         An explanation of your regex will be automatically generated as you type.
         3 chickens
@@ -107,16 +109,23 @@
         100 eggs
         1 dragonfly
         1 pig
-      </textarea>
+      </div>
     </div>
   </div>
   <script>
-    "use strict"
+    "use strict";
     //元素id为xxx时,页面的全局就会出现一个叫xxx的变量,指向一个想表示那个标签的对象
-    
-    run()
-    
-    function run() {
+    let result = document.querySelector("#result")
+    let reInput = document.querySelector("#reInput")
+    let runInput = document.querySelector("#runInput")
+    let tips = document.querySelector("#tips")
+    let matchState = document.querySelector("#matchState")
+    window.addEventListener("load", run)
+    result.addEventListener("input", run)
+    reInput.addEventListener("keyup", run)
+    runInput.addEventListener("lick", run)
+
+    function run(e) {
       let reString = reInput.value // 可以通过value属性读取到文本框的值
       if (reString === "") {
         return undefined
@@ -134,13 +143,14 @@
         }
       }
       tips.innerHTML = ""
-      let testString = testStringInput.value
+      let testString = result.textContent
 
       let lastLastIndex = 0
       let html = ""
       let matchIndex = 0
 
       getMatchesFromWorker(re, testString, matches => {
+        let position = 0
         matches.forEach(match => {
           html += testString.slice(lastLastIndex, match.index)
           html += heightLightRegExp(match, matchIndex)
@@ -148,68 +158,58 @@
           matchIndex++
         })
         html += testString.slice(lastLastIndex)
+        if (e.target === result) {
+          position = getCursorPosition(result)
+        }
         result.innerHTML = html // 这里用的不是value属性,而是innerHTML
+        if (e.target === result) {
+          restoreCursorPosition(result, position)
+        }
       }, () => {
         matchState.textContent = "timeout"
       })
-
-      // let isAction = false
-      // let matchState = document.querySelector("#match-state")
-
-      // let worker = new Worker("regexp-match-worker.js")
-      // worker.postMessage({
-      //   regexp: re,
-      //   string:testString
-      // })
-      // let matchs = null
-      // worker.addEventListener("message", e => {
-      //   matchs = e.data
-      //   matchs.forEach(match => {
-      //     html += testString.slice(lastLastIndex, match.index)
-      //     html += heightLightRegExp(match, matchIndex)
-      //     lastLastIndex = match.indices[0][1]
-      //     matchIndex++
-      //   })
-      //   html += testString.slice(lastLastIndex)
-      //   result.innerHTML = html // 这里用的不是value属性,而是innerHTML
-      //   worker.terminate()
-      //   isAction = true
-      //   matchState.textContent = "okk"
-      // })
-
-      // setTimeout(() => {
-      //   if (isAction == false) {
-      //     matchState.textContent = "loading..."
-      //   }
-      // },500)
-
-      // setTimeout(() => {
-      //   if (isAction == false) {
-      //     worker.terminate()
-      //     matchState.textContent = "timeout"
-      //   }
-      // },4000)
-
-      // while (match = re.exec(testString)) {
-      //   html += testString.slice(lastLastIndex, match.index)
-      //   html += heightLightRegExp(match, matchIndex)
-      //   // html += `<strong>${match[0]}</strong>`
-      //   lastLastIndex = re.lastIndex
-
-      //   if (match[0].length == 0) {
-      //     re.lastIndex++
-      //   }
-
-      //   if (re.global === false) {
-      //     break
-      //   }
-      //   matchIndex++
-      // }
-      // html += testString.slice(lastLastIndex)
-
-      // result.innerHTML = html // 这里用的不是value属性,而是innerHTML
+    }
+    function restoreCursorPosition(node, input) {
+      let selected = window.getSelection()
+      traverseTextNode(node, (textNode) => {
+        if (input > textNode.textContent.length) {
+          input -= textNode.textContent.length
+        } else {
+          selected.setPosition(textNode, input)
+          return false
+        }
+      })
 
     }
+    function getCursorPosition(node) {
+      let selected = window.getSelection()
+      console.dir(selected)
+      let pos = 0
+      traverseTextNode(node, (textNode) => {
+        if (textNode === selected.anchorNode) {
+          pos += selected.anchorOffset
+          return false
+        } else {
+          pos += textNode.textContent.length
+        }
+      })
+      return pos
+    }
+
+    function traverseTextNode(node, func) {
+      if (node.nodeType === document.TEXT_NODE) {
+        if(func(node) === false) {
+          return false
+        }
+      } else if (node.nodeType === document.ELEMENT_NODE) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          if (traverseTextNode(node.childNodes[i], func) === false) {
+            return false
+          }
+        }
+      }
+    }
+
     function getMatchesFromWorker(re, textString, func, timeoutFunc) {
       let isAction = false
       let worker = new Worker("regexp-match-worker.js")
@@ -228,13 +228,13 @@
       })
 
       setTimeout(() => {
-        if (isAction == false) {
+        if (isAction === false) {
           matchState.textContent = "loading..."
         }
       },500)
 
       setTimeout(() => {
-        if (isAction == false) {
+        if (isAction === false) {
           worker.terminate()
           timeoutFunc()
         }
