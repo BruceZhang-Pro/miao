@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>regexp rail graph</title>
+</head>
+<body>
+<!--<svg viewBox="0 0 500 500" id="rail-graph" xmlns="http://www.w3.org/2000/svg">-->
+<svg width="300px" height="300px" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
+
+</svg>
+<script>
+  "use strict"
+  
+  let elementPadding = 10
+  let radiiEllipse = elementPadding // 画椭圆时的 x 和 y 的半径, 这里设置为一样的 1倍的padding为正常的椭圆曲线 3倍的padding为机甲风曲线
+  let railGraph = document.querySelector("#rail-graph")
+  let regexp = /foo|qwe(as[^2564]|rt{2,})+/
+  // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
+  
+  function parseRegularExpression(re) {
+    let i = 0
+    let input = re.source
+    let groupIndex = 1
+    
+    // debugger
+    let branches = parseBranches()
+    return {
+        type: "RegularExpression",
+        start: 0,
+        end: i,
+        branches,
+    }
+    function parseBranches() {
+      let branches = []
+      while(input[i] !== ")" && i < input.length) {
+        let branch = parseBranch()
+        branches.push(branch)
+        if (input[i] === "|") {
+          i++ //skip the "|"
+        }
+      }
+      
+      return branches
+    }
+    
+    function parseBranch() {
+      let node = {
+        type: "Branch",
+        start: i,
+        end: 0,
+        row: "",
+        character: []
+      }
+
+      while(input[i] !== "|" && input[i] !== ")" && i < input.length) {
+        let char = parseOnePart()
+        if (char.type === "Quantity") {
+          if (node.character.length === 0) {
+            throw new Error("syntax error !!!!!!!")
+          } else {
+            let repeatCharacter = node.character.pop()
+            char.repeat = repeatCharacter
+            char.start = repeatCharacter.start
+            char.row = input.slice(char.start, char.end)
+          }
+        }
+        node.character.push(char)
+      }
+      
+      node.end = i
+      node.row = input.slice(node.start, i)
+      return node
+    }
+    
+    function parseOnePart() {
+      if (input[i] === "(") {
+        return parseCaptureGroup()
+      } else if (input[i] === "[") {
+        return parseCharacterClass()
+      } else if (input[i] === "{" || input[i] === "+" ||  input[i] === "*" || input[i] === "?") {
+        return parseQuantity()
+      } else if (input[i] === "\\") {
+        return parseEscape()
+      } else {
+        return parseCharacter()
+      }
+    }
+    function parseEscape() {
+      let node = {
+        type: "Escape",
+        start: i,
+        end: 0,
+        row: "",
+        escape:"",
+      }
+      i++
+      node.row = "\\" + input[i]
+      node.escape = input[i]
+      i++
+      node.end = i
+      return node
+    }
+    function parseCaptureGroup() {
+      let node = {
+        type: "CaptureGroup",
+        start: i,
+        end: 0,
+        row: "",
+        capture: true,
+        groupName: "",
+        zeroWidthAssert: false,
+        positive: true,
+        lookahead: true,
+        GroupIndex: groupIndex,
+        branches: [],
+      }
+      
+      i++ // skip the "("
+      
+      // (asdas)
+      // (?<asdsa>asdas)
+      // (?:asdas)
+      
+      // (?=asdas)
+      // (?<asdas)
+      // positive lookahead
+      //positive lookbehind
+      // negative lookbehind
+      // negative lookahead
+      
+      if (input[i] === "?") {
+        i++
+        if (input[i] === ":") {
+          node.capture = false
+          i++
+        } else if (input[i] === "=") {
+          node.zeroWidthAssert = true
+          node.capture = false
+          i++
+        } else if (input[i] === "!") {
+          node.zeroWidthAssert = true
+          node.positive = false
+          i++
+        } else if (input[i] === "<") {
+          i++ //skip the "<"
+          if (input[i] === "=") {
+            node.zeroWidthAssert = true
+            node.lookahead = false
+            node.capture = false
+            i++
+          } else if (input[i] === "!") {
+            node.zeroWidthAssert = true
+            node.positive = false
+            node.lookahead = false
+            node.capture = false
+            i++
+          } else {
+            node.groupName = parseGroupName()
+          }
+        }
+      }
+      if (node.zeroWidthAssert !== true && node.capture !== false) {
+        groupIndex++
+      } else {
+        node.GroupIndex = undefined
+      }
+      while (input[i] !== ")" && i < input.length) {
+        node.branches.push(...parseBranches())
+      }
+      i++ //skip the ")"
+
+      function parseGroupName() {
+        let start = i
+        while (input[i] !== ">" && i < input.length) {
+          i++
+        }
+        return input.slice(start, i++) // i++ is skip the ">"
+      }
+      
+      node.end = i
+      node.row = input.slice(node.start, i)
+      return node
+    }
+    
+    function parseQuantity() {
+      let node = {
+        type: "Quantity",
+        start: i,
+        end: 0,
+        min: 0,
+        max: Infinity,
+        row: "",
+        greed: true,
+        repeat: null,
+      }
+      
+      if (input[i] === "+") {
+        node.min = 1
+        i++
+      } else if (input[i] === "*") {
+        i++
+      } else if (input[i] === "?") {
+        node.max = 1
+        i++
+      } else if (input[i] === "{") {
+        i++
+        node.min = parseInt()
+        i++ //skip the ","
+        if (input[i] === "}") { //说明为 {x,} 这种形式
+          i++ // skip "}"
+        } else {
+          node.max = parseInt()
+          i++ // skip the "}"
+        }
+      }
+      
+      if (input[i] === "?") { //非贪婪匹配
+        node.greed = false
+        i++
+      }
+      
+      function parseInt() {
+        let start = i
+        while (input[i] >= "0" && input[i] <= "9") {
+          i++
+        }
+        return Number(input.slice(start, i))
+      }
+      
+      node.end = i
+      node.row = input.slice(node.start, i)
+      return node
+    }
+    
+    function parseCharacter() {
+      let node = {
+        type: "Character",
+        start: i,
+        end: 0,
+        row: ""
+      }
+      
+      node.row = input[i]
+      i++
+      node.end = i
+      
+      return node
+    }
+    
+    function parseCharacterClass() {
+      let node = {
+        type: "CharacterClass",
+        start: i,
+        end: 0,
+        row: "",
+        negative: false,
+        Character: [],
+      }
+      i++ // this the "["
+      if (input[i] === "^") {
+        node.negative = true
+        i++ //skip the "^"
+      }
+      
+      while (input[i] !== "]" && i < input.length) {
+        node.Character.push(parseCharacter())
+      }
+      i++ // skip the "]"
+      
+      node.end = i
+      node.row = input.slice(node.start, i)
+      
+      return node
+    }
+  }
+  
+  function drawRegularExpressionGraph(node) {
+  
+  }
+  
+  function elt(string, obj = {}, ...arg) {
+    let node = document.createElementNS("http://www.w3.org/2000/svg", string)
+    
+    for (let key in obj) {
+      node.setAttribute(key, obj[key])
+    }
+    for (let val of arg) {
+      if (typeof val === "string") {
+        let textNode = document.createTextNode(val)
+        node.append(textNode)
+      } else {
+        node.append(val.node)
+      }
+    }
+    railGraph.append(node)
+    return {
+      node: node,
+      width: node.getBBox().width,
+      height: node.getBBox().height,
+      boxX: node.getBBox().x,
+      boxY: node.getBBox().y,
+    }
+  }
+
+  function drawBaselineOfGraph(graphObj) {
+    let g = elt("g").node
+    // let rect = elt("rect",{
+    //   width: `${graphObj.width + elementPadding * 2}`,
+    //   height: `${graphObj.height}`,
+    //   fill: "#a4c04a",
+    // }).node
+    // g.append(rect)
+    graphObj.node.setAttribute("transform", `translate(${elementPadding} 0)`)
+    g.append(graphObj.node)
+    
+    let path = elt("path", {
+      stroke: "black",
+      d: `M 0, ${graphObj.height / 2} h ${elementPadding}
+      m ${graphObj.width} 0 h${elementPadding}`,
+    }).node
+    path.setAttribute("stroke-width", "2")
+    g.append(path)
+    
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+    
+  }
+  
+  function drawCharacterGraph(node) {
+    let heightPadding = elementPadding * 2
+    let widthPadding = elementPadding
+    
+    let g = elt("g").node
+    let leftQuote = elt("tspan", {
+      fill: "#908c83",
+      font: "12px Arial",
+    }, '“')
+    let rightQuote = elt("tspan", {
+      fill: "#908c83",
+      font: "12px Arial",
+    }, '”')
+    let character = elt("tspan", {
+      font: "12px Arial",
+    }, node.row)
+
+    let textObj = elt("text", {}, leftQuote, character, rightQuote)
+    let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
+    let rectWidth = textObj.width * boxAspectRatio + textObj.width //rect的宽度
+    
+    let rectObj = elt("rect", {
+      width: `${rectWidth}`,
+      height: `${textObj.height + heightPadding}`,
+      fill: "#dae8e5",
+      rx: "5",
+    })
+    
+    let textDy = 0 - textObj.boxY + (heightPadding / 2) //text的dy, 是在其原来的位置上的偏移
+    textObj.node.setAttribute("x", `${(rectWidth - textObj.width) / 2}`)
+    textObj.node.setAttribute("dy", `${textDy}`)
+    
+    // gObj.node.setAttribute("transform", `translate(100 100)`)
+    g.append(rectObj.node)
+    g.append(textObj.node)
+    
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+    
+  }
+  
+  function drawCharacterClassGraph(node) {
+    let charObjArray = node.Character.map((it) => {
+      return drawCharacterGraph(it)
+    })
+    let g = elt("g").node
+    let maxWidth = charObjArray.reduce((result, obj) => {
+      if (result < obj.width) {
+        return obj.width
+      } else {
+        return result
+      }
+    }, -Infinity)
+    // console.log(charObjArray.length)
+    let height = (charObjArray.length + 1) * elementPadding + (charObjArray.length * charObjArray[0].height)
+    let rect = elt("rect", {
+      width: `${maxWidth + elementPadding * 2}`,
+      height: `${height}`,
+      fill: "#cbcbba",
+      rx: "5",
+    }).node
+    
+    g.append(rect)
+    let h = 0
+    charObjArray.forEach(obj => {
+      obj.node.setAttribute("transform", `translate(${(maxWidth - obj.width) / 2 + elementPadding} ${h + elementPadding})`)
+      h += elementPadding + obj.height
+      g.append(obj.node)
+    })
+    
+   return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+  }
+  //obj.branches[0].character[4]
+  function drawQuantityGraph(node) {
+    let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
+    let g = elt("g").node
+    let character = matchFunc(node.repeat)
+    character.node.setAttribute("transform", `translate(${padding} ${padding})`)
+    let rect = elt("rect", {
+      width: `${character.width + (padding * 2)}`,
+      height: `${character.height + (padding * 2)}`,
+      fill: "#a4c04a",
+    }).node
+    g.append(rect)
+    g.append(character.node)
+    
+    let strokeWidth = "2"
+    let yPosition = character.height / 2 + (padding) // 计算与其他元素连线时,连接线在纵轴的位置
+    let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
+    let zeroTime = "" // 最小为0次的匹配
+    let repeatedly = "" //最大的匹配大于1次
+    if (node.min === 0) {
+      zeroTime = `M 0 ${yPosition}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${-elementPadding}
+        L ${elementPadding} ${padding}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}
+        h ${character.width}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
+        L ${character.width + padding + (elementPadding)} ${yPosition - (elementPadding)}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${elementPadding}`
+    }
+    if (node.max > 1) {
+      repeatedly = `M ${padding + character.width} ${yPosition}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
+        L ${character.width + padding + (elementPadding)} ${character.height + padding}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${elementPadding}
+        h ${-character.width}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${-elementPadding}
+        L ${elementPadding} ${yPosition + (elementPadding)}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}`
+    }
+    
+    let path = elt("path", {
+      fill: "none",
+      stroke: "black",
+      "stroke-width": strokeWidth,
+      d: straightLine + zeroTime + repeatedly
+    }).node
+    
+    g.append(path)
+    
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+  }
+  
+  function drawBranchGraph(node) {
+    let g = elt("g").node
+    let objArray = node.character.map(obj => {
+      return matchFunc(obj)
+    })
+    objArray = objArray.map(obj => {
+      return drawBaselineOfGraph(obj)
+    })
+    let width = objArray.reduce((result, obj) => {
+      return result + obj.width
+    }, 0)
+    let height = getMaxValueOfAllG(objArray, "height")
+    let rect = elt("rect", {
+      fill: "#a4c04a",
+      width: `${width}`,
+      // height: `${height + elementPadding * 2}`,
+      height: `${height}`,
+      rx: "5"
+    }).node
+    g.append(rect)
+    
+    let x = 0
+    let rectHeight = rect.getBBox().height
+    objArray.forEach(obj => {
+      obj.node.setAttribute("transform", `translate(${x} ${(rectHeight - obj.height) / 2})`)
+      x += obj.width
+      g.append(obj.node)
+    })
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+  }
+  
+  /**
+   * 计算对象数组里的最大宽度或高度
+   * @param objArray 已经画好的对象组成的数组
+   * @param key width or height
+   * @returns value 所有对象里宽度的最大值或者高度的最大值
+   */
+  function getMaxValueOfAllG(objArray, key) {
+    return objArray.reduce((result, obj) => {
+      if (result < obj[key]) {
+        return obj[key]
+      } else {
+        return result
+      }
+    }, -Infinity)
+  }
+  
+  function matchFunc(node) {
+    if (node.type === "Character") {
+      return drawCharacterGraph(node)
+    } else if (node.type === "CharacterClass") {
+      return drawCharacterClassGraph(node)
+    } else if (node.type === "CaptureGroup") {
+      return
+    } else if (node.type === "Quantity") {
+      return drawQuantityGraph(node)
+    }
+  }
+  
+  function drawBranchesGraph(nodes) {
+  
+  }
+  
+  function drawCaptureGraph(node) {
+  
+  }
+  
+  function drawEscapeGraph(node) {
+  
+  }
+  
+  
+  // function drawCharacterGraph(node) {
+  //   let heightPadding = elementPadding
+  //   let widthPadding = elementPadding
+  //   let g = document.createElementNS("http://www.w3.org/2000/svg", "g")
+  //   railGraph.append(g)
+  //   let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
+  //   let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+  //
+  //   let textNode = document.createTextNode("fymzasdgergs")
+  //   // let textNode = document.createTextNode("f")
+  //   text.append(textNode)
+  //   railGraph.append(text)
+  //   let box = text.getBBox()
+  //   let boxAspectRatio = box.height / box.width //text 的高宽比
+  //   let rectWidth = box.width * boxAspectRatio + box.width //rect的宽度
+  //   let textDy = text.getAttribute("y") - box.y + (heightPadding / 2) //text的dy, 是在其原来的位置上的偏移
+  //   text.setAttribute("x", `${(rectWidth - box.width) / 2}`)
+  //   text.setAttribute("dy", `${textDy}`)
+  //
+  //   // text.setAttribute("dy", "20px")
+  //
+  //   rect.setAttribute("width", `${rectWidth}`)
+  //   rect.setAttribute("height", `${box.height + heightPadding}`)
+  //   rect.setAttribute("fill", "#dae8e5")
+  //   rect.setAttribute("rx", "5")
+  //   g.setAttribute("transform", `translate(100 100)`)
+  //   g.append(rect)
+  //   g.append(text)
+  //
+  // }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
