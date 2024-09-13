@@ -19,6 +19,12 @@
   let radiiEllipse = elementPadding // 画椭圆时的 x 和 y 的半径, 这里设置为一样的 1倍的padding为正常的椭圆曲线 3倍的padding为机甲风曲线
   let railGraph = document.querySelector("#rail-graph") // svg 对象
   
+  //待改
+  // /asd{,3}/  // 把{,3} 全当做普通字符
+  // /asd{,}/  // 把{,} 全当做普通字符
+  // [abz049_-]  //把 - 在开头和结尾时,当做普通字符  其余的时候当做 前后字母的过度字符
+  // 转移字符看看有没有问题
+  
   // /foo|qwe(as[^2564]|rt{2,})+/
   // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
   
@@ -36,8 +42,8 @@
   // console.log(parseRegularExpression(regexp))
   // let regexp = /a[y(ak)s]+/
   
-  let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
-  drawRegularExpressionGraph(parseRegularExpression(regexp))
+  // let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
+  // drawRegularExpressionGraph(parseRegularExpression(regexp))
   
   function parseRegularExpression(re) {
     let i = 0
@@ -285,7 +291,16 @@
       }
       
       while (input[i] !== "]" && i < input.length) {
-        node.Character.push(parseCharacter())
+        if (input[i] === "-" && input[i - 1] !== "[" && input[i - 1] !== "^" && input[i + 1] !== "]") {
+          let charSeries = parseCharSeries()
+          let char = node.Character.pop()
+          charSeries.character.unshift(char)
+          charSeries.start = char.start
+          charSeries.row = input.slice(charSeries.start, charSeries.end)
+          node.Character.push(charSeries)
+        } else {
+          node.Character.push(parseCharacter())
+        }
       }
       i++ // skip the "]"
       
@@ -294,7 +309,51 @@
       
       return node
     }
+    
+    /**
+     * 把[]里的需要连续的字符放到用这个解析
+     * @param time  "-" 之前的字符已经解析过了,所以默认值为2
+     * @returns {{character: *[], start: number, end: number, row: string, type: string}}
+     */
+    function parseCharSeries(time = 2) {
+      let node = {
+        type: "CharSeries",
+        start: i,
+        end: 0,
+        row: "",
+        character: [],
+      }
+      for (let k = 0; k < time; k++) {
+        if (input[i] === "-") {
+          node.character.push(parseContentChar())
+        } else {
+          node.character.push(parseCharacter())
+        }
+      }
+      
+      node.end = i
+      node.row = input.slice(node.start, node.end)
+      
+      return node
+    }
+    
+    function parseContentChar() {
+      let node =  {
+        type: "contentChar",
+        start: i,
+        end: 0,
+        row: "",
+      }
+      node.row = input[i]
+      i++
+      
+      node.end = i
+      node.row = input.slice(node.start, node.end)
+      
+      return node
+    }
   }
+  
   
   function drawRegularExpressionGraph(node) {
     let lineLength = elementPadding // 两端的线的长度
