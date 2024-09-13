@@ -9,16 +9,15 @@
 </head>
 <body>
 <!--<svg viewBox="0 0 500 500" id="rail-graph" xmlns="http://www.w3.org/2000/svg">-->
-<svg width="500px" height="800px" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
+<svg width="1500px" height="800px" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
 
 </svg>
 <script>
   "use strict"
-  // 待实现  /a[y(ak)s]+/
   
   let elementPadding = 10
   let radiiEllipse = elementPadding // 画椭圆时的 x 和 y 的半径, 这里设置为一样的 1倍的padding为正常的椭圆曲线 3倍的padding为机甲风曲线
-  let railGraph = document.querySelector("#rail-graph")
+  let railGraph = document.querySelector("#rail-graph") // svg 对象
   
   // /foo|qwe(as[^2564]|rt{2,})+/
   // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
@@ -33,9 +32,11 @@
   // drawCaptureGraph(parseRegularExpression(regexp).branches[0].character[0])
   
   // let regexp = /as*d|(s[wv])+|rt/
-  // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/
+  // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/ //  这个没法画出来,需要改
   // console.log(parseRegularExpression(regexp))
-  let regexp = /a[y(ak)s]+/
+  // let regexp = /a[y(ak)s]+/
+  
+  let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
   drawRegularExpressionGraph(parseRegularExpression(regexp))
   
   function parseRegularExpression(re) {
