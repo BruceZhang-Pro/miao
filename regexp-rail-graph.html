@@ -6,11 +6,28 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>regexp rail graph</title>
+  <style>
+    /*body {*/
+    /*  width: 100%;*/
+    /*  height: 100%;*/
+    /*}*/
+  </style>
 </head>
 <body>
 <!--<svg viewBox="0 0 500 500" id="rail-graph" xmlns="http://www.w3.org/2000/svg">-->
-<svg width="1500px" height="800px" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
-
+<svg width="2000" height="1000" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
+<style>
+  rect[class=Escape] {
+    fill: #bada55;
+  }
+  rect[class=Character] {
+    fill: #dae8e5;
+  }
+  rect[class=Special] {
+    fill: #6b6659;
+    rx: 0;
+  }
+</style>
 </svg>
 <script>
   "use strict"
@@ -19,11 +36,66 @@
   let radiiEllipse = elementPadding // 画椭圆时的 x 和 y 的半径, 这里设置为一样的 1倍的padding为正常的椭圆曲线 3倍的padding为机甲风曲线
   let railGraph = document.querySelector("#rail-graph") // svg 对象
   
+  // 普通字符转义后的显示
+  const ESCAPE = {
+    b: "word boundary", //单词边界
+    B: "non-word boundary", //匹配非单词边界
+    d: "digit", //匹配一个数字
+    D: "non-digit", //匹配一个非数字
+    f: "form feed (0x0C)", //匹配一个换页符
+    n: "line feed (0x0A)", //匹配一个换行符
+    r: "carriage return (0x0D)", //匹配一个换行符
+    s: "white space", //匹配任何空白字符，包括空格、制表符、换页符
+    S: "non-white space", //匹配非空白字符，包括空格、制表符、换页符
+    t: "tab (0x09)", //匹配制表符
+    v: "vertical tab (0x0B)", //匹配一个垂直制表符
+    w: "word", //匹配包括下划线的任何单词字符
+    W: "non-word", //匹配任何非单词字符
+  }
+  
+  // 通用字符组
+  const GENERAL_CHAR_GROUP = {
+    d: true,
+    D: true,
+    w: true,
+    W: true,
+    s: true,
+    S: true,
+  }
+  
+  const SPECIAL = {
+    "^": "Start of line",
+    "$": "End of line",
+  }
+
+  const COMMON_CHAR = "Character" // 普通字符
+  const ESCAPE_CHAR = "Escape" // 转义字符
+  const SPECIAL_CHAR = "Special" // 特殊字符 如 ^ $
+  
   //待改
-  // /asd{,3}/  // 把{,3} 全当做普通字符
-  // /asd{,}/  // 把{,} 全当做普通字符
-  // [abz049_-]  //把 - 在开头和结尾时,当做普通字符  其余的时候当做 前后字母的过度字符
-  // 转移字符看看有没有问题
+  // /asd{,3}/  // 把{,3} 全当做普通字符 ✓
+  // /asd{,}/  // 把{,} 全当做普通字符 ✓
+  // [abz049_-]  //把 - 在开头和结尾时,当做普通字符  其余的时候当做 前后字母的过度字符 ✓
+  // {3}  //量词匹配只能是3次,不能多不能少 ✓
+  // 转移字符 在[]里的转义字符 也有问题  ✓
+  // ^  $  这两个要画一下 ✓
+  // 转义字符显示 ✓
+  // 中括号里的转意字符 ✓
+  // 中括号里的 中划线连接的字符 ✓
+  // 中括号里,中划线连接的转义字符 ✓
+  // 普通字符连接在一起 ✓
+  // 中括号里的重复项去掉 ✓
+  // {3} 量词匹配只能是3次,不能多不能少 ,在画的时候,量词的提示要和 {0,3} 不一样
+  // 量词的箭头
+  // 量词的文本
+  // 量词的提示词
+  // 捕获的文本
+  // characterClass 的文本
+  
+  
+  //暂时不做的
+  // {1,  } 带空格 的问题
+  // 转义字符可以转多个字符
   
   // /foo|qwe(as[^2564]|rt{2,})+/
   // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
@@ -38,12 +110,19 @@
   // drawCaptureGraph(parseRegularExpression(regexp).branches[0].character[0])
   
   // let regexp = /as*d|(s[wv])+|rt/
-  // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/ //  这个没法画出来,需要改
-  // console.log(parseRegularExpression(regexp))
-  // let regexp = /a[y(ak)s]+/
+  // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/ // 我测试的
+  // let regexp = /a\b[a-za-zA^\^]\n\^^\$$/ // 测试转义字符
+  // let regexp = /^a${s\da\^^234}[12ad3456]/ // 测试去重
   
   // let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
-  // drawRegularExpressionGraph(parseRegularExpression(regexp))
+  // let regexp = /a\b\n\^^\$$/
+  // let regexp = /a\b^[\da^\^^]\n\^\$$/ // 测试转义字符
+  let regexp = /(zhang(ziC[a-z]heng)+fo)*?(?=fa)(?:fa)|ba([^fa\rffaou]{1,2}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-9][a-z]/
+  // let regexp = /s{2,5}34/
+  // let regexp = /a\d[\n-\f]g[\nd\d]r\B|[\W-a]/ // 测试转义字符
+  console.log(parseRegularExpression(regexp))
+  
+  drawRegularExpressionGraph(parseRegularExpression(regexp))
   
   function parseRegularExpression(re) {
     let i = 0
@@ -105,14 +184,66 @@
         return parseCaptureGroup()
       } else if (input[i] === "[") {
         return parseCharacterClass()
-      } else if (input[i] === "{" || input[i] === "+" ||  input[i] === "*" || input[i] === "?") {
+      } else if (input[i] === "{") {
+        if (isQuantity() === true) {
+          return parseQuantity()
+        } else {
+          return parseCharacter()
+        }
+      } else if (input[i] === "+" ||  input[i] === "*" || input[i] === "?") {
         return parseQuantity()
       } else if (input[i] === "\\") {
         return parseEscape()
+      } else if (input[i] === "^" || input[i] === "$") {
+        return parseCharacterSpecial()
       } else {
         return parseCharacter()
       }
     }
+    
+    function parseCharacterSpecial() {
+      let node = {
+        type: "Special",
+        start: i,
+        end: 0,
+        row: ""
+      }
+      node.row = input[i]
+      i++ // skip the character of special
+      node.end = i
+      return node
+    }
+    
+    function isQuantity() {
+      let start = i
+      let commaTime = 0 //逗号出现的次数
+      let isQuantity = true
+      i++ // skip the "{"
+      if (input[i] === "}") {
+        isQuantity = false
+      } else if (input[i] === ",") {
+          isQuantity = false
+      }
+      
+      while (input[i] !== "}" && i < input.length) {
+        if (input[i] === ",") {
+          commaTime++
+          if (commaTime > 1) {
+            isQuantity = false
+            break
+          }
+        }
+        if ((input[i] < "0" || input[i] > "9") && input[i] !== ",") {
+          isQuantity = false
+          break
+        }
+        i++
+      }
+      
+      i = start
+      return isQuantity
+    }
+    
     function parseEscape() {
       let node = {
         type: "Escape",
@@ -121,10 +252,10 @@
         row: "",
         escape:"",
       }
-      i++
+      i++ // skip the "\"
       node.row = "\\" + input[i]
       node.escape = input[i]
-      i++
+      i++ // skip the character of escape
       node.end = i
       return node
     }
@@ -231,15 +362,19 @@
         node.max = 1
         i++
       } else if (input[i] === "{") {
-        i++
+        i++ // skip the "{"
         node.min = parseInt()
-        i++ //skip the ","
-        if (input[i] === "}") { //说明为 {x,} 这种形式
-          i++ // skip "}"
-        } else {
-          node.max = parseInt()
-          i++ // skip the "}"
+        node.max = node.min
+        while (input[i] !== "}" && i < input.length) {
+          if (input[i] === ",") {
+            i++ //skip the ","
+          } else {
+            node.max = parseInt()
+
+          }
         }
+        
+        i++ // skip "}"
       }
       
       if (input[i] === "?") { //非贪婪匹配
@@ -291,18 +426,35 @@
       }
       
       while (input[i] !== "]" && i < input.length) {
-        if (input[i] === "-" && input[i - 1] !== "[" && input[i - 1] !== "^" && input[i + 1] !== "]") {
+        if (input[i] === "-" && input[i - 1] !== "[" && input[i - 1] !== "^" && input[i + 1] !== "]" && isGeneralCharGroup() === false) {
           let charSeries = parseCharSeries()
           let char = node.Character.pop()
           charSeries.character.unshift(char)
           charSeries.start = char.start
           charSeries.row = input.slice(charSeries.start, charSeries.end)
           node.Character.push(charSeries)
+        } else if (input[i] === "\\") {
+          node.Character.push(parseEscape())
         } else {
           node.Character.push(parseCharacter())
         }
       }
       i++ // skip the "]"
+      
+      /**
+       * 判断 "-" 的前一个字符是不是范围字符组
+       * @returns {boolean}
+       */
+      function isGeneralCharGroup() {
+        let idx = node.Character.length - 1
+        
+        if (node.Character[idx].type !== "Escape") {
+          return false
+        }
+        
+        return Object.hasOwn(GENERAL_CHAR_GROUP, node.Character[idx].escape)
+        
+      }
       
       node.end = i
       node.row = input.slice(node.start, i)
@@ -312,10 +464,9 @@
     
     /**
      * 把[]里的需要连续的字符放到用这个解析
-     * @param time  "-" 之前的字符已经解析过了,所以默认值为2
      * @returns {{character: *[], start: number, end: number, row: string, type: string}}
      */
-    function parseCharSeries(time = 2) {
+    function parseCharSeries() {
       let node = {
         type: "CharSeries",
         start: i,
@@ -323,9 +474,11 @@
         row: "",
         character: [],
       }
-      for (let k = 0; k < time; k++) {
+      for (let k = 0; k < 2; k++) {
         if (input[i] === "-") {
-          node.character.push(parseContentChar())
+          node.character.push(parseConnectChar())
+        } else if (input[i] === "\\") {
+          node.character.push(parseEscape())
         } else {
           node.character.push(parseCharacter())
         }
@@ -337,9 +490,9 @@
       return node
     }
     
-    function parseContentChar() {
+    function parseConnectChar() {
       let node =  {
-        type: "contentChar",
+        type: "connectChar",
         start: i,
         end: 0,
         row: "",
@@ -364,7 +517,7 @@
     let YPosition = height / 2
     let g = elt("g").node
     let rect = elt("rect", {
-      fill: "#a4c04a",
+      fill: "none",
       width: `${result.width + (leftRightPadding << 1)}`,
       height: `${height}`,
     }).node
@@ -435,7 +588,7 @@
     // let rect = elt("rect",{
     //   width: `${graphObj.width + lineLength * 2}`,
     //   height: `${graphObj.height}`,
-    //   fill: "#a4c04a",
+    //   fill: "none",
     // }).node
     // g.append(rect)
     graphObj.node.setAttribute("transform", `translate(${lineLength} 0)`)
@@ -457,42 +610,60 @@
     
   }
   
-  function drawCharacterGraph(node) {
+  /**
+   * 根据text对象,计算其兄弟元素rect的宽度
+   * @param textObj
+   * @returns {*}
+   */
+  function calculateRectWidth(textObj) {
+    let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
+    return textObj.width * boxAspectRatio + textObj.width //rect的宽度
+  }
+  
+  function drawCharacterGraph(node, type = COMMON_CHAR) {
     let heightPadding = elementPadding * 2
     let widthPadding = elementPadding
-    
+    let textObj
     let g = elt("g").node
-    let leftQuote = elt("tspan", {
-      fill: "#908c83",
-      font: "12px Arial",
-    }, '“')
-    let rightQuote = elt("tspan", {
-      fill: "#908c83",
-      font: "12px Arial",
-    }, '”')
-    let character = elt("tspan", {
-      font: "12px Arial",
-    }, node.row)
 
-    let textObj = elt("text", {}, leftQuote, character, rightQuote)
-    let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
-    let rectWidth = textObj.width * boxAspectRatio + textObj.width //rect的宽度
+     if (type === ESCAPE_CHAR) {
+       textObj = elt("text", {}, ESCAPE[node.row])
+       
+     } else if (type === SPECIAL_CHAR) {
+       textObj = elt("text", {}, SPECIAL[node.row])
+      
+     } else { // type === COMMON_CHAR
+      let leftQuote = elt("tspan", {
+        fill: "#908c83",
+        font: "12px Arial",
+      }, '“')
+      let rightQuote = elt("tspan", {
+        fill: "#908c83",
+        font: "12px Arial",
+      }, '”')
+      let character = elt("tspan", {
+        font: "12px Arial",
+      }, node.row)
+      
+      textObj = elt("text", {}, leftQuote, character, rightQuote)
+    }
+    
+    let rectWidth = calculateRectWidth(textObj)
     
     let rectObj = elt("rect", {
       width: `${rectWidth}`,
       height: `${textObj.height + heightPadding}`,
-      fill: "#dae8e5",
       rx: "5",
+      class: type,
     })
     
     let textDy = 0 - textObj.boxY + (heightPadding / 2) //text的dy, 是在其原来的位置上的偏移
     textObj.node.setAttribute("x", `${(rectWidth - textObj.width) / 2}`)
     textObj.node.setAttribute("dy", `${textDy}`)
     
-    // gObj.node.setAttribute("transform", `translate(100 100)`)
     g.append(rectObj.node)
     g.append(textObj.node)
-    
+
     return {
       node: g,
       width: g.getBBox().width,
@@ -502,9 +673,21 @@
   }
   
   function drawCharacterClassGraph(node) {
-    let charObjArray = node.Character.map((it) => {
-      return drawCharacterGraph(it)
+    let characterMap = {}
+    let charObjArray = []
+    let set = new Set()
+    node.Character.forEach(it => {
+      characterMap[it.row] = it
+      set.add(it.row)
     })
+
+    set.forEach(key => {
+      charObjArray.push(matchFunc(characterMap[key]))
+    })
+
+    // let charObjArray = node.Character.map((it) => {
+    //   return matchFunc(it)
+    // })
     let g = elt("g").node
     let maxWidth = charObjArray.reduce((result, obj) => {
       if (result < obj.width) {
@@ -536,6 +719,60 @@
       height: g.getBBox().height,
     }
   }
+  
+  /**
+   * 画 中括号里的连续的字符
+   * @param node
+   * @returns {{node: SVGAElement | SVGAnimateElement | SVGAnimateMotionElement | SVGAnimateTransformElement | SVGCircleElement | SVGClipPathElement | SVGDefsElement | SVGDescElement | SVGEllipseElement | SVGFEBlendElement | SVGFEColorMatrixElement | SVGFEComponentTransferElement | SVGFECompositeElement | SVGFEConvolveMatrixElement | SVGFEDiffuseLightingElement | SVGFEDisplacementMapElement | SVGFEDistantLightElement | SVGFEDropShadowElement | SVGFEFloodElement | SVGFEFuncAElement | SVGFEFuncBElement | SVGFEFuncGElement | SVGFEFuncRElement | SVGFEGaussianBlurElement | SVGFEImageElement | SVGFEMergeElement | SVGFEMergeNodeElement | SVGFEMorphologyElement | SVGFEOffsetElement | SVGFEPointLightElement | SVGFESpecularLightingElement | SVGFESpotLightElement | SVGFETileElement | SVGFETurbulenceElement | SVGFilterElement | SVGForeignObjectElement | SVGGElement | SVGImageElement | SVGLineElement | SVGLinearGradientElement | SVGMarkerElement | SVGMaskElement | SVGMetadataElement | SVGMPathElement | SVGPathElement | SVGPatternElement | SVGPolygonElement | SVGPolylineElement | SVGRadialGradientElement | SVGRectElement | SVGScriptElement | SVGSetElement | SVGStopElement | SVGStyleElement | SVGSVGElement | SVGSwitchElement | SVGSymbolElement | SVGTextElement | SVGTextPathElement | SVGTitleElement | SVGTSpanElement | SVGUseElement | SVGViewElement, width: number, height: number}}
+   */
+  function drawCharSeriesGraph(node) {
+    let objArray = node.character.map((charObj) => {
+      if (charObj.type === "connectChar") { //画连接字符
+        return drawConnectCharGraph(charObj)
+      } else if (charObj.type === "Escape") { // 画转义符
+        return drawEscapeGraph(charObj)
+      } else {
+        return drawCharacterGraph(charObj)
+      }
+    })
+    let g = elt("g", {class: "charSeries"}).node
+    let widthNum = objArray.reduce((result, obj) => {
+      return result + obj.width
+    }, 0)
+    let needWidth = widthNum + ((objArray.length - 1) * elementPadding)
+    let maxHeight = getMaxValueOfAllG(objArray, "height")
+    let rect = elt("rect", {
+      fill: "none",
+      height: `${maxHeight}`,
+      width: `${needWidth}`
+    }).node
+    g.append(rect)
+    let x = 0
+    objArray.forEach((obj) => {
+      obj.node.setAttribute("transform", `translate(${x} ${(maxHeight - obj.height) >>> 1})`)
+      x += obj.width + elementPadding
+      g.append(obj.node)
+    })
+    
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+  }
+  
+  function drawConnectCharGraph(node) {
+    let g = elt("g", {class: "connectChar"}).node
+    let text = elt("text", {}, node.row)
+    let dy = 0 - text.boxY
+    text.node.setAttribute("dy", `${dy}`)
+    g.append(text.node)
+    return {
+      node: g,
+      width: g.getBBox().width,
+      height: g.getBBox().height,
+    }
+  }
 
   function drawQuantityGraph(node) {
     let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
@@ -545,7 +782,7 @@
     let rect = elt("rect", {
       width: `${character.width + (padding * 2)}`,
       height: `${character.height + (padding * 2)}`,
-      fill: "#a4c04a",
+      fill: "none",
     }).node
     g.append(rect)
     g.append(character.node)
@@ -594,7 +831,20 @@
   
   function drawBranchGraph(node) {
     let g = elt("g").node
-    let objArray = node.character.map(obj => {
+    let mergeCharArray = []
+    node.character.forEach(obj => {
+    let tempObj = null
+      if (obj.type === "Character") {
+        if ((tempObj = mergeCharArray[mergeCharArray.length - 1])?.type === "Character") {
+          tempObj.row += obj.row
+        } else {
+          mergeCharArray.push(obj)
+        }
+      } else {
+        mergeCharArray.push(obj)
+      }
+    })
+    let objArray = mergeCharArray.map(obj => {
       return matchFunc(obj)
     })
     objArray = objArray.map(obj => {
@@ -605,7 +855,7 @@
     }, 0)
     let height = getMaxValueOfAllG(objArray, "height")
     let rect = elt("rect", {
-      fill: "#a4c04a",
+      fill: "none",
       width: `${width}`,
       // height: `${height + elementPadding * 2}`,
       height: `${height}`,
@@ -644,7 +894,7 @@
   }
   
   function matchFunc(node) {
-    if (node.type === "Character") {
+    if (node.type === COMMON_CHAR) {
       return drawCharacterGraph(node)
     } else if (node.type === "CharacterClass") {
       return drawCharacterClassGraph(node)
@@ -654,8 +904,22 @@
       return drawQuantityGraph(node)
     } else if (node.type === "Branch") {
       return drawBranchGraph(node)
+    } else if (node.type === "CharSeries") {
+      return drawCharSeriesGraph(node)
+    } else if (node.type === ESCAPE_CHAR) {
+      return drawEscapeGraph(node)
+    } else if (node.type === SPECIAL_CHAR) {
+      return drawSpecialCharGraph(node)
     }
     return undefined
+  }
+  
+  function drawSpecialCharGraph(node) {
+    if (Object.hasOwn(SPECIAL, node.row)) {
+      return drawCharacterGraph(node, SPECIAL_CHAR)
+    } else {
+      return drawCharacterGraph(node, COMMON_CHAR)
+    }
   }
   
   function drawBranchesGraph(nodes) {
@@ -673,7 +937,7 @@
     let maxWidth = getMaxValueOfAllG(branchArray, "width")
     let rectHeight = (branchArray.length - 1) * elementPadding + heightMun
     let rect = elt("rect", {
-      fill: "#a4c04a",
+      fill: "none",
       width: `${maxWidth + padding * 2}`,
       height: `${rectHeight}`,
       rx: "5",
@@ -767,6 +1031,14 @@
   }
   
   function drawEscapeGraph(node) {
+    let char = node.escape
+    if (Object.hasOwn(ESCAPE, char)) { // 说明是普通字符的转义字符
+      
+      return drawCharacterGraph({row: char}, ESCAPE_CHAR)
+      
+    } else { // 说明是特殊字符的转义字符,这时要当做普通字符处理
+      return drawCharacterGraph({row: char}, COMMON_CHAR)
+    }
   
   }
   
