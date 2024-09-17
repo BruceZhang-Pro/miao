@@ -7,10 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>regexp rail graph</title>
   <style>
-    /*body {*/
-    /*  width: 100%;*/
-    /*  height: 100%;*/
-    /*}*/
   </style>
 </head>
 <body>
@@ -30,13 +26,36 @@
   text[class=quantityRemind] {
     cursor: help;
   }
+  <!-- tspan[class=Character] {
+    font-size: 12px;
+    font-family: Arial;
+  }
+  tspan[class=Escape] {
+    font-size: 12px;
+    font-family: Arial;
+  }
+  tspan[class=Special] {
+    font-size: 12px;
+    font-family: Arial;
+    fill: white;
+  }
+  tspan[class=remind] {
+    font-size: 12px;
+    font-family: Arial;
+  } -->
+  tspan {
+    font-size: 12px;
+    font-family: Arial;
+  }
+  tspan[class=Special] {
+    fill: white;
+  }
 </style>
 </svg>
 <script>
   "use strict"
   
-  let elementPadding = 10
-  let radiiEllipse = elementPadding // 画椭圆时的 x 和 y 的半径, 这里设置为一样的 1倍的padding为正常的椭圆曲线 3倍的padding为机甲风曲线
+  let elementPadding = 6
   let railGraph = document.querySelector("#rail-graph") // svg 对象
   
   // 普通字符转义后的显示
@@ -66,6 +85,7 @@
     S: true,
   }
   
+  // 特殊字符
   const SPECIAL = {
     "^": "Start of line",
     "$": "End of line",
@@ -89,11 +109,14 @@
   // 普通字符连接在一起 ✓
   // 中括号里的重复项去掉 ✓
   // {3} 量词匹配只能是3次,不能多不能少 ,在画的时候,量词的提示要和 {0,3} 不一样
-  // 量词的箭头
-  // 量词的文本
   // 捕获的文本 ✓
   // characterClass 的文本 ✓
   // 当只有一个branch时,画线不对 ✓
+  // 量词的箭头 ✓
+  // 量词的文本 的位置 ✓
+  // 量词的曲线 ✓
+  // 普通字符的宽度 ✓
+  // characterClass的宽度 ✓
   
   //暂时不做的
   // {1,  } 带空格 的问题
@@ -139,8 +162,8 @@
   
   // let regexp = /\^a\^^sd\^af\dsdfg/
   // let regexp = 	/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)/
-  let regexp = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-
+  // let regexp = /^(?:(?:25[0-5]|2[0-4][0-9]|[^01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+ let regexp = /^(zh\^ang(ziC[a-z]|heng[fa])+fo)*?(?=fa)(?:fa)$|^ba([^fa\rffaou]{0,3}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-91-9][a-z]|fa(fda)[f\n]/
   console.log(parseRegularExpression(regexp))
   
   drawRegularExpressionGraph(parseRegularExpression(regexp))
@@ -150,7 +173,6 @@
     let input = re.source
     let groupIndex = 1
     
-    // debugger
     let branches = parseBranches()
     return {
         type: "RegularExpression",
@@ -643,22 +665,32 @@
    * @param textObj
    * @returns {*}
    */
-  function calculateRectWidth(textObj) {
+  function calculateRectWidth(textObj, widthPadding) {
     let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
+    // return textObj.width * boxAspectRatio + textObj.width //rect的宽度
     return textObj.width * boxAspectRatio + textObj.width //rect的宽度
+
   }
   
   function drawCharacterGraph(node, type = COMMON_CHAR) {
     let heightPadding = elementPadding * 2
-    let widthPadding = elementPadding
+    let widthPadding = elementPadding * 2
     let textObj
     let g = elt("g").node
 
      if (type === ESCAPE_CHAR) {
-       textObj = elt("text", {}, ESCAPE[node.row])
-       
+      let character= elt("tspan", {
+        class: ESCAPE_CHAR,
+      }, ESCAPE[node.row])
+
+       textObj = elt("text", {}, character)
+
      } else if (type === SPECIAL_CHAR) {
-       textObj = elt("text", {}, SPECIAL[node.row])
+      let character = elt("tspan", {
+        class: SPECIAL_CHAR,
+      }, SPECIAL[node.row])
+
+       textObj = elt("text", {}, character)
       
      } else { // type === COMMON_CHAR
       let leftQuote = elt("tspan", {
@@ -670,13 +702,15 @@
         font: "12px Arial",
       }, '”')
       let character = elt("tspan", {
+        class: COMMON_CHAR,
         font: "12px Arial",
       }, node.row)
       
       textObj = elt("text", {}, leftQuote, character, rightQuote)
     }
     
-    let rectWidth = calculateRectWidth(textObj)
+    // let rectWidth = calculateRectWidth(textObj)
+    let rectWidth = textObj.width + widthPadding
     
     let rectObj = elt("rect", {
       width: `${rectWidth}`,
@@ -765,11 +799,11 @@
     let g = elt("g").node
     
     let maxWidth = getMaxValueOfAllG(charObjArray, "width").width
-    maxWidth = Math.max(maxWidth, remindWidth)
+    let rectWidth = Math.max(maxWidth + (elementPadding * 2), remindWidth)
     
     let height = (charObjArray.length + 1) * elementPadding + (charObjArray.length * charObjArray[0].height)
     let rect = elt("rect", {
-      width: `${maxWidth + elementPadding * 2}`,
+      width: `${rectWidth}`,
       height: `${height}`,
       fill: "#cbcbba",
       rx: "5",
@@ -779,7 +813,7 @@
     g.append(rect)
     let h = 0
     charObjArray.forEach(obj => {
-      obj.node.setAttribute("transform", `translate(${(maxWidth - obj.width) / 2 + elementPadding} ${h + elementPadding})`)
+      obj.node.setAttribute("transform", `translate(${(rectWidth - obj.width) / 2} ${h + elementPadding})`)
       h += elementPadding + obj.height
       g.append(obj.node)
     })
@@ -846,19 +880,21 @@
       height: g.getBBox().height,
     }
   }
-  
+
   function drawQuantityContentGraph(node) {
     if (node.min === 1 && node.max === 1) { // 这种情况 {1} , 不需要画线
       return matchFunc(node.repeat)
     }
-    let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
+    let padding = elementPadding * 3 // 左边或右边的padding为 3倍的 间距
+    let radiiEllipse = elementPadding * 2 // 画椭圆时的 x 和 y 的半径,设置为一样的,就可以画出正圆
+    let lineSpan = padding - radiiEllipse //画贪婪匹配线的x轴以及y轴的跨度
     let topPadding = 0
     let bottomPadding = 0
     if (node.min === 0) {
-      topPadding = elementPadding
+      topPadding = radiiEllipse
     }
     if (node.max > 1) {
-      bottomPadding = elementPadding
+      bottomPadding = radiiEllipse
     }
     let g = elt("g").node
     let character = matchFunc(node.repeat)
@@ -874,34 +910,49 @@
     let strokeWidth = "2"
     let yPosition = character.lineY + topPadding // 计算与其他元素连线时,连接线在纵轴的位置
     let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
-    let zeroTime = "" // 最小为0次的匹配
+    let zeroTime = "" //最小为0次的匹配
     let repeatedly = "" //最大的匹配大于1次
+    let greed = "" //贪婪匹配
+    let outrange = radiiEllipse * 2 - padding // 超出左边距的距离
     if (node.min === 0) {
       zeroTime = `M 0 ${yPosition}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${-elementPadding}
-        L ${elementPadding} ${topPadding}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}
-        h ${character.width}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-        L ${character.width + padding + (elementPadding)} ${yPosition - (elementPadding)}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${elementPadding}`
+        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${radiiEllipse},${-radiiEllipse}
+        L ${radiiEllipse} ${topPadding}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${-radiiEllipse}
+        h ${character.width - (outrange + outrange)}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${radiiEllipse}
+        L ${character.width + padding + (padding - radiiEllipse)} ${yPosition - radiiEllipse}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${radiiEllipse},${radiiEllipse}`
+        if (node.greed === false) {
+          // greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse - (radiiEllipse - lineSpan)}
+          greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse}
+          l ${lineSpan} ${-lineSpan}
+          l ${lineSpan} ${lineSpan}`
+        }
     }
     if (node.max > 1) {
       repeatedly = `M ${padding + character.width} ${yPosition}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-        L ${character.width + padding + (elementPadding)} ${character.height + topPadding}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${elementPadding}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${radiiEllipse}
+        L ${character.width + padding + (radiiEllipse)} ${character.height + topPadding}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-radiiEllipse},${radiiEllipse}
         h ${-character.width}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${-elementPadding}
-        L ${elementPadding} ${yPosition + (elementPadding)}
-        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}`
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-radiiEllipse},${-radiiEllipse}
+        L ${padding - radiiEllipse} ${yPosition + (radiiEllipse)}
+        a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${-radiiEllipse}`
+        if (node.greed === true) {
+          // greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse + (radiiEllipse - lineSpan)}
+          greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse}
+
+          l ${-lineSpan} ${lineSpan}
+          l ${-lineSpan} ${-lineSpan}`
+        }
     }
     
     let path = elt("path", {
       fill: "none",
       stroke: "black",
       "stroke-width": strokeWidth,
-      d: straightLine + zeroTime + repeatedly
+      d: straightLine + zeroTime + repeatedly + greed
     }).node
     
     g.append(path)
@@ -913,6 +964,72 @@
       lineY: yPosition,
     }
   }
+  // function drawQuantityContentGraph(node) {
+  //   if (node.min === 1 && node.max === 1) { // 这种情况 {1} , 不需要画线
+  //     return matchFunc(node.repeat)
+  //   }
+  //   let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
+  //   let topPadding = 0
+  //   let bottomPadding = 0
+  //   if (node.min === 0) {
+  //     topPadding = elementPadding
+  //   }
+  //   if (node.max > 1) {
+  //     bottomPadding = elementPadding
+  //   }
+  //   let g = elt("g").node
+  //   let character = matchFunc(node.repeat)
+  //   character.node.setAttribute("transform", `translate(${padding} ${topPadding})`)
+  //   let rect = elt("rect", {
+  //     width: `${character.width + (padding * 2)}`,
+  //     height: `${character.height + topPadding + bottomPadding}`,
+  //     fill: "none",
+  //   }).node
+  //   g.append(rect)
+  //   g.append(character.node)
+    
+  //   let strokeWidth = "2"
+  //   let yPosition = character.lineY + topPadding // 计算与其他元素连线时,连接线在纵轴的位置
+  //   let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
+  //   let zeroTime = "" // 最小为0次的匹配
+  //   let repeatedly = "" //最大的匹配大于1次
+  //   if (node.min === 0) {
+  //     zeroTime = `M 0 ${yPosition}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${-elementPadding}
+  //       L ${elementPadding} ${topPadding}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}
+  //       h ${character.width}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
+  //       L ${character.width + padding + (elementPadding)} ${yPosition - (elementPadding)}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${elementPadding}`
+  //   }
+  //   if (node.max > 1) {
+  //     repeatedly = `M ${padding + character.width} ${yPosition}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
+  //       L ${character.width + padding + (elementPadding)} ${character.height + topPadding}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${elementPadding}
+  //       h ${-character.width}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${-elementPadding}
+  //       L ${elementPadding} ${yPosition + (elementPadding)}
+  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}`
+  //   }
+    
+  //   let path = elt("path", {
+  //     fill: "none",
+  //     stroke: "black",
+  //     "stroke-width": strokeWidth,
+  //     d: straightLine + zeroTime + repeatedly
+  //   }).node
+    
+  //   g.append(path)
+    
+  //   return {
+  //     node: g,
+  //     width: g.getBBox().width,
+  //     height: g.getBBox().height,
+  //     lineY: yPosition,
+  //   }
+  // }
   
   function drawQuantityRemindGraph(node) {
     let remindText = ""
@@ -969,7 +1086,7 @@
       g.append(path)
       remindXOffset = 0
     } else {
-      remindXOffset = (content.width - remind.width) >>> 1
+      remindXOffset = width - remind.width
     }
     remind.node.setAttribute("transform", `translate(${remindXOffset}, ${content.height})`)
     g.append(remind.node)
@@ -1241,7 +1358,6 @@
   
   function drawBranchesGraph(nodes) {
     let padding = elementPadding * 4
-    let g = elt("g").node
     let branchArray = nodes.map(obj => {
       return matchFunc(obj)
     })
@@ -1253,6 +1369,8 @@
     }, 0)
     let maxWidth = getMaxValueOfAllG(branchArray, "width").width
     let rectHeight = (branchArray.length - 1) * elementPadding + heightMun
+
+    let g = elt("g").node
     let rect = elt("rect", {
       fill: "none",
       width: `${maxWidth + padding * 2}`,
@@ -1369,9 +1487,13 @@
     for (let val of arg) {
       g.append(val)
     }
+
+    let tspan = elt("tspan", {
+      class: "remind",
+    }, text)
     let textObj = elt("text", {
       class: className,
-    }, text)
+    }, tspan)
     
     let rectObj = elt("rect", {
       width: `${textObj.width}`,
