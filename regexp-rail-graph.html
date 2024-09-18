@@ -1,921 +1,1070 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>regexp rail graph</title>
   <style>
+    html {
+      min-width: 500px;
+      min-height: 500px;
+    }
+    body {
+      margin: 0;
+      font-size: 16px;
+      background-color: #6b6659;
+    }
+
+    #header {
+      background-color: #a8c44d;
+      overflow: auto;
+      padding: 40px 32px 40px 32px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 3em;
+    }
+
+    #header p {
+      margin: 0;
+      font-family: sans-serif;
+      color: #6b6659;
+    }
+
+    #main {
+      /* background-color: #6b6659; */
+      padding: 20px 32px;
+
+    }
+
+    #inputArea {}
+
+    #viewArea {
+      background-color: white;
+      visibility: hidden;
+      padding: 0.5em 0;
+      text-align: center;
+      overflow: auto;
+    }
+
+    #keyArea {
+      padding: 10px 0 20px 0;
+      width: 100%;
+      overflow: auto;
+    }
+
+    #inputStr {
+      display: block;
+      width: 100%;
+      font-size: 1em;
+      box-sizing: border-box;
+      padding: 0 0.5em;
+      line-height: 1.5em;
+      font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+      outline: none;
+    }
+
+    #rail-graph {
+    }
+
+    .rightElement {
+      float: right;
+      margin-left: 15px;
+    }
+
+    #drawRailGraph {
+      background-color: #a8c44d;
+      padding: 5px 20px;
+      border: none;
+      font-size: 1em;
+      font-family: sans-serif;
+    }
+
+    a {
+      font-family: sans-serif;
+      font-size: 1em;
+      text-decoration: underline;
+      cursor: pointer;
+      color: black;
+    }
+
+    #error {
+      display: none;
+      background-color: #b3151a;
+      color: white;
+      font-size: 1.2em;
+      font-family: monospace;
+      padding: 0 0 10px 0.5em;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
-<body>
-<!--<svg viewBox="0 0 500 500" id="rail-graph" xmlns="http://www.w3.org/2000/svg">-->
-<svg width="2000" height="1000" id="rail-graph" xmlns="http://www.w3.org/2000/svg">
-<style>
-  rect[class=Escape] {
-    fill: #bada55;
-  }
-  rect[class=Character] {
-    fill: #dae8e5;
-  }
-  rect[class=Special] {
-    fill: #6b6659;
-    rx: 0;
-  }
-  text[class=quantityRemind] {
-    cursor: help;
-  }
-  <!-- tspan[class=Character] {
-    font-size: 12px;
-    font-family: Arial;
-  }
-  tspan[class=Escape] {
-    font-size: 12px;
-    font-family: Arial;
-  }
-  tspan[class=Special] {
-    font-size: 12px;
-    font-family: Arial;
-    fill: white;
-  }
-  tspan[class=remind] {
-    font-size: 12px;
-    font-family: Arial;
-  } -->
-  tspan {
-    font-size: 12px;
-    font-family: Arial;
-  }
-  tspan[class=Special] {
-    fill: white;
-  }
-</style>
-</svg>
-<script>
-  "use strict"
-  
-  let elementPadding = 6
-  let railGraph = document.querySelector("#rail-graph") // svg 对象
-  
-  // 普通字符转义后的显示
-  const ESCAPE = {
-    b: "word boundary", //单词边界
-    B: "non-word boundary", //匹配非单词边界
-    d: "digit", //匹配一个数字
-    D: "non-digit", //匹配一个非数字
-    f: "form feed (0x0C)", //匹配一个换页符
-    n: "line feed (0x0A)", //匹配一个换行符
-    r: "carriage return (0x0D)", //匹配一个换行符
-    s: "white space", //匹配任何空白字符，包括空格、制表符、换页符
-    S: "non-white space", //匹配非空白字符，包括空格、制表符、换页符
-    t: "tab (0x09)", //匹配制表符
-    v: "vertical tab (0x0B)", //匹配一个垂直制表符
-    w: "word", //匹配包括下划线的任何单词字符
-    W: "non-word", //匹配任何非单词字符
-  }
-  
-  // 通用字符组
-  const GENERAL_CHAR_GROUP = {
-    d: true,
-    D: true,
-    w: true,
-    W: true,
-    s: true,
-    S: true,
-  }
-  
-  // 特殊字符
-  const SPECIAL = {
-    "^": "Start of line",
-    "$": "End of line",
-  }
 
-  const COMMON_CHAR = "Character" // 普通字符
-  const ESCAPE_CHAR = "Escape" // 转义字符
-  const SPECIAL_CHAR = "Special" // 特殊字符 如 ^ $
-  
-  //待改
-  // /asd{,3}/  // 把{,3} 全当做普通字符 ✓
-  // /asd{,}/  // 把{,} 全当做普通字符 ✓
-  // [abz049_-]  //把 - 在开头和结尾时,当做普通字符  其余的时候当做 前后字母的过度字符 ✓
-  // {3}  //量词匹配只能是3次,不能多不能少 ✓
-  // 转移字符 在[]里的转义字符 也有问题  ✓
-  // ^  $  这两个要画一下 ✓
-  // 转义字符显示 ✓
-  // 中括号里的转意字符 ✓
-  // 中括号里的 中划线连接的字符 ✓
-  // 中括号里,中划线连接的转义字符 ✓
-  // 普通字符连接在一起 ✓
-  // 中括号里的重复项去掉 ✓
-  // {3} 量词匹配只能是3次,不能多不能少 ,在画的时候,量词的提示要和 {0,3} 不一样
-  // 捕获的文本 ✓
-  // characterClass 的文本 ✓
-  // 当只有一个branch时,画线不对 ✓
-  // 量词的箭头 ✓
-  // 量词的文本 的位置 ✓
-  // 量词的曲线 ✓
-  // 普通字符的宽度 ✓
-  // characterClass的宽度 ✓
-  
-  //暂时不做的
-  // {1,  } 带空格 的问题
-  // 转义字符可以转多个字符
-  
-  // /foo|qwe(as[^2564]|rt{2,})+/
-  // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
-  
-  // let regexp = /a[yas]+/
-  // drawBranchGraph(parseRegularExpression(regexp).branches[0])
-  
-  // let regexp = /[cb]|a/
-  // let regexp = /as*d|(s[wv])+|rt/
-  // drawBranchesGraph(parseRegularExpression(regexp).branches)
-  // let regexp = /(s)/
-  // drawCaptureGraph(parseRegularExpression(regexp).branches[0].character[0])
-  
-  // let regexp = /as*d|(s[wv])+|rt/
-  // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/ // 我测试的
-  // let regexp = /a\b[a-za-zA^\^]\n\^^\$$/ // 测试转义字符
-  // let regexp = /^a${s\da\^^234}[12ad3456]/ // 测试去重
-  
-  // let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
-  // let regexp = /a\b\n\^^\$$/
-  // let regexp = /a\b^[\da^\^^]\n\^\$$/ // 测试转义字符
-  // let regexp = /^(zh\^a\dng(ziC[a-z]heng)+fo)*?(?=fa)(?:fa)$|^ba([^fa\rffaou]{1,2}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-91-9\n-z][a-z]/
-  // let regexp = /s{2,5}34/
-  // let regexp = /a\d[\n-\f]g[\nd\d]r\B|[\W-a]/ // 测试转义字符
-  
-  // let regexp = /a(?<aasdasfa>f)b/ //捕获  具名分组
-  // let regexp = /a(?=f)b/ // 零宽断言
-  // let regexp = /a(?!f)b/ // 零宽断言
-  // let regexp = /a(?<!f)b/ // 零宽断言
-  // let regexp = /a(?<=f)b/ // 零宽断言
-  // let regexp = /a(?:f)b/ // 非捕获
-  // let regexp = /a(f)b|de(?<=we)v|a(?:s)b/ // 捕获
-  
-  // let regexp = /a[^ie-j]o|rg[a3-Z]t|ad/ // CharacterClass
-  // let regexp = /a[^ie-j]o/
-  // let regexp = /ao|rt|ad/ // CharacterClass
-  
-  // let regexp = /ao|rt|a{0,2}d/
-  
-  // let regexp = /\^a\^^sd\^af\dsdfg/
-  // let regexp = 	/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)/
-  // let regexp = /^(?:(?:25[0-5]|2[0-4][0-9]|[^01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
- let regexp = /^(zh\^ang(ziC[a-z]|heng[fa])+fo)*?(?=fa)(?:fa)$|^ba([^fa\rffaou]{0,3}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-91-9][a-z]|fa(fda)[f\n]/
-  console.log(parseRegularExpression(regexp))
-  
-  drawRegularExpressionGraph(parseRegularExpression(regexp))
-  
-  function parseRegularExpression(re) {
-    let i = 0
-    let input = re.source
-    let groupIndex = 1
-    
-    let branches = parseBranches()
-    return {
+<body>
+
+  <div id="header">
+    <h1>正则表达式可视化</h1>
+    <p>“Some people, when confronted with a problem, think ‘I know, I’ll use regular expressions.’ Now they have two
+      problems.” —Jamie Zawinski</p>
+  </div>
+  <div id="main">
+    <div id="inputArea">
+      <textarea id="inputStr"></textarea>
+    </div>
+    <div id="keyArea">
+      <button id="drawRailGraph">Display</button>
+      <a id="copyPermalink" class="rightElement">Permalink</a>
+      <a id="downloadPNG" class="rightElement">Download PNG</a>
+      <a id="downloadSVG" class="rightElement">Download SVG</a>
+    </div>
+    <div id="error"></div>
+    <div id="viewArea">
+      <svg id="rail-graph" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          rect[class=Escape] {
+            fill: #bada55;
+          }
+          rect[class=Character] {
+            fill: #dae8e5;
+          }
+          rect[class=Special] {
+            fill: #6b6659;
+            rx: 0;
+          }
+          text[class=quantityRemind] {
+            cursor: help;
+          }
+          tspan {
+            font-size: 0.75em; 
+            font-family: Arial;
+          }
+          tspan[class=Special] {
+            fill: white;
+          }
+          tspan[class=symbol] {
+            fill: "#908c83;
+          }
+        </style>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    // 普通字符转义后的显示
+    const ESCAPE = {
+      b: "word boundary", //单词边界
+      B: "non-word boundary", //匹配非单词边界
+      d: "digit", //匹配一个数字
+      D: "non-digit", //匹配一个非数字
+      f: "form feed (0x0C)", //匹配一个换页符
+      n: "line feed (0x0A)", //匹配一个换行符
+      r: "carriage return (0x0D)", //匹配一个换行符
+      s: "white space", //匹配任何空白字符，包括空格、制表符、换页符
+      S: "non-white space", //匹配非空白字符，包括空格、制表符、换页符
+      t: "tab (0x09)", //匹配制表符
+      v: "vertical tab (0x0B)", //匹配一个垂直制表符
+      w: "word", //匹配包括下划线的任何单词字符
+      W: "non-word", //匹配任何非单词字符
+    }
+
+    // 通用字符组
+    const GENERAL_CHAR_GROUP = {
+      d: true,
+      D: true,
+      w: true,
+      W: true,
+      s: true,
+      S: true,
+    }
+
+    // 特殊字符
+    const SPECIAL = {
+      "^": "Start of line",
+      "$": "End of line",
+    }
+
+    const COMMON_CHAR = "Character" // 普通字符
+    const ESCAPE_CHAR = "Escape" // 转义字符
+    const SPECIAL_CHAR = "Special" // 特殊字符 如 ^ $
+
+    let railGraph = document.querySelector("#rail-graph") // svg 对象
+    let drawGraph = document.querySelector("#drawRailGraph") //Display按钮
+    let input = document.querySelector("#inputStr") // 输入
+    let svgStyle = document.querySelector("svg style") //svg 的 样式
+    let viewArea = document.querySelector("#viewArea") // 包住svg的div
+    let viewError = document.querySelector("#error") // 显示报错信息
+    let downSVG = document.querySelector("#downloadSVG")
+    let downPNG = document.querySelector("#downloadPNG")
+    let copyLink = document.querySelector("#copyPermalink")
+
+    //暂时不支持的功能
+    // {1,  } 带空格 的问题
+    // 转义字符后面有两个字符的转义
+
+    // /foo|qwe(as[^2564]|rt{2,})+/
+    // /(?<abc>af)foo|(bar|(ba+z{2,})[aeiou])/
+
+    // let regexp = /a[yas]+/
+    // drawBranchGraph(parseRegularExpression(regexp).branches[0])
+
+    // let regexp = /[cb]|a/
+    // let regexp = /as*d|(s[wv])+|rt/
+    // drawBranchesGraph(parseRegularExpression(regexp).branches)
+    // let regexp = /(s)/
+    // drawCaptureGraph(parseRegularExpression(regexp).branches[0].character[0])
+
+    // let regexp = /as*d|(s[wv])+|rt/
+    // let regexp = /\[[-+]?([048]|\d*(?:[02468][048]|[13579][26]))\]/ // 我测试的
+    // let regexp = /a\b[a-za-zA^\^]\n\^^\$$/ // 测试转义字符
+    // let regexp = /^a${s\da\^^234}[12ad3456]/ // 测试去重
+
+    // let regexp = /(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaa/  // 大喵的
+    // let regexp = /a\b\n\^^\$$/
+    // let regexp = /a\b^[\da^\^^]\n\^\$$/ // 测试转义字符
+    // let regexp = /^(zh\^a\dng(ziC[a-z]heng)+fo)*?(?=fa)(?:fa)$|^ba([^fa\rffaou]{1,2}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-91-9\n-z][a-z]/
+    // let regexp = /s{2,5}34/
+    // let regexp = /a\d[\n-\f]g[\nd\d]r\B|[\W-a]/ // 测试转义字符
+
+    // let regexp = /a(?<aasdasfa>f)b/ //捕获  具名分组
+    // let regexp = /a(?=f)b/ // 零宽断言
+    // let regexp = /a(?!f)b/ // 零宽断言
+    // let regexp = /a(?<!f)b/ // 零宽断言
+    // let regexp = /a(?<=f)b/ // 零宽断言
+    // let regexp = /a(?:f)b/ // 非捕获
+    // let regexp = /a(f)b|de(?<=we)v|a(?:s)b/ // 捕获
+
+    // let regexp = /a[^ie-j]o|rg[a3-Z]t|ad/ // CharacterClass
+    // let regexp = /a[^ie-j]o/
+    // let regexp = /ao|rt|ad/ // CharacterClass
+
+    // let regexp = /ao|rt|a{0,2}d/
+
+    // let regexp = /\^a\^^sd\^af\dsdfg/
+    // let regexp = 	/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)/
+    // let regexp = /^(?:(?:25[0-5]|2[0-4][0-9]|[^01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+    // let regexp = /^(zh\^ang(ziC[a-z]|heng[fa])+fo)*?(?=fa)(?:fa)$|^ba([^fa\rffaou]{0,3}?f)alf(b*?a+z{2,5})[aeio\b]|[^fa\n\t][\n-z1-91-9][a-z]|fa(fda)[f\n]/
+    // console.log(parseRegularExpression(regexp))
+
+    // drawRegularExpressionGraph(parseRegularExpression(regexp))
+
+
+    downPNG.addEventListener("click", (e) => {
+      let svg = '<?xml version="1.0"?>' + railGraph.outerHTML
+      let blob = new Blob([svg], {type: "image/svg+xml"})
+      let url = URL.createObjectURL(blob)
+      let img = document.createElement("img")
+      img.src = url
+      console.dir(img)
+      img.onload = () => {
+        console.dir(img)
+        let canvas = document.createElement("canvas")
+
+        canvas.width = parseFloat(railGraph.style.width)
+        canvas.height = parseFloat(railGraph.style.height)
+
+        let ctx = canvas.getContext("2d") // 创建一个2d的画布
+        ctx.fillStyle = "white"
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(img, 0, 0)
+
+        let url = canvas.toDataURL("image/png")
+        let a = document.createElement("a")
+        a.href = url
+        a.download = "regexp-rail-graph.png"
+        a.click()
+      }
+    })
+
+    downSVG.addEventListener("click", (e) => {
+      let svg = '<?xml version="1.0"?>' + railGraph.outerHTML
+      let blob = new Blob([svg], {type: "image/xml+svg"})
+      let url = URL.createObjectURL(blob)
+      downSVG.href = url
+      downSVG.download = "regexp-rail-graph.svg"
+    })
+
+    drawGraph.addEventListener("click", (e) => {
+      let regexp = null
+      try{
+        regexp = new RegExp(input.value)
+      }catch (e) {
+        viewError.style.display = "block"
+        viewError.innerHTML = ""
+        viewError.innerHTML = e.name + ": " + e.message
+        viewArea.style.visibility = "hidden"
+        return undefined
+      }
+      viewError.style.display = "none"
+
+      if (regexp.source === "(?:)") {
+        console.log("空值,啥也不做")
+        viewArea.style.visibility = "hidden"
+        return undefined
+      }
+      viewArea.style.visibility = "visible"
+      let child = null
+      while(child = railGraph.lastChild) {
+        if (child.tagName === "style") {
+          break
+        }
+        railGraph.removeChild(child)
+      }
+
+      let rect = drawRegularExpressionGraph(parseRegularExpression(regexp))
+      railGraph.style.width = rect.width + "px"
+      railGraph.style.height = rect.height + "px"
+    })
+
+    function parseRegularExpression(re) {
+      let i = 0
+      let input = re.source
+      let groupIndex = 1
+
+      let branches = parseBranches()
+      return {
         type: "RegularExpression",
         start: 0,
         end: i,
         branches,
-    }
-    function parseBranches() {
-      let branches = []
-      while(input[i] !== ")" && i < input.length) {
-        let branch = parseBranch()
-        branches.push(branch)
-        if (input[i] === "|") {
-          i++ //skip the "|"
-        }
       }
-      
-      return branches
-    }
-    
-    function parseBranch() {
-      let node = {
-        type: "Branch",
-        start: i,
-        end: 0,
-        row: "",
-        character: []
-      }
-
-      while(input[i] !== "|" && input[i] !== ")" && i < input.length) {
-        let char = parseOnePart()
-        if (char.type === "Quantity") {
-          if (node.character.length === 0) {
-            throw new Error("syntax error !!!!!!!")
-          } else {
-            let repeatCharacter = node.character.pop()
-            char.repeat = repeatCharacter
-            char.start = repeatCharacter.start
-            char.row = input.slice(char.start, char.end)
+      function parseBranches() {
+        let branches = []
+        while (input[i] !== ")" && i < input.length) {
+          let branch = parseBranch()
+          branches.push(branch)
+          if (input[i] === "|") {
+            i++ //skip the "|"
           }
         }
-        node.character.push(char)
+
+        return branches
       }
-      
-      node.end = i
-      node.row = input.slice(node.start, i)
-      return node
-    }
-    
-    function parseOnePart() {
-      if (input[i] === "(") {
-        return parseCaptureGroup()
-      } else if (input[i] === "[") {
-        return parseCharacterClass()
-      } else if (input[i] === "{") {
-        if (isQuantity() === true) {
+
+      function parseBranch() {
+        let node = {
+          type: "Branch",
+          start: i,
+          end: 0,
+          row: "",
+          character: []
+        }
+
+        while (input[i] !== "|" && input[i] !== ")" && i < input.length) {
+          let char = parseOnePart()
+          if (char.type === "Quantity") {
+            if (node.character.length === 0) {
+              throw new Error("syntax error !!!!!!!")
+            } else {
+              let repeatCharacter = node.character.pop()
+              char.repeat = repeatCharacter
+              char.start = repeatCharacter.start
+              char.row = input.slice(char.start, char.end)
+            }
+          }
+          node.character.push(char)
+        }
+
+        node.end = i
+        node.row = input.slice(node.start, i)
+        return node
+      }
+
+      function parseOnePart() {
+        if (input[i] === "(") {
+          return parseCaptureGroup()
+        } else if (input[i] === "[") {
+          return parseCharacterClass()
+        } else if (input[i] === "{") {
+          if (isQuantity() === true) {
+            return parseQuantity()
+          } else {
+            return parseCharacter()
+          }
+        } else if (input[i] === "+" || input[i] === "*" || input[i] === "?") {
           return parseQuantity()
+        } else if (input[i] === "\\") {
+          return parseEscape()
+        } else if (input[i] === "^" || input[i] === "$") {
+          return parseCharacterSpecial()
         } else {
           return parseCharacter()
         }
-      } else if (input[i] === "+" ||  input[i] === "*" || input[i] === "?") {
-        return parseQuantity()
-      } else if (input[i] === "\\") {
-        return parseEscape()
-      } else if (input[i] === "^" || input[i] === "$") {
-        return parseCharacterSpecial()
-      } else {
-        return parseCharacter()
       }
-    }
-    
-    function parseCharacterSpecial() {
-      let node = {
-        type: "Special",
-        start: i,
-        end: 0,
-        row: ""
+
+      function parseCharacterSpecial() {
+        let node = {
+          type: "Special",
+          start: i,
+          end: 0,
+          row: ""
+        }
+        node.row = input[i]
+        i++ // skip the character of special
+        node.end = i
+        return node
       }
-      node.row = input[i]
-      i++ // skip the character of special
-      node.end = i
-      return node
-    }
-    
-    function isQuantity() {
-      let start = i
-      let commaTime = 0 //逗号出现的次数
-      let isQuantity = true
-      i++ // skip the "{"
-      if (input[i] === "}") {
-        isQuantity = false
-      } else if (input[i] === ",") {
+
+      function isQuantity() {
+        let start = i
+        let commaTime = 0 //逗号出现的次数
+        let isQuantity = true
+        i++ // skip the "{"
+        if (input[i] === "}") {
           isQuantity = false
-      }
-      
-      while (input[i] !== "}" && i < input.length) {
-        if (input[i] === ",") {
-          commaTime++
-          if (commaTime > 1) {
+        } else if (input[i] === ",") {
+          isQuantity = false
+        }
+
+        while (input[i] !== "}" && i < input.length) {
+          if (input[i] === ",") {
+            commaTime++
+            if (commaTime > 1) {
+              isQuantity = false
+              break
+            }
+          }
+          if ((input[i] < "0" || input[i] > "9") && input[i] !== ",") {
             isQuantity = false
             break
           }
+          i++
         }
-        if ((input[i] < "0" || input[i] > "9") && input[i] !== ",") {
-          isQuantity = false
-          break
+
+        i = start
+        return isQuantity
+      }
+
+      function parseEscape() {
+        let node = {
+          type: "Escape",
+          start: i,
+          end: 0,
+          row: "",
+          escape: "",
         }
-        i++
+        i++ // skip the "\"
+        node.row = "\\" + input[i]
+        node.escape = input[i]
+        i++ // skip the character of escape
+        node.end = i
+        return node
       }
-      
-      i = start
-      return isQuantity
-    }
-    
-    function parseEscape() {
-      let node = {
-        type: "Escape",
-        start: i,
-        end: 0,
-        row: "",
-        escape:"",
-      }
-      i++ // skip the "\"
-      node.row = "\\" + input[i]
-      node.escape = input[i]
-      i++ // skip the character of escape
-      node.end = i
-      return node
-    }
-    function parseCaptureGroup() {
-      let node = {
-        type: "CaptureGroup",
-        start: i,
-        end: 0,
-        row: "",
-        capture: true,
-        groupName: "",
-        zeroWidthAssert: false,
-        positive: true,
-        lookahead: true,
-        groupIndex: groupIndex,
-        branches: [],
-      }
-      
-      i++ // skip the "("
-      
-      // (asdas)
-      // (?<asdsa>asdas)
-      // (?:asdas)
-      
-      // (?=asdas)
-      // (?<asdas)
-      // positive lookahead
-      //positive lookbehind
-      // negative lookbehind
-      // negative lookahead
-      
-      if (input[i] === "?") {
-        i++
-        if (input[i] === ":") {
-          node.capture = false
+      function parseCaptureGroup() {
+        let node = {
+          type: "CaptureGroup",
+          start: i,
+          end: 0,
+          row: "",
+          capture: true,
+          groupName: "",
+          zeroWidthAssert: false,
+          positive: true,
+          lookahead: true,
+          groupIndex: groupIndex,
+          branches: [],
+        }
+
+        i++ // skip the "("
+
+        // (asdas)
+        // (?<asdsa>asdas)
+        // (?:asdas)
+
+        // (?=asdas)
+        // (?<asdas)
+        // positive lookahead
+        //positive lookbehind
+        // negative lookbehind
+        // negative lookahead
+
+        if (input[i] === "?") {
           i++
-        } else if (input[i] === "=") {
-          node.zeroWidthAssert = true
-          node.capture = false
-          i++
-        } else if (input[i] === "!") {
-          node.zeroWidthAssert = true
-          node.positive = false
-          node.capture = false
-          i++
-        } else if (input[i] === "<") {
-          i++ //skip the "<"
-          if (input[i] === "=") {
+          if (input[i] === ":") {
+            node.capture = false
+            i++
+          } else if (input[i] === "=") {
             node.zeroWidthAssert = true
-            node.lookahead = false
             node.capture = false
             i++
           } else if (input[i] === "!") {
             node.zeroWidthAssert = true
             node.positive = false
-            node.lookahead = false
             node.capture = false
             i++
-          } else {
-            node.groupName = parseGroupName()
+          } else if (input[i] === "<") {
+            i++ //skip the "<"
+            if (input[i] === "=") {
+              node.zeroWidthAssert = true
+              node.lookahead = false
+              node.capture = false
+              i++
+            } else if (input[i] === "!") {
+              node.zeroWidthAssert = true
+              node.positive = false
+              node.lookahead = false
+              node.capture = false
+              i++
+            } else {
+              node.groupName = parseGroupName()
+            }
           }
         }
-      }
-      // if (node.zeroWidthAssert !== true && node.capture !== false) {
-      if (node.capture === true) {
-        groupIndex++
-      } else {
-        node.groupIndex = undefined
-      }
-      while (input[i] !== ")" && i < input.length) {
-        node.branches.push(...parseBranches())
-      }
-      i++ //skip the ")"
-
-      function parseGroupName() {
-        let start = i
-        while (input[i] !== ">" && i < input.length) {
-          i++
-        }
-        return input.slice(start, i++) // i++ is skip the ">"
-      }
-      
-      node.end = i
-      node.row = input.slice(node.start, i)
-      return node
-    }
-    
-    function parseQuantity() {
-      let node = {
-        type: "Quantity",
-        start: i,
-        end: 0,
-        min: 0,
-        max: Infinity,
-        row: "",
-        greed: true,
-        repeat: null,
-      }
-      
-      if (input[i] === "+") {
-        node.min = 1
-        i++
-      } else if (input[i] === "*") {
-        i++
-      } else if (input[i] === "?") {
-        node.max = 1
-        i++
-      } else if (input[i] === "{") {
-        i++ // skip the "{"
-        node.min = parseInt()
-        node.max = node.min
-        while (input[i] !== "}" && i < input.length) {
-          if (input[i] === ",") {
-            i++ //skip the ","
-          } else {
-            node.max = parseInt()
-
-          }
-        }
-        
-        i++ // skip "}"
-      }
-      
-      if (input[i] === "?") { //非贪婪匹配
-        node.greed = false
-        i++
-      }
-      
-      function parseInt() {
-        let start = i
-        while (input[i] >= "0" && input[i] <= "9") {
-          i++
-        }
-        return Number(input.slice(start, i))
-      }
-      
-      node.end = i
-      node.row = input.slice(node.start, i)
-      return node
-    }
-    
-    function parseCharacter() {
-      let node = {
-        type: "Character",
-        start: i,
-        end: 0,
-        row: ""
-      }
-      
-      node.row = input[i]
-      i++
-      node.end = i
-      
-      return node
-    }
-    
-    function parseCharacterClass() {
-      let node = {
-        type: "CharacterClass",
-        start: i,
-        end: 0,
-        row: "",
-        negative: false,
-        Character: [],
-      }
-      i++ // this the "["
-      if (input[i] === "^") {
-        node.negative = true
-        i++ //skip the "^"
-      }
-      
-      while (input[i] !== "]" && i < input.length) {
-        if (input[i] === "-" && input[i - 1] !== "[" && input[i - 1] !== "^" && input[i + 1] !== "]" && isGeneralCharGroup() === false) {
-          let charSeries = parseCharSeries()
-          let char = node.Character.pop()
-          charSeries.character.unshift(char)
-          charSeries.start = char.start
-          charSeries.row = input.slice(charSeries.start, charSeries.end)
-          node.Character.push(charSeries)
-        } else if (input[i] === "\\") {
-          node.Character.push(parseEscape())
+        if (node.capture === true) {
+          groupIndex++
         } else {
-          node.Character.push(parseCharacter())
+          node.groupIndex = undefined
         }
+        while (input[i] !== ")" && i < input.length) {
+          node.branches.push(...parseBranches())
+        }
+        i++ //skip the ")"
+
+        function parseGroupName() {
+          let start = i
+          while (input[i] !== ">" && i < input.length) {
+            i++
+          }
+          return input.slice(start, i++) // i++ is skip the ">"
+        }
+
+        node.end = i
+        node.row = input.slice(node.start, i)
+        return node
       }
-      i++ // skip the "]"
-      
+
+      function parseQuantity() {
+        let node = {
+          type: "Quantity",
+          start: i,
+          end: 0,
+          min: 0,
+          max: Infinity,
+          row: "",
+          greed: true,
+          repeat: null,
+        }
+
+        if (input[i] === "+") {
+          node.min = 1
+          i++
+        } else if (input[i] === "*") {
+          i++
+        } else if (input[i] === "?") {
+          node.max = 1
+          i++
+        } else if (input[i] === "{") {
+          i++ // skip the "{"
+          node.min = parseInt()
+          node.max = node.min
+          while (input[i] !== "}" && i < input.length) {
+            if (input[i] === ",") {
+              i++ //skip the ","
+            } else {
+              node.max = parseInt()
+
+            }
+          }
+
+          i++ // skip "}"
+        }
+
+        if (input[i] === "?") { //非贪婪匹配
+          node.greed = false
+          i++
+        }
+
+        function parseInt() {
+          let start = i
+          while (input[i] >= "0" && input[i] <= "9") {
+            i++
+          }
+          return Number(input.slice(start, i))
+        }
+
+        node.end = i
+        node.row = input.slice(node.start, i)
+        return node
+      }
+
+      function parseCharacter() {
+        let node = {
+          type: "Character",
+          start: i,
+          end: 0,
+          row: ""
+        }
+
+        node.row = input[i]
+        i++
+        node.end = i
+
+        return node
+      }
+
+      function parseCharacterClass() {
+        let node = {
+          type: "CharacterClass",
+          start: i,
+          end: 0,
+          row: "",
+          negative: false,
+          Character: [],
+        }
+        i++ // this the "["
+        if (input[i] === "^") {
+          node.negative = true
+          i++ //skip the "^"
+        }
+
+        while (input[i] !== "]" && i < input.length) {
+          if (input[i] === "-" && input[i - 1] !== "[" && input[i - 1] !== "^" && input[i + 1] !== "]" && isGeneralCharGroup() === false) {
+            let charSeries = parseCharSeries()
+            let char = node.Character.pop()
+            charSeries.character.unshift(char)
+            charSeries.start = char.start
+            charSeries.row = input.slice(charSeries.start, charSeries.end)
+            node.Character.push(charSeries)
+          } else if (input[i] === "\\") {
+            node.Character.push(parseEscape())
+          } else {
+            node.Character.push(parseCharacter())
+          }
+        }
+        i++ // skip the "]"
+
+        /**
+         * 判断 "-" 的前一个字符是不是范围字符组
+         * @returns {boolean}
+         */
+        function isGeneralCharGroup() {
+          let idx = node.Character.length - 1
+
+          if (node.Character[idx].type !== "Escape") {
+            return false
+          }
+
+          return Object.hasOwn(GENERAL_CHAR_GROUP, node.Character[idx].escape)
+
+        }
+
+        node.end = i
+        node.row = input.slice(node.start, i)
+
+        return node
+      }
+
       /**
-       * 判断 "-" 的前一个字符是不是范围字符组
-       * @returns {boolean}
+       * 把[]里的需要连续的字符放到用这个解析
+       * @returns {{character: *[], start: number, end: number, row: string, type: string}}
        */
-      function isGeneralCharGroup() {
-        let idx = node.Character.length - 1
-        
-        if (node.Character[idx].type !== "Escape") {
-          return false
+      function parseCharSeries() {
+        let node = {
+          type: "CharSeries",
+          start: i,
+          end: 0,
+          row: "",
+          character: [],
         }
-        
-        return Object.hasOwn(GENERAL_CHAR_GROUP, node.Character[idx].escape)
-        
-      }
-      
-      node.end = i
-      node.row = input.slice(node.start, i)
-      
-      return node
-    }
-    
-    /**
-     * 把[]里的需要连续的字符放到用这个解析
-     * @returns {{character: *[], start: number, end: number, row: string, type: string}}
-     */
-    function parseCharSeries() {
-      let node = {
-        type: "CharSeries",
-        start: i,
-        end: 0,
-        row: "",
-        character: [],
-      }
-      for (let k = 0; k < 2; k++) {
-        if (input[i] === "-") {
-          node.character.push(parseConnectChar())
-        } else if (input[i] === "\\") {
-          node.character.push(parseEscape())
-        } else {
-          node.character.push(parseCharacter())
+        for (let k = 0; k < 2; k++) {
+          if (input[i] === "-") {
+            node.character.push(parseConnectChar())
+          } else if (input[i] === "\\") {
+            node.character.push(parseEscape())
+          } else {
+            node.character.push(parseCharacter())
+          }
         }
+
+        node.end = i
+        node.row = input.slice(node.start, node.end)
+
+        return node
       }
-      
-      node.end = i
-      node.row = input.slice(node.start, node.end)
-      
-      return node
-    }
-    
-    function parseConnectChar() {
-      let node =  {
-        type: "connectChar",
-        start: i,
-        end: 0,
-        row: "",
+
+      function parseConnectChar() {
+        let node = {
+          type: "connectChar",
+          start: i,
+          end: 0,
+          row: "",
+        }
+        node.row = input[i]
+        i++
+
+        node.end = i
+        node.row = input.slice(node.start, node.end)
+
+        return node
       }
-      node.row = input[i]
-      i++
-      
-      node.end = i
-      node.row = input.slice(node.start, node.end)
-      
-      return node
     }
-  }
-  
-  function drawRegularExpressionGraph(node) {
-    let lineLength = elementPadding // 两端的线的长度
-    let circleRadius = elementPadding // 两端的圆的半径
-    let leftRightPadding = ((circleRadius << 1) + lineLength) // 左或右的空间
-    let topBottomPadding = elementPadding // 上或下的空间
-    let result = drawBranchesGraph(node.branches)
-    let height = result.height + (topBottomPadding << 1)
-    let YPosition = topBottomPadding + result.lineY
-    
-    let g = elt("g").node
-    let rect = elt("rect", {
-      fill: "none",
-      width: `${result.width + (leftRightPadding << 1)}`,
-      height: `${height}`,
-    }).node
-    g.append(rect)
-    result.node.setAttribute("transform", `translate(${leftRightPadding} ${topBottomPadding})`)
-    g.append(result.node)
- 
-    g.append(drawCircle((circleRadius + 1), YPosition, circleRadius, "#28b463"))
-    g.append(drawCircle((result.width + leftRightPadding + lineLength + circleRadius - 1), YPosition, circleRadius, "#cb4335"))
-    
-    let path = elt("path", {
-      stroke: "black",
-      "stroke-width": "2",
-      d: `M ${circleRadius + circleRadius} ${YPosition}
+
+    function drawRegularExpressionGraph(node) {
+      let elementPadding = 6
+     
+      return drawStartAndEnd(node)
+
+      function drawStartAndEnd(node) {
+        let lineLength = elementPadding // 两端的线的长度
+        let circleRadius = elementPadding // 两端的圆的半径
+        let leftRightPadding = ((circleRadius << 1) + lineLength) // 左或右的空间
+        let topBottomPadding = elementPadding // 上或下的空间
+        let result = drawBranchesGraph(node.branches)
+        let height = result.height + (topBottomPadding << 1)
+        let width = result.width + (leftRightPadding << 1)
+        let YPosition = topBottomPadding + result.lineY
+
+        let g = elt("g").node
+        let rect = elt("rect", {
+          fill: "none",
+          width: `${width}`,
+          height: `${height}`,
+        }).node
+        g.append(rect)
+        result.node.setAttribute("transform", `translate(${leftRightPadding} ${topBottomPadding})`)
+        g.append(result.node)
+
+        g.append(drawCircle((circleRadius + 1), YPosition, circleRadius, "#28b463"))
+        g.append(drawCircle((result.width + leftRightPadding + lineLength + circleRadius - 1), YPosition, circleRadius, "#cb4335"))
+
+        let path = elt("path", {
+          stroke: "black",
+          "stroke-width": "2",
+          d: `M ${circleRadius + circleRadius} ${YPosition}
       h ${lineLength} m ${result.width} 0 h ${lineLength}`
-    }).node
+        }).node
 
-    g.append(path)
-  }
-  
-  /**
-   *
-   * @param cx string type, 圆的x坐标
-   * @param cy string type, 圆的y坐标
-   * @param r string type, 圆的半径
-   * @param color string type, 圆的填充颜色
-   * @returns
-   */
-  function drawCircle(cx, cy, r, color = "gray") {
-    return elt("circle", {
-      cx: `${cx}`,
-      cy: `${cy}`,
-      r: `${r}`,
-      fill: color,
-      stroke: "black",
-      "stroke-width": "2",
-    }).node
-  }
-  
-  function elt(string, obj = {}, ...arg) {
-    let node = document.createElementNS("http://www.w3.org/2000/svg", string)
-    
-    for (let key in obj) {
-      node.setAttribute(key, obj[key])
-    }
-    for (let val of arg) {
-      if (typeof val === "string") {
-        let textNode = document.createTextNode(val)
-        node.append(textNode)
-      } else {
-        node.append(val.node)
+        g.append(path)
+
+        return {
+          width: width,
+          height: height,
+        }
       }
-    }
-    railGraph.append(node)
-    
-    return {
-      node: node,
-      width: node.getBBox().width,
-      height: node.getBBox().height,
-      boxX: node.getBBox().x,
-      boxY: node.getBBox().y,
-    }
-    
-  }
+
+      /**
+       *
+       * @param cx string type, 圆的x坐标
+       * @param cy string type, 圆的y坐标
+       * @param r string type, 圆的半径
+       * @param color string type, 圆的填充颜色
+       * @returns
+       */
+      function drawCircle(cx, cy, r, color = "gray") {
+        return elt("circle", {
+          cx: `${cx}`,
+          cy: `${cy}`,
+          r: `${r}`,
+          fill: color,
+          stroke: "black",
+          "stroke-width": "2",
+        }).node
+      }
+
+      function elt(string, obj = {}, ...arg) {
+        let node = document.createElementNS("http://www.w3.org/2000/svg", string)
+
+        for (let key in obj) {
+          node.setAttribute(key, obj[key])
+        }
+        for (let val of arg) {
+          if (typeof val === "string") {
+            let textNode = document.createTextNode(val)
+            node.append(textNode)
+          } else {
+            node.append(val.node)
+          }
+        }
+        railGraph.append(node)
+
+        return {
+          node: node,
+          width: node.getBBox().width,
+          height: node.getBBox().height,
+          boxX: node.getBBox().x,
+          boxY: node.getBBox().y,
+        }
+
+      }
+
+      function drawBaselineOfGraph(graphObj, lineLength = elementPadding) {
+        let g = elt("g", {
+          class: "drawLine",
+        }).node
   
-  function drawBaselineOfGraph(graphObj, lineLength = elementPadding) {
-    let g = elt("g", {
-      class: "drawLine",
-    }).node
-    // let rect = elt("rect",{
-    //   width: `${graphObj.width + lineLength * 2}`,
-    //   height: `${graphObj.height}`,
-    //   fill: "none",
-    // }).node
-    // g.append(rect)
-    graphObj.node.setAttribute("transform", `translate(${lineLength} 0)`)
-    g.append(graphObj.node)
-    
-    let path = elt("path", {
-      stroke: "black",
-      "stroke-width": "2",
-      // d: `M 0, ${graphObj.height / 2} h ${lineLength}
-      d: `M 0, ${graphObj.lineY} h ${lineLength}
+        graphObj.node.setAttribute("transform", `translate(${lineLength} 0)`)
+        g.append(graphObj.node)
+
+        let path = elt("path", {
+          stroke: "black",
+          "stroke-width": "2",
+          d: `M 0, ${graphObj.lineY} h ${lineLength}
       m ${graphObj.width} 0 h${lineLength}`,
-    }).node
-    g.append(path)
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-      lineY: graphObj.lineY,
-    }
-    
-  }
-  
-  /**
-   * 根据text对象,计算其兄弟元素rect的宽度
-   * @param textObj
-   * @returns {*}
-   */
-  function calculateRectWidth(textObj, widthPadding) {
-    let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
-    // return textObj.width * boxAspectRatio + textObj.width //rect的宽度
-    return textObj.width * boxAspectRatio + textObj.width //rect的宽度
+        }).node
+        g.append(path)
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+          lineY: graphObj.lineY,
+        }
 
-  }
-  
-  function drawCharacterGraph(node, type = COMMON_CHAR) {
-    let heightPadding = elementPadding * 2
-    let widthPadding = elementPadding * 2
-    let textObj
-    let g = elt("g").node
-
-     if (type === ESCAPE_CHAR) {
-      let character= elt("tspan", {
-        class: ESCAPE_CHAR,
-      }, ESCAPE[node.row])
-
-       textObj = elt("text", {}, character)
-
-     } else if (type === SPECIAL_CHAR) {
-      let character = elt("tspan", {
-        class: SPECIAL_CHAR,
-      }, SPECIAL[node.row])
-
-       textObj = elt("text", {}, character)
-      
-     } else { // type === COMMON_CHAR
-      let leftQuote = elt("tspan", {
-        fill: "#908c83",
-        font: "12px Arial",
-      }, '“')
-      let rightQuote = elt("tspan", {
-        fill: "#908c83",
-        font: "12px Arial",
-      }, '”')
-      let character = elt("tspan", {
-        class: COMMON_CHAR,
-        font: "12px Arial",
-      }, node.row)
-      
-      textObj = elt("text", {}, leftQuote, character, rightQuote)
-    }
-    
-    // let rectWidth = calculateRectWidth(textObj)
-    let rectWidth = textObj.width + widthPadding
-    
-    let rectObj = elt("rect", {
-      width: `${rectWidth}`,
-      height: `${textObj.height + heightPadding}`,
-      fill: "none",
-      rx: "5",
-      class: type,
-    })
-    
-    // let textDy = 0 - textObj.boxY + (heightPadding / 2) //text的dy, 是在其原来的位置上的偏移
-    // textObj.node.setAttribute("x", `${(rectWidth - textObj.width) / 2}`)
-    // textObj.node.setAttribute("dy", `${textDy}`)
-    setOffsetOfText(textObj, ((rectWidth - textObj.width) / 2), (heightPadding / 2))
-    
-    g.append(rectObj.node)
-    g.append(textObj.node)
-    
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-      lineY: gBBox.height / 2,
-    }
-    
-  }
-  
-  /**
-   * 副作用函数, 设置textObj的基于BBox左上角的 x 和 y 的偏移
-   * @param textObj
-   * @param xOffset
-   * @param yOffset
-   */
-  function setOffsetOfText(textObj, xOffset, yOffset) {
-    textObj.node.setAttribute("x", `${xOffset}`)
-    let textDy = 0 - textObj.boxY + yOffset //text的dy, 是在其原来的位置上的偏移
-    textObj.node.setAttribute("dy", `${textDy}`)
-  }
-  
-  function drawCharacterClassRemind(node) {
-    let remindChar = ""
-    if (node.negative === true) {
-      remindChar = "None of:"
-    } else {
-      remindChar = "One of:"
-    }
-    
-    return drawRemindGraph(remindChar, "characterClassRemind")
-  }
-  
-  function drawCharacterClassGraph(node) {
-    let remind = drawCharacterClassRemind(node)
-    let content = drawCharacterClassContent(node, remind.width)
-    let g = elt("g").node
-    let rect = elt("rect", {
-      width: `${content.width}`,
-      height: `${remind.height + content.height}`,
-      fill: "none",
-    }).node
-    g.append(rect)
-    g.append(remind.node)
-    content.node.setAttribute("transform", `translate(0, ${remind.height})`)
-    g.append(content.node)
-    
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-      lineY: remind.height + content.lineY,
-    }
-    
-  }
-  function drawCharacterClassContent(node, remindWidth) {
-    let characterMap = {}
-    let charObjArray = []
-    let set = new Set()
-    node.Character.forEach(it => {
-      characterMap[it.row] = it
-      set.add(it.row)
-    })
-    set.forEach(key => {
-      charObjArray.push(matchFunc(characterMap[key]))
-    })
-    
-    let g = elt("g").node
-    
-    let maxWidth = getMaxValueOfAllG(charObjArray, "width").width
-    let rectWidth = Math.max(maxWidth + (elementPadding * 2), remindWidth)
-    
-    let height = (charObjArray.length + 1) * elementPadding + (charObjArray.length * charObjArray[0].height)
-    let rect = elt("rect", {
-      width: `${rectWidth}`,
-      height: `${height}`,
-      fill: "#cbcbba",
-      rx: "5",
-      class: "CharacterClassContent",
-    }).node
-    
-    g.append(rect)
-    let h = 0
-    charObjArray.forEach(obj => {
-      obj.node.setAttribute("transform", `translate(${(rectWidth - obj.width) / 2} ${h + elementPadding})`)
-      h += elementPadding + obj.height
-      g.append(obj.node)
-    })
-    
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-      lineY: gBBox.height / 2,
-    }
-  }
-  
-  /**
-   * 画 中括号里的连续的字符
-   * @param node
-   * @returns
-   */
-  function drawCharSeriesGraph(node) {
-    let objArray = node.character.map((charObj) => {
-      if (charObj.type === "connectChar") { //画连接字符
-        return drawConnectCharGraph(charObj)
-      } else if (charObj.type === "Escape") { // 画转义符
-        return drawEscapeGraph(charObj)
-      } else {
-        return drawCharacterGraph(charObj)
       }
-    })
-    let g = elt("g", {class: "charSeries"}).node
-    let widthNum = objArray.reduce((result, obj) => {
-      return result + obj.width
-    }, 0)
-    let needWidth = widthNum + ((objArray.length - 1) * elementPadding)
-    let maxHeight = getMaxValueOfAllG(objArray, "height").height
-    let rect = elt("rect", {
-      fill: "none",
-      height: `${maxHeight}`,
-      width: `${needWidth}`
-    }).node
-    g.append(rect)
-    let x = 0
-    objArray.forEach((obj) => {
-      obj.node.setAttribute("transform", `translate(${x} ${(maxHeight - obj.height) >>> 1})`)
-      x += obj.width + elementPadding
-      g.append(obj.node)
-    })
-    
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-    }
-  }
-  
-  function drawConnectCharGraph(node) {
-    let g = elt("g", {class: "connectChar"}).node
-    let text = elt("text", {}, node.row)
-    let dy = 0 - text.boxY
-    text.node.setAttribute("dy", `${dy}`)
-    g.append(text.node)
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-    }
-  }
 
-  function drawQuantityContentGraph(node) {
-    if (node.min === 1 && node.max === 1) { // 这种情况 {1} , 不需要画线
-      return matchFunc(node.repeat)
-    }
-    let padding = elementPadding * 3 // 左边或右边的padding为 3倍的 间距
-    let radiiEllipse = elementPadding * 2 // 画椭圆时的 x 和 y 的半径,设置为一样的,就可以画出正圆
-    let lineSpan = padding - radiiEllipse //画贪婪匹配线的x轴以及y轴的跨度
-    let topPadding = 0
-    let bottomPadding = 0
-    if (node.min === 0) {
-      topPadding = radiiEllipse
-    }
-    if (node.max > 1) {
-      bottomPadding = radiiEllipse
-    }
-    let g = elt("g").node
-    let character = matchFunc(node.repeat)
-    character.node.setAttribute("transform", `translate(${padding} ${topPadding})`)
-    let rect = elt("rect", {
-      width: `${character.width + (padding * 2)}`,
-      height: `${character.height + topPadding + bottomPadding}`,
-      fill: "none",
-    }).node
-    g.append(rect)
-    g.append(character.node)
-    
-    let strokeWidth = "2"
-    let yPosition = character.lineY + topPadding // 计算与其他元素连线时,连接线在纵轴的位置
-    let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
-    let zeroTime = "" //最小为0次的匹配
-    let repeatedly = "" //最大的匹配大于1次
-    let greed = "" //贪婪匹配
-    let outrange = radiiEllipse * 2 - padding // 超出左边距的距离
-    if (node.min === 0) {
-      zeroTime = `M 0 ${yPosition}
+      /**
+       * 根据text对象,计算其兄弟元素rect的宽度
+       * @param textObj
+       * @returns {*}
+       */
+      function calculateRectWidth(textObj, widthPadding) {
+        let boxAspectRatio = textObj.height / textObj.width //text 的高宽比
+        return textObj.width * boxAspectRatio + textObj.width //rect的宽度
+
+      }
+
+      function drawCharacterGraph(node, type = COMMON_CHAR) {
+        let heightPadding = elementPadding * 2
+        let widthPadding = elementPadding * 2
+        let textObj
+        let g = elt("g").node
+
+        if (type === ESCAPE_CHAR) {
+          let character = elt("tspan", {
+            class: ESCAPE_CHAR,
+          }, ESCAPE[node.row])
+
+          textObj = elt("text", {}, character)
+
+        } else if (type === SPECIAL_CHAR) {
+          let character = elt("tspan", {
+            class: SPECIAL_CHAR,
+          }, SPECIAL[node.row])
+
+          textObj = elt("text", {}, character)
+
+        } else { // type === COMMON_CHAR
+          let leftQuote = elt("tspan", {
+            class: "symbol"
+          }, '“')
+          let rightQuote = elt("tspan", {
+            class: "symbol"
+          }, '”')
+          let character = elt("tspan", {
+            class: COMMON_CHAR,
+          }, node.row)
+
+          textObj = elt("text", {}, leftQuote, character, rightQuote)
+        }
+
+        let rectWidth = textObj.width + widthPadding
+
+        let rectObj = elt("rect", {
+          width: `${rectWidth}`,
+          height: `${textObj.height + heightPadding}`,
+          fill: "none",
+          rx: "5",
+          class: type,
+        })
+
+        setOffsetOfText(textObj, ((rectWidth - textObj.width) / 2), (heightPadding / 2))
+
+        g.append(rectObj.node)
+        g.append(textObj.node)
+
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+          lineY: gBBox.height / 2,
+        }
+
+      }
+
+      /**
+       * 副作用函数, 设置textObj的基于BBox左上角的 x 和 y 的偏移
+       * @param textObj
+       * @param xOffset
+       * @param yOffset
+       */
+      function setOffsetOfText(textObj, xOffset, yOffset) {
+        textObj.node.setAttribute("x", `${xOffset}`)
+        let textDy = 0 - textObj.boxY + yOffset //text的dy, 是在其原来的位置上的偏移
+        textObj.node.setAttribute("dy", `${textDy}`)
+      }
+
+      function drawCharacterClassRemind(node) {
+        let remindChar = ""
+        if (node.negative === true) {
+          remindChar = "None of:"
+        } else {
+          remindChar = "One of:"
+        }
+
+        return drawRemindGraph(remindChar, "characterClassRemind")
+      }
+
+      function drawCharacterClassGraph(node) {
+        let remind = drawCharacterClassRemind(node)
+        let content = drawCharacterClassContent(node, remind.width)
+        let g = elt("g").node
+        let rect = elt("rect", {
+          width: `${content.width}`,
+          height: `${remind.height + content.height}`,
+          fill: "none",
+        }).node
+        g.append(rect)
+        g.append(remind.node)
+        content.node.setAttribute("transform", `translate(0, ${remind.height})`)
+        g.append(content.node)
+
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+          lineY: remind.height + content.lineY,
+        }
+
+      }
+      function drawCharacterClassContent(node, remindWidth) {
+        let characterMap = {}
+        let charObjArray = []
+        let set = new Set()
+        node.Character.forEach(it => {
+          characterMap[it.row] = it
+          set.add(it.row)
+        })
+        set.forEach(key => {
+          charObjArray.push(matchFunc(characterMap[key]))
+        })
+
+        let g = elt("g").node
+
+        let maxWidth = getMaxValueOfAllG(charObjArray, "width").width
+        let rectWidth = Math.max(maxWidth + (elementPadding * 2), remindWidth)
+
+        let height = (charObjArray.length + 1) * elementPadding + (charObjArray.length * charObjArray[0].height)
+        let rect = elt("rect", {
+          width: `${rectWidth}`,
+          height: `${height}`,
+          fill: "#cbcbba",
+          rx: "5",
+          class: "CharacterClassContent",
+        }).node
+
+        g.append(rect)
+        let h = 0
+        charObjArray.forEach(obj => {
+          obj.node.setAttribute("transform", `translate(${(rectWidth - obj.width) / 2} ${h + elementPadding})`)
+          h += elementPadding + obj.height
+          g.append(obj.node)
+        })
+
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+          lineY: gBBox.height / 2,
+        }
+      }
+
+      /**
+       * 画 中括号里的连续的字符
+       * @param node
+       * @returns
+       */
+      function drawCharSeriesGraph(node) {
+        let objArray = node.character.map((charObj) => {
+          if (charObj.type === "connectChar") { //画连接字符
+            return drawConnectCharGraph(charObj)
+          } else if (charObj.type === "Escape") { // 画转义符
+            return drawEscapeGraph(charObj)
+          } else {
+            return drawCharacterGraph(charObj)
+          }
+        })
+        let g = elt("g", { class: "charSeries" }).node
+        let widthNum = objArray.reduce((result, obj) => {
+          return result + obj.width
+        }, 0)
+        let needWidth = widthNum + ((objArray.length - 1) * elementPadding)
+        let maxHeight = getMaxValueOfAllG(objArray, "height").height
+        let rect = elt("rect", {
+          fill: "none",
+          height: `${maxHeight}`,
+          width: `${needWidth}`
+        }).node
+        g.append(rect)
+        let x = 0
+        objArray.forEach((obj) => {
+          obj.node.setAttribute("transform", `translate(${x} ${(maxHeight - obj.height) >>> 1})`)
+          x += obj.width + elementPadding
+          g.append(obj.node)
+        })
+
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+        }
+      }
+
+      function drawConnectCharGraph(node) {
+        let g = elt("g", { class: "connectChar" }).node
+        let text = elt("text", {}, node.row)
+        let dy = 0 - text.boxY
+        text.node.setAttribute("dy", `${dy}`)
+        g.append(text.node)
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+        }
+      }
+
+      function drawQuantityContentGraph(node) {
+        if (node.min === 1 && node.max === 1) { // 这种情况 {1} , 不需要画线
+          return matchFunc(node.repeat)
+        }
+        let padding = elementPadding * 3 // 左边或右边的padding为 3倍的 间距
+        let radiiEllipse = elementPadding * 2 // 画椭圆时的 x 和 y 的半径,设置为一样的,就可以画出正圆
+        let lineSpan = padding - radiiEllipse //画贪婪匹配线的x轴以及y轴的跨度
+        let topPadding = 0
+        let bottomPadding = 0
+        if (node.min === 0) {
+          topPadding = radiiEllipse
+        }
+        if (node.max > 1) {
+          bottomPadding = radiiEllipse
+        }
+        let g = elt("g").node
+        let character = matchFunc(node.repeat)
+        character.node.setAttribute("transform", `translate(${padding} ${topPadding})`)
+        let rect = elt("rect", {
+          width: `${character.width + (padding * 2)}`,
+          height: `${character.height + topPadding + bottomPadding}`,
+          fill: "none",
+        }).node
+        g.append(rect)
+        g.append(character.node)
+
+        let strokeWidth = "2"
+        let yPosition = character.lineY + topPadding // 计算与其他元素连线时,连接线在纵轴的位置
+        let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
+        let zeroTime = "" //最小为0次的匹配
+        let repeatedly = "" //最大的匹配大于1次
+        let greed = "" //贪婪匹配
+        let outrange = radiiEllipse * 2 - padding // 超出左边距的距离
+        if (node.min === 0) {
+          zeroTime = `M 0 ${yPosition}
         a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${radiiEllipse},${-radiiEllipse}
         L ${radiiEllipse} ${topPadding}
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${-radiiEllipse}
@@ -923,15 +1072,15 @@
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${radiiEllipse}
         L ${character.width + padding + (padding - radiiEllipse)} ${yPosition - radiiEllipse}
         a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${radiiEllipse},${radiiEllipse}`
-        if (node.greed === false) {
-          // greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse - (radiiEllipse - lineSpan)}
-          greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse}
+          if (node.greed === false) {
+            // greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse - (radiiEllipse - lineSpan)}
+            greed += `M ${lineSpan} ${topPadding + character.lineY - radiiEllipse}
           l ${lineSpan} ${-lineSpan}
           l ${lineSpan} ${lineSpan}`
+          }
         }
-    }
-    if (node.max > 1) {
-      repeatedly = `M ${padding + character.width} ${yPosition}
+        if (node.max > 1) {
+          repeatedly = `M ${padding + character.width} ${yPosition}
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${radiiEllipse}
         L ${character.width + padding + (radiiEllipse)} ${character.height + topPadding}
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-radiiEllipse},${radiiEllipse}
@@ -939,474 +1088,274 @@
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-radiiEllipse},${-radiiEllipse}
         L ${padding - radiiEllipse} ${yPosition + (radiiEllipse)}
         a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${radiiEllipse},${-radiiEllipse}`
-        if (node.greed === true) {
-          // greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse + (radiiEllipse - lineSpan)}
-          greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse}
+          if (node.greed === true) {
+            // greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse + (radiiEllipse - lineSpan)}
+            greed += `M ${character.width + padding + padding} ${topPadding + character.lineY + radiiEllipse}
 
           l ${-lineSpan} ${lineSpan}
           l ${-lineSpan} ${-lineSpan}`
+          }
         }
-    }
-    
-    let path = elt("path", {
-      fill: "none",
-      stroke: "black",
-      "stroke-width": strokeWidth,
-      d: straightLine + zeroTime + repeatedly + greed
-    }).node
-    
-    g.append(path)
-    
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-      lineY: yPosition,
-    }
-  }
-  // function drawQuantityContentGraph(node) {
-  //   if (node.min === 1 && node.max === 1) { // 这种情况 {1} , 不需要画线
-  //     return matchFunc(node.repeat)
-  //   }
-  //   let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
-  //   let topPadding = 0
-  //   let bottomPadding = 0
-  //   if (node.min === 0) {
-  //     topPadding = elementPadding
-  //   }
-  //   if (node.max > 1) {
-  //     bottomPadding = elementPadding
-  //   }
-  //   let g = elt("g").node
-  //   let character = matchFunc(node.repeat)
-  //   character.node.setAttribute("transform", `translate(${padding} ${topPadding})`)
-  //   let rect = elt("rect", {
-  //     width: `${character.width + (padding * 2)}`,
-  //     height: `${character.height + topPadding + bottomPadding}`,
-  //     fill: "none",
-  //   }).node
-  //   g.append(rect)
-  //   g.append(character.node)
-    
-  //   let strokeWidth = "2"
-  //   let yPosition = character.lineY + topPadding // 计算与其他元素连线时,连接线在纵轴的位置
-  //   let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
-  //   let zeroTime = "" // 最小为0次的匹配
-  //   let repeatedly = "" //最大的匹配大于1次
-  //   if (node.min === 0) {
-  //     zeroTime = `M 0 ${yPosition}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${-elementPadding}
-  //       L ${elementPadding} ${topPadding}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}
-  //       h ${character.width}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-  //       L ${character.width + padding + (elementPadding)} ${yPosition - (elementPadding)}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${elementPadding}`
-  //   }
-  //   if (node.max > 1) {
-  //     repeatedly = `M ${padding + character.width} ${yPosition}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-  //       L ${character.width + padding + (elementPadding)} ${character.height + topPadding}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${elementPadding}
-  //       h ${-character.width}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${-elementPadding}
-  //       L ${elementPadding} ${yPosition + (elementPadding)}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}`
-  //   }
-    
-  //   let path = elt("path", {
-  //     fill: "none",
-  //     stroke: "black",
-  //     "stroke-width": strokeWidth,
-  //     d: straightLine + zeroTime + repeatedly
-  //   }).node
-    
-  //   g.append(path)
-    
-  //   return {
-  //     node: g,
-  //     width: g.getBBox().width,
-  //     height: g.getBBox().height,
-  //     lineY: yPosition,
-  //   }
-  // }
-  
-  function drawQuantityRemindGraph(node) {
-    let remindText = ""
-    let title = ""
-    if (node.min === node.max) {
-      remindText = `${node.min - 1} times`
-      title = `repeats ${node.min} times in total`
-    } else if (node.max === Infinity) {
-      remindText = `${node.min - 1}+ times`
-      title = `repeats ${node.min}+ times in total`
-    } else if (node.min === 0 || node.min === 1) {
-      if (node.max === 2) {
-        remindText = `at most once`
-      } else {
-        remindText = `at most ${node.max - 1} times`
-      }
-      title = `repeats at most ${node.max} times in total`
-    } else { // node.min > 2
-      remindText = `${node.min - 1}...${node.max - 1} times`
-      title = `repeats ${node.min}...${node.max} times in total`
-    }
-    let titleNode = document.createElementNS("http://www.w3.org/2000/svg", "title")
-    let textNode = document.createTextNode(title)
-    titleNode.append(textNode)
-    
-    return drawRemindGraph(remindText, "quantityRemind", titleNode)
-  }
-  
-  function drawQuantityGraph(node) {
-    let content = drawQuantityContentGraph(node)
-    if ((node.min < 2 && node.max === Infinity) || (node.min < 2 && node.max < 2)) {
-      return content // 不需要加文本直接返回
-    }
-    let remind = drawQuantityRemindGraph(node)
-    let width = Math.max(content.width, remind.width)
-    let height = content.height + remind.height
-    let g = elt("g").node
-    let rect = elt("rect", {
-      width: `${width}`,
-      height: `${height}`,
-      fill: `none`,
-      class: "Quantity",
-    }).node
-    g.append(rect)
-    g.append(content.node)
-    let remindXOffset
-    if (width > content.width) {
-      let path = elt("path", {
-        fill: "none",
-        stroke: "black",
-        "stroke-width": "2",
-        d: `M ${content.width} ${content.lineY} h ${width - content.width}`
-      }).node
-      g.append(path)
-      remindXOffset = 0
-    } else {
-      remindXOffset = width - remind.width
-    }
-    remind.node.setAttribute("transform", `translate(${remindXOffset}, ${content.height})`)
-    g.append(remind.node)
-    
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-      lineY: content.lineY,
-    }
-  }
-  // function drawQuantityGraph(node) {
-  //   let padding = elementPadding * 2 // 这里不要动,如果动的话,就要改 path 的 d 的值
-  //   let g = elt("g").node
-  //   let character = matchFunc(node.repeat)
-  //   character.node.setAttribute("transform", `translate(${padding} ${padding})`)
-  //   let rect = elt("rect", {
-  //     width: `${character.width + (padding * 2)}`,
-  //     height: `${character.height + (padding * 2)}`,
-  //     fill: "none",
-  //   }).node
-  //   g.append(rect)
-  //   g.append(character.node)
-  //
-  //   let strokeWidth = "2"
-  //   let yPosition = character.height / 2 + (padding) // 计算与其他元素连线时,连接线在纵轴的位置
-  //   let straightLine = `M 0 ${yPosition} h ${padding} m ${character.width} 0 h ${padding}`
-  //   let zeroTime = "" // 最小为0次的匹配
-  //   let repeatedly = "" //最大的匹配大于1次
-  //   if (node.min === 0) {
-  //     zeroTime = `M 0 ${yPosition}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${-elementPadding}
-  //       L ${elementPadding} ${padding >>> 1}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}
-  //       h ${character.width}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-  //       L ${character.width + padding + (elementPadding)} ${yPosition - (elementPadding)}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 0 ${elementPadding},${elementPadding}`
-  //   }
-  //   if (node.max > 1) {
-  //     repeatedly = `M ${padding + character.width} ${yPosition}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${elementPadding}
-  //       L ${character.width + padding + (elementPadding)} ${character.height + padding + (padding >>> 1)}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${elementPadding}
-  //       h ${-character.width}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${-elementPadding},${-elementPadding}
-  //       L ${elementPadding} ${yPosition + (elementPadding)}
-  //       a ${radiiEllipse} ${radiiEllipse} 0 0 1 ${elementPadding},${-elementPadding}`
-  //   }
-  //
-  //   let path = elt("path", {
-  //     fill: "none",
-  //     stroke: "black",
-  //     "stroke-width": strokeWidth,
-  //     d: straightLine + zeroTime + repeatedly
-  //   }).node
-  //
-  //   g.append(path)
-  //
-  //   return {
-  //     node: g,
-  //     width: g.getBBox().width,
-  //     height: g.getBBox().height,
-  //   }
-  // }
-  
-  function mergeCommonChar(charArray) {
-    let mergeCharArray = []
-    charArray.forEach(obj => {
-      // let tempObj = null
-      if (obj.type === "Character") {
-        if (mergeChar(obj, obj.row) === true) {
-          return // break
-        }
-        // tempObj = mergeCharArray[mergeCharArray.length - 1]
-        // if ((tempObj)?.type === "Character") {
-        //   tempObj.row += obj.row
-        //   return "break"
-        // } else if ((tempObj)?.type === "Escape") {
-        //   if(Object.hasOwn(ESCAPE, tempObj.escape) !== true) {
-        //     tempObj.escape += obj.row
-        //     return "break"
-        //   }
-        // }
-      } else if (obj.type === "Escape" && Object.hasOwn(ESCAPE, obj.escape) !== true) {
-        if (mergeChar(obj, obj.escape) === true) {
-          return // break
-        }
-        // tempObj = mergeCharArray[mergeCharArray.length - 1]
-        // if ((tempObj)?.type === "Character") {
-        //   tempObj.row += obj.escape
-        //   return "break"
-        // } else if ((tempObj)?.type === "Escape") {
-        //   if(Object.hasOwn(ESCAPE, tempObj.escape) !== true) {
-        //     tempObj.escape = obj.escape
-        //     return "break"
-        //   }
-        // }
-      }
-      mergeCharArray.push(obj)
-    })
-    function mergeChar(obj, char) {
-      let tempObj = mergeCharArray[mergeCharArray.length - 1]
-      if ((tempObj)?.type === "Character") {
-        tempObj.row += char
-        return true
-      } else if ((tempObj)?.type === "Escape") {
-        if(Object.hasOwn(ESCAPE, tempObj.escape) !== true) {
-          tempObj.escape += char
-          return true
-        }
-      }
-      return false
-    }
-    
-    return mergeCharArray
-  }
-  
-  function drawBranchGraph(node) {
-    let g = elt("g").node
-    let mergeCharArray = mergeCommonChar(node.character)
-    // let mergeCharArray = []
-    // node.character.forEach(obj => {
-    //   let tempObj = null
-    //   if (obj.type === "Character") {
-    //     if ((tempObj = mergeCharArray[mergeCharArray.length - 1])?.type === "Character") {
-    //       tempObj.row += obj.row
-    //     } else {
-    //       mergeCharArray.push(obj)
-    //     }
-    //   } else {
-    //     mergeCharArray.push(obj)
-    //   }
-    // })
-    let objArray = mergeCharArray.map(obj => {
-      return matchFunc(obj)
-    })
-    objArray = objArray.map(obj => {
-      return drawBaselineOfGraph(obj)
-    })
-    let width = objArray.reduce((result, obj) => {
-      return result + obj.width
-    }, 0)
-    
-    let maxLineY = getMaxValueOfAllG(objArray, "lineY").lineY
-    let x = 0
-    let maxResidueLineY = 0 // 基线的以下那部分的最大值
-    objArray.forEach(obj => {
-      obj.node.setAttribute("transform", `translate(${x} ${maxLineY - obj.lineY})`)
-      x += obj.width
-      maxResidueLineY = Math.max((obj.height - obj.lineY), maxResidueLineY)
-    })
-    let height = maxLineY + maxResidueLineY
-    
-    let rect = elt("rect", {
-      fill: "none",
-      width: `${width}`,
-      height: `${height}`,
-      rx: "5"
-    }).node
-    g.append(rect)
-    
-    objArray.forEach(obj => {
-      g.append(obj.node)
-    })
-    
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-      lineY: maxLineY,
-    }
-  }
-  // function drawBranchGraph(node) {
-  //   let g = elt("g").node
-  //   let mergeCharArray = []
-  //   node.character.forEach(obj => {
-  //   let tempObj = null
-  //     if (obj.type === "Character") {
-  //       if ((tempObj = mergeCharArray[mergeCharArray.length - 1])?.type === "Character") {
-  //         tempObj.row += obj.row
-  //       } else {
-  //         mergeCharArray.push(obj)
-  //       }
-  //     } else {
-  //       mergeCharArray.push(obj)
-  //     }
-  //   })
-  //   let objArray = mergeCharArray.map(obj => {
-  //     return matchFunc(obj)
-  //   })
-  //   objArray = objArray.map(obj => {
-  //     return drawBaselineOfGraph(obj)
-  //   })
-  //   let width = objArray.reduce((result, obj) => {
-  //     return result + obj.width
-  //   }, 0)
-  //   let maxHeightObj = getMaxValueOfAllG(objArray, "height")
-  //   let rect = elt("rect", {
-  //     fill: "none",
-  //     width: `${width}`,
-  //     // height: `${height + elementPadding * 2}`,
-  //     height: `${maxHeightObj.height}`,
-  //     rx: "5"
-  //   }).node
-  //   g.append(rect)
-  //
-  //   let x = 0
-  //   let rectHeight = rect.getBBox().height
-  //   objArray.forEach(obj => {
-  //     // obj.node.setAttribute("transform", `translate(${x} ${(rectHeight - obj.height) / 2})`)
-  //     obj.node.setAttribute("transform", `translate(${x} ${(rectHeight - obj.height) / 2})`)
-  //     x += obj.width
-  //     g.append(obj.node)
-  //   })
-  //   return {
-  //     node: g,
-  //     width: g.getBBox().width,
-  //     height: g.getBBox().height,
-  //   }
-  // }
-  
-  /**
-   * 获得对象数组里的最大宽度或最大高度的对象
-   * @param objArray 已经画好的对象组成的数组
-   * @param key width or height
-   * @returns obj 所有对象里宽度最大或高度最大的对象
-   */
-  function getMaxValueOfAllG(objArray, key) {
-    let temp = {}
-    temp[key] = -Infinity
-    return objArray.reduce((result, obj) => {
-      if (result[key] < obj[key]) {
-        return obj
-      } else {
-        return result
-      }
-    }, temp)
-  }
-  
-  function matchFunc(node) {
-    if (node.type === COMMON_CHAR) {
-      return drawCharacterGraph(node)
-    } else if (node.type === "CharacterClass") {
-      return drawCharacterClassGraph(node)
-    } else if (node.type === "CaptureGroup") {
-      return drawCaptureGraph(node)
-    } else if (node.type === "Quantity") {
-      return drawQuantityGraph(node)
-    } else if (node.type === "Branch") {
-      return drawBranchGraph(node)
-    } else if (node.type === "CharSeries") {
-      return drawCharSeriesGraph(node)
-    } else if (node.type === ESCAPE_CHAR) {
-      return drawEscapeGraph(node)
-    } else if (node.type === SPECIAL_CHAR) {
-      return drawSpecialCharGraph(node)
-    }
-    return undefined
-  }
-  
-  function drawSpecialCharGraph(node) {
-    if (Object.hasOwn(SPECIAL, node.row)) {
-      return drawCharacterGraph(node, SPECIAL_CHAR)
-    } else {
-      return drawCharacterGraph(node, COMMON_CHAR)
-    }
-  }
-  
-  function drawBranchesGraph(nodes) {
-    let padding = elementPadding * 4
-    let branchArray = nodes.map(obj => {
-      return matchFunc(obj)
-    })
-    if (branchArray.length === 1) { //如果只有一个分支,则直接把画好的那个对象返回
-      return branchArray[0]
-    }
-    let heightMun = branchArray.reduce((result, obj) => {
-      return result + obj.height
-    }, 0)
-    let maxWidth = getMaxValueOfAllG(branchArray, "width").width
-    let rectHeight = (branchArray.length - 1) * elementPadding + heightMun
 
-    let g = elt("g").node
-    let rect = elt("rect", {
-      fill: "none",
-      width: `${maxWidth + padding * 2}`,
-      height: `${rectHeight}`,
-      rx: "5",
-    }).node
-    g.append(rect)
-    let newBranchArray = branchArray.map(obj => {
-      return alignLineOfWidth(obj, maxWidth)
-    })
-    let yPositionGraph = [] //记录每个graph的联线位置 Y轴的位置
-    let y = 0
-    newBranchArray.forEach(obj => {
-      obj.node.setAttribute("transform", `translate(${padding} ${y})`)
-      yPositionGraph.push(obj.lineY + y)
-      y += obj.height + elementPadding
-      g.append(obj.node)
-    })
-    let yGather = 0 //分支连线的Y轴的聚集点
-    let idx = yPositionGraph.length >>> 1
-    if (yPositionGraph.length % 2 !== 0) { //说明有奇数个branch
-      yGather = yPositionGraph[idx] //取中间的那个branch的连线的Y轴位置
-      // yGather = rectHeight / 2 // 不能用这个,用三次贝塞尔曲线画的时候,用这个会导致在汇聚点那里,线会有不重合的情况
-    } else {
-      yGather = (yPositionGraph[idx] + yPositionGraph[idx - 1]) / 2
-    }
-    
-    let drawLine = ""
-    yPositionGraph.forEach(yPosition => {
-      let contPointX = 0 // 贝塞尔曲线的控制点的 X 坐标
-      if (Math.abs(yGather - yPosition) < padding) {
-        contPointX = padding / 2
-      } else {
-        contPointX = padding
+        let path = elt("path", {
+          fill: "none",
+          stroke: "black",
+          "stroke-width": strokeWidth,
+          d: straightLine + zeroTime + repeatedly + greed
+        }).node
+
+        g.append(path)
+
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+          lineY: yPosition,
+        }
       }
-      drawLine += `
+
+      function drawQuantityRemindGraph(node) {
+        let remindText = ""
+        let title = ""
+        if (node.min === node.max) {
+          remindText = `${node.min - 1} times`
+          title = `repeats ${node.min} times in total`
+        } else if (node.max === Infinity) {
+          remindText = `${node.min - 1}+ times`
+          title = `repeats ${node.min}+ times in total`
+        } else if (node.min === 0 || node.min === 1) {
+          if (node.max === 2) {
+            remindText = `at most once`
+          } else {
+            remindText = `at most ${node.max - 1} times`
+          }
+          title = `repeats at most ${node.max} times in total`
+        } else { // node.min > 2
+          remindText = `${node.min - 1}...${node.max - 1} times`
+          title = `repeats ${node.min}...${node.max} times in total`
+        }
+        let titleNode = document.createElementNS("http://www.w3.org/2000/svg", "title")
+        let textNode = document.createTextNode(title)
+        titleNode.append(textNode)
+
+        return drawRemindGraph(remindText, "quantityRemind", titleNode)
+      }
+
+      function drawQuantityGraph(node) {
+        let content = drawQuantityContentGraph(node)
+        if ((node.min < 2 && node.max === Infinity) || (node.min < 2 && node.max < 2)) {
+          return content // 不需要加文本直接返回
+        }
+        let remind = drawQuantityRemindGraph(node)
+        let width = Math.max(content.width, remind.width)
+        let height = content.height + remind.height
+        let g = elt("g").node
+        let rect = elt("rect", {
+          width: `${width}`,
+          height: `${height}`,
+          fill: `none`,
+          class: "Quantity",
+        }).node
+        g.append(rect)
+        g.append(content.node)
+        let remindXOffset
+        if (width > content.width) {
+          let path = elt("path", {
+            fill: "none",
+            stroke: "black",
+            "stroke-width": "2",
+            d: `M ${content.width} ${content.lineY} h ${width - content.width}`
+          }).node
+          g.append(path)
+          remindXOffset = 0
+        } else {
+          remindXOffset = width - remind.width
+        }
+        remind.node.setAttribute("transform", `translate(${remindXOffset}, ${content.height})`)
+        g.append(remind.node)
+
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+          lineY: content.lineY,
+        }
+      }
+
+      function mergeCommonChar(charArray) {
+        let mergeCharArray = []
+        charArray.forEach(obj => {
+          if (obj.type === "Character") {
+            if (mergeChar(obj, obj.row) === true) {
+              return // break
+            }
+
+          } else if (obj.type === "Escape" && Object.hasOwn(ESCAPE, obj.escape) !== true) {
+            if (mergeChar(obj, obj.escape) === true) {
+              return // break
+            }
+          }
+          mergeCharArray.push(obj)
+        })
+        function mergeChar(obj, char) {
+          let tempObj = mergeCharArray[mergeCharArray.length - 1]
+          if ((tempObj)?.type === "Character") {
+            tempObj.row += char
+            return true
+          } else if ((tempObj)?.type === "Escape") {
+            if (Object.hasOwn(ESCAPE, tempObj.escape) !== true) {
+              tempObj.escape += char
+              return true
+            }
+          }
+          return false
+        }
+
+        return mergeCharArray
+      }
+
+      function drawBranchGraph(node) {
+        let g = elt("g").node
+        let mergeCharArray = mergeCommonChar(node.character)
+        
+        let objArray = mergeCharArray.map(obj => {
+          return matchFunc(obj)
+        })
+        objArray = objArray.map(obj => {
+          return drawBaselineOfGraph(obj)
+        })
+        let width = objArray.reduce((result, obj) => {
+          return result + obj.width
+        }, 0)
+
+        let maxLineY = getMaxValueOfAllG(objArray, "lineY").lineY
+        let x = 0
+        let maxResidueLineY = 0 // 基线的以下那部分的最大值
+        objArray.forEach(obj => {
+          obj.node.setAttribute("transform", `translate(${x} ${maxLineY - obj.lineY})`)
+          x += obj.width
+          maxResidueLineY = Math.max((obj.height - obj.lineY), maxResidueLineY)
+        })
+        let height = maxLineY + maxResidueLineY
+
+        let rect = elt("rect", {
+          fill: "none",
+          width: `${width}`,
+          height: `${height}`,
+          rx: "5"
+        }).node
+        g.append(rect)
+
+        objArray.forEach(obj => {
+          g.append(obj.node)
+        })
+
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+          lineY: maxLineY,
+        }
+      }
+
+      /**
+       * 获得对象数组里的最大宽度或最大高度的对象
+       * @param objArray 已经画好的对象组成的数组
+       * @param key width or height
+       * @returns obj 所有对象里宽度最大或高度最大的对象
+       */
+      function getMaxValueOfAllG(objArray, key) {
+        let temp = {}
+        temp[key] = -Infinity
+        return objArray.reduce((result, obj) => {
+          if (result[key] < obj[key]) {
+            return obj
+          } else {
+            return result
+          }
+        }, temp)
+      }
+
+      function matchFunc(node) {
+        if (node.type === COMMON_CHAR) {
+          return drawCharacterGraph(node)
+        } else if (node.type === "CharacterClass") {
+          return drawCharacterClassGraph(node)
+        } else if (node.type === "CaptureGroup") {
+          return drawCaptureGraph(node)
+        } else if (node.type === "Quantity") {
+          return drawQuantityGraph(node)
+        } else if (node.type === "Branch") {
+          return drawBranchGraph(node)
+        } else if (node.type === "CharSeries") {
+          return drawCharSeriesGraph(node)
+        } else if (node.type === ESCAPE_CHAR) {
+          return drawEscapeGraph(node)
+        } else if (node.type === SPECIAL_CHAR) {
+          return drawSpecialCharGraph(node)
+        }
+        return undefined
+      }
+
+      function drawSpecialCharGraph(node) {
+        if (Object.hasOwn(SPECIAL, node.row)) {
+          return drawCharacterGraph(node, SPECIAL_CHAR)
+        } else {
+          return drawCharacterGraph(node, COMMON_CHAR)
+        }
+      }
+
+      function drawBranchesGraph(nodes) {
+        let padding = elementPadding * 4
+        let branchArray = nodes.map(obj => {
+          return matchFunc(obj)
+        })
+        if (branchArray.length === 1) { //如果只有一个分支,则直接把画好的那个对象返回
+          return branchArray[0]
+        }
+        let heightMun = branchArray.reduce((result, obj) => {
+          return result + obj.height
+        }, 0)
+        let maxWidth = getMaxValueOfAllG(branchArray, "width").width
+        let rectHeight = (branchArray.length - 1) * elementPadding + heightMun
+
+        let g = elt("g").node
+        let rect = elt("rect", {
+          fill: "none",
+          width: `${maxWidth + padding * 2}`,
+          height: `${rectHeight}`,
+          rx: "5",
+        }).node
+        g.append(rect)
+        let newBranchArray = branchArray.map(obj => {
+          return alignLineOfWidth(obj, maxWidth)
+        })
+        let yPositionGraph = [] //记录每个graph的联线位置 Y轴的位置
+        let y = 0
+        newBranchArray.forEach(obj => {
+          obj.node.setAttribute("transform", `translate(${padding} ${y})`)
+          yPositionGraph.push(obj.lineY + y)
+          y += obj.height + elementPadding
+          g.append(obj.node)
+        })
+        let yGather = 0 //分支连线的Y轴的聚集点
+        let idx = yPositionGraph.length >>> 1
+        if (yPositionGraph.length % 2 !== 0) { //说明有奇数个branch
+          yGather = yPositionGraph[idx] //取中间的那个branch的连线的Y轴位置
+          // yGather = rectHeight / 2 // 不能用这个,用三次贝塞尔曲线画的时候,用这个会导致在汇聚点那里,线会有不重合的情况
+        } else {
+          yGather = (yPositionGraph[idx] + yPositionGraph[idx - 1]) / 2
+        }
+
+        let drawLine = ""
+        yPositionGraph.forEach(yPosition => {
+          let contPointX = 0 // 贝塞尔曲线的控制点的 X 坐标
+          if (Math.abs(yGather - yPosition) < padding) {
+            contPointX = padding / 2
+          } else {
+            contPointX = padding
+          }
+          drawLine += `
           M 0 ${yGather}
           C ${contPointX},${yGather} ${padding - contPointX},${yPosition} ${padding},${yPosition}
 
@@ -1414,216 +1363,183 @@
           C ${maxWidth + padding + contPointX},${yPosition} ${maxWidth + padding + (padding - contPointX)},${yGather}
           ${maxWidth + (padding * 2)},${yGather}
           `
-    })
-    
-    let path = elt("path", {
-      fill: "none",
-      stroke: "black",
-      "stroke-width": "2",
-      d: drawLine,
-    }).node
-    g.append(path)
-    
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-      lineY: yGather,
-    }
-  }
-  
-  /**
-   * 把obj小于targetWidth的部分,用线补齐
-   * @param obj 需要补齐宽度的对象
-   * @param targetWidth obj需要达到的宽度
-   * @returns {*|{node: 宽度补齐后的对象, width: 对象的宽度, height: 对象的高度}}
-   */
-  function alignLineOfWidth(obj, targetWidth) {
-    if (obj.width === targetWidth) {
-      return obj
-    }
-    let lineLength = (targetWidth - obj.width) / 2
-    return drawBaselineOfGraph(obj, lineLength)
-  }
-  
-  function drawCaptureGraph(node) {
-    if (node.capture === false && node.zeroWidthAssert === false) {
-      return drawCaptureContentGraph(node) // 需返回带有 联线位置的 y坐标
-    }
-    let remind = drawCaptureRemindGraph(node)
-    let content = drawCaptureContentGraph(node, remind.width)
-    let rectHeight = content.height + remind.height
-    let rectWidth = Math.max(content.width, remind.width)
+        })
 
-    let g = elt("g").node
-    let rect = elt("rect", {
-      width: `${rectWidth}`,
-      height: `${rectHeight}`,
-      fill: "none",
-      class: "capture",
-    }).node
-    content.node.setAttribute("transform", `translate(0 ${remind.height})`)
-    g.append(remind.node)
-    g.append(content.node)
-    g.append(rect)
+        let path = elt("path", {
+          fill: "none",
+          stroke: "black",
+          "stroke-width": "2",
+          d: drawLine,
+        }).node
+        g.append(path)
 
-    return {
-      node: g,
-      width: g.getBBox().width,
-      height: g.getBBox().height,
-      lineY: remind.height + content.lineY
-    }
-  }
-  
-  /**
-   * 画提示词
-   * @param text string
-   * @param className string
-   * @param arg obj
-   * @returns
-   */
-  function drawRemindGraph(text, className, ...arg) {
-    let g = elt("g").node
-    for (let val of arg) {
-      g.append(val)
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+          lineY: yGather,
+        }
+      }
+
+      /**
+       * 把obj小于targetWidth的部分,用线补齐
+       * @param obj 需要补齐宽度的对象
+       * @param targetWidth obj需要达到的宽度
+       * @returns {*|{node: 宽度补齐后的对象, width: 对象的宽度, height: 对象的高度}}
+       */
+      function alignLineOfWidth(obj, targetWidth) {
+        if (obj.width === targetWidth) {
+          return obj
+        }
+        let lineLength = (targetWidth - obj.width) / 2
+        return drawBaselineOfGraph(obj, lineLength)
+      }
+
+      function drawCaptureGraph(node) {
+        if (node.capture === false && node.zeroWidthAssert === false) {
+          return drawCaptureContentGraph(node) // 需返回带有 联线位置的 y坐标
+        }
+        let remind = drawCaptureRemindGraph(node)
+        let content = drawCaptureContentGraph(node, remind.width)
+        let rectHeight = content.height + remind.height
+        let rectWidth = Math.max(content.width, remind.width)
+
+        let g = elt("g").node
+        let rect = elt("rect", {
+          width: `${rectWidth}`,
+          height: `${rectHeight}`,
+          fill: "none",
+          class: "capture",
+        }).node
+        content.node.setAttribute("transform", `translate(0 ${remind.height})`)
+        g.append(remind.node)
+        g.append(content.node)
+        g.append(rect)
+
+        return {
+          node: g,
+          width: g.getBBox().width,
+          height: g.getBBox().height,
+          lineY: remind.height + content.lineY
+        }
+      }
+
+      /**
+       * 画提示词
+       * @param text string
+       * @param className string
+       * @param arg obj
+       * @returns
+       */
+      function drawRemindGraph(text, className, ...arg) {
+        let g = elt("g").node
+        for (let val of arg) {
+          g.append(val)
+        }
+
+        let tspan = elt("tspan", {
+          class: "remind",
+        }, text)
+        let textObj = elt("text", {
+          class: className,
+        }, tspan)
+
+        let rectObj = elt("rect", {
+          width: `${textObj.width}`,
+          height: `${textObj.height}`,
+          fill: "none",
+          class: className,
+        })
+
+        setOffsetOfText(textObj, 0, 0)
+
+        g.append(rectObj.node)
+        g.append(textObj.node)
+
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+        }
+      }
+
+      function drawCaptureRemindGraph(node) {
+        let remindChar = ""
+        if (node.capture === true) {
+          remindChar = `group #${node.groupIndex}`
+          if (node.groupName !== "") {
+            remindChar += ` ${node.groupName}`
+          }
+        } else if (node.zeroWidthAssert === true) {
+          if (node.positive === true) {
+            remindChar = "positive"
+          } else {
+            remindChar = "negative"
+          }
+          if (node.lookahead === true) {
+            remindChar += " lookahead"
+          } else {
+            remindChar += " lookbehind"
+          }
+        } else {
+          return elt("g", { class: "nullCaptureRemind" })
+        }
+
+        return drawRemindGraph(remindChar, "captureRemind")
+
+      }
+
+      function drawCaptureContentGraph(node, remindWidth = 0) {
+        let strokeWidth = 2
+        let padding = 0
+        let strokeColor = ""
+        if (node.capture === true || node.zeroWidthAssert === true) {
+          padding = elementPadding
+          strokeColor = "gray"
+        }
+        let g = elt("g").node
+        let branches = drawBranchesGraph(node.branches)
+        let width = Math.max(branches.width, remindWidth)
+        if (width > branches.width) {
+          branches = drawBaselineOfGraph(branches, (width - branches.width) / 2)
+        }
+        let rect = elt("rect", {
+          width: `${branches.width}`,
+          height: `${branches.height + (padding * 2)}`,
+          rx: "5",
+          "stroke-dasharray": "5,5",
+          stroke: strokeColor,
+          "stroke-width": `${strokeWidth}`,
+          fill: "none",
+          class: "captureContent",
+        }).node
+        branches.node.setAttribute("transform", `translate(0 ${padding})`)
+        g.append(branches.node)
+        g.append(rect)
+        let gBBox = g.getBBox()
+        return {
+          node: g,
+          width: gBBox.width,
+          height: gBBox.height,
+          lineY: branches.lineY + padding,
+        }
+      }
+
+      function drawEscapeGraph(node) {
+        let char = node.escape
+        if (Object.hasOwn(ESCAPE, char)) { // 说明是普通字符的转义字符
+
+          return drawCharacterGraph({ row: char }, ESCAPE_CHAR)
+
+        } else { // 说明是特殊字符的转义字符,这时要当做普通字符处理
+          return drawCharacterGraph({ row: char }, COMMON_CHAR)
+        }
+
+      }
     }
 
-    let tspan = elt("tspan", {
-      class: "remind",
-    }, text)
-    let textObj = elt("text", {
-      class: className,
-    }, tspan)
-    
-    let rectObj = elt("rect", {
-      width: `${textObj.width}`,
-      height: `${textObj.height}`,
-      fill: "none",
-      class: className,
-    })
-    
-    setOffsetOfText(textObj, 0, 0)
-    
-    g.append(rectObj.node)
-    g.append(textObj.node)
-    
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-    }
-  }
-  
-  function drawCaptureRemindGraph(node) {
-    let remindChar = ""
-    if (node.capture === true) {
-      remindChar =`group #${node.groupIndex}`
-      if (node.groupName !== "") {
-        remindChar += ` ${node.groupName}`
-      }
-    } else if (node.zeroWidthAssert === true) {
-      if (node.positive === true) {
-        remindChar = "positive"
-      } else {
-        remindChar = "negative"
-      }
-      if (node.lookahead === true) {
-        remindChar += " lookahead"
-      } else {
-        remindChar += " lookbehind"
-      }
-    } else {
-      return elt("g", {class: "nullCaptureRemind"})
-    }
-    
-    return drawRemindGraph(remindChar, "captureRemind")
-    
-  }
-  
-  function drawCaptureContentGraph(node, remindWidth = 0) {
-    let strokeWidth = 2
-    let padding = 0
-    let strokeColor = ""
-    if (node.capture === true || node.zeroWidthAssert === true) {
-      padding = elementPadding
-      strokeColor = "gray"
-    }
-    let g = elt("g").node
-    let branches = drawBranchesGraph(node.branches)
-    let width = Math.max(branches.width, remindWidth)
-    if (width > branches.width) {
-      branches = drawBaselineOfGraph(branches, (width - branches.width) / 2)
-    }
-    let rect = elt("rect", {
-      width: `${branches.width}`,
-      height: `${branches.height + (padding * 2)}`,
-      rx: "5",
-      "stroke-dasharray": "5,5",
-      stroke: strokeColor,
-      "stroke-width": `${strokeWidth}`,
-      fill: "none",
-      class: "captureContent",
-    }).node
-    branches.node.setAttribute("transform", `translate(0 ${padding})`)
-    g.append(branches.node)
-    g.append(rect)
-    // console.log(g.getBBox().height)
-    let gBBox = g.getBBox()
-    return {
-      node: g,
-      width: gBBox.width,
-      height: gBBox.height,
-      lineY: branches.lineY + padding,
-    }
-  }
-  
-  function drawEscapeGraph(node) {
-    let char = node.escape
-    if (Object.hasOwn(ESCAPE, char)) { // 说明是普通字符的转义字符
-      
-      return drawCharacterGraph({row: char}, ESCAPE_CHAR)
-      
-    } else { // 说明是特殊字符的转义字符,这时要当做普通字符处理
-      return drawCharacterGraph({row: char}, COMMON_CHAR)
-    }
-  
-  }
-  
-</script>
+  </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
