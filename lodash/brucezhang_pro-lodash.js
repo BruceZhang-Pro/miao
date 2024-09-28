@@ -1143,8 +1143,71 @@ function isArray(item) {
     result += repeatChar(char, tailLength)
     return result
   }
+  function keys(object) {
+    let result = []
+    forOwn(object, (_, key) => {
+      result.push(key)
+    })
+    return result
+  }
+  function keysIn(object) {
+    let result = []
+    forIn(object, (_, key) => {
+      result.push(key)
+    })
+    return result
+  }
+  function values(object) {
+    let result = []
+    forOwn(object, value => {
+      result.push(value)
+    })
+    return result
+  }
+  function valuesIn(object) {
+    let result = []
+    forIn(object, value => {
+      result.push(value)
+    })
+    return result
+  }
+  function ceil(number, precision = 0) {
+    let num = number
+    if (precision === 0) {
+      num += (num % 1 > 0) ? 1 : 0
+      num = num - num % 1
+    } else {
+      let multiple = 10 ** precision
+      num *= multiple
+      num += (num % 1 > 0) ? 1 : 0
+      num -= num % 1
+      num /= multiple
+    }
+    return num
+  }
+  function floor(number, precision = 0) {
+    let num = number
+    if (precision === 0) {
+      num -= num % 1
+    } else {
+      let multiple = 10 ** precision
+      num *= multiple
+      num -= num % 1
+      num /= multiple
+    }
+     return num
+  }
+  function cloneDeep() {
 
+  }
   return {
+    cloneDeep,
+    floor,
+    ceil,
+    valuesIn,
+    values,
+    keysIn,
+    keys,
     padEnd: padEnd,
     padStart: padStart,
     pad: pad,
