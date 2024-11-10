@@ -79,6 +79,18 @@
         border-left: 1px solid #9fcfff;
       }
     }
+    #group-hover-title {
+      position: fixed;
+      background-color: black;
+      white-space: pre;
+      color: white;
+      font-size: 12px;
+      opacity: 0.8;
+      padding: 0.5em;
+      border-radius: 0.5em;
+      display: none;
+      transform: translateX(-50%) translateY(-100%) translateY(-5px);
+    }
 
   </style>
 </head>
@@ -86,7 +98,7 @@
   <div>
     <div>REGULAR EXPRESSION</div>
     <input class="border" type="text" id="reInput" value=".(.(.)(.))(..)">
-    <button class="border" id="runInput" onclick="run()">RUN</button>
+    <button class="border" id="runInputButton" onclick="run()">RUN</button>
     <span id="matchState"></span>
     <div id="tips"></div>
     <div>FLAGS</div>
@@ -111,21 +123,28 @@
         1 pig
       </div>
     </div>
+    <div id="group-hover-title"></div>
   </div>
   <script>
     "use strict";
     //元素id为xxx时,页面的全局就会出现一个叫xxx的变量,指向一个想表示那个标签的对象
     let result = document.querySelector("#result")
     let reInput = document.querySelector("#reInput")
-    let runInput = document.querySelector("#runInput")
+    let runInputBtn = document.querySelector("#runInputButton")
     let tips = document.querySelector("#tips")
     let matchState = document.querySelector("#matchState")
+    let groupHoverTitle = document.querySelector("#group-hover-title")
     window.addEventListener("load", run)
-    result.addEventListener("input", run)
-    reInput.addEventListener("keyup", run)
-    runInput.addEventListener("lick", run)
+    result.addEventListener("input", debounce(run, 500))
+    reInput.addEventListener("keyup", debounce(run, 500))
+    runInputBtn.addEventListener("lick", run)
+    result.addEventListener("mousemove", showMatchGroupInfo)
+    result.addEventListener("mouseleave", hiddenMatchGroupInfo, true)
+    let lastStartTimeOfMatch = 0
 
     function run(e) {
+      let matchTime = Date.now()
+      lastStartTimeOfMatch = matchTime
       let reString = reInput.value // 可以通过value属性读取到文本框的值
       if (reString === "") {
         return undefined
@@ -151,6 +170,10 @@
 
       getMatchesFromWorker(re, testString, matches => {
         let position = 0
+        if (matchTime < lastStartTimeOfMatch) {
+          return
+        }
+        
         matches.forEach(match => {
           html += testString.slice(lastLastIndex, match.index)
           html += heightLightRegExp(match, matchIndex)
@@ -165,9 +188,57 @@
         if (e.target === result) {
           restoreCursorPosition(result, position)
         }
-      }, () => {
-        matchState.textContent = "timeout"
-      })
+      }, matchTime)
+      
+    }
+    
+    function showMatchGroupInfo(e) {
+      if(e.target.matches("em")) {
+        let emBoxes = e.target.getClientRects()
+        // console.dir(emBoxes)
+        let mouseX = e.clientX
+        let mouseY = e.clientY
+        // console.log(mouseX)
+        
+        let box = getMouseHoverBox(emBoxes, mouseY)
+        // console.dir(box)
+        
+        groupHoverTitle.textContent = e.target.dataset.title
+        // console.log(e.target.dataset.title)
+        groupHoverTitle.style.top = box.top + "px"
+        groupHoverTitle.style.left = mouseX + "px"
+        groupHoverTitle.style.display = "block"
+      }
+    }
+    
+    function hiddenMatchGroupInfo(e) {
+      console.dir(e)
+      if(e.target.matches("em")) {
+        console.log(111)
+        groupHoverTitle.style.display = "none"
+      }
+    }
+    
+    function getMouseHoverBox(boxes, y) {
+      if(boxes.length === 1) {
+        return boxes[0]
+      }
+      for (let i = 0; i < boxes.length; i++) {
+        if (boxes[i].top < y && boxes[i].bottom > y) {
+          return boxes[i]
+        }
+      }
+      return boxes[0]
+    }
+    
+    function debounce(func, delay) {
+      let timeId = null
+      return function (...arg) {
+        clearTimeout(timeId)
+        timeId = setTimeout(() => {
+          func(...arg)
+        }, delay)
+      }
     }
     function restoreCursorPosition(node, input) {
       let selected = window.getSelection()
@@ -183,7 +254,7 @@
     }
     function getCursorPosition(node) {
       let selected = window.getSelection()
-      console.dir(selected)
+
       let pos = 0
       traverseTextNode(node, (textNode) => {
         if (textNode === selected.anchorNode) {
@@ -209,8 +280,26 @@
         }
       }
     }
+    function matchOk(matchTime) {
+      if(matchTime < lastStartTimeOfMatch) {
+        return
+      }
+      matchState.textContent = "okk"
+    }
+    function matchLoad(matchTime) {
+      if(matchTime < lastStartTimeOfMatch) {
+        return
+      }
+      matchState.textContent = "loading..."
+    }
+    function matchTimeout(matchTime) {
+      if(matchTime < lastStartTimeOfMatch) {
+        return
+      }
+      matchState.textContent = "timeout"
+    }
 
-    function getMatchesFromWorker(re, textString, func, timeoutFunc) {
+    function getMatchesFromWorker(re, textString, func, matchTime) {
       let isAction = false
       let worker = new Worker("regexp-match-worker.js")
       worker.postMessage({
@@ -224,19 +313,19 @@
         matches = e.data
         func(matches)
         isAction = true
-        matchState.textContent = "okk"
+        matchOk(matchTime)
       })
 
       setTimeout(() => {
         if (isAction === false) {
-          matchState.textContent = "loading..."
+          matchLoad(matchTime)
         }
       },500)
 
       setTimeout(() => {
         if (isAction === false) {
           worker.terminate()
-          timeoutFunc()
+          matchTimeout(matchTime)
         }
       },4000)
     }
@@ -266,7 +355,7 @@
         ].join("\n")
         start = index[0] - match.index
         end = index[1] - match.index
-        label[start] += `<em data-group-index="${groupIndex % 8}" title="${info}">`
+        label[start] += `<em data-group-index="${groupIndex % 8}" data-title="${info}">`
         label[end] = "</em>" + label[end]
         groupIndex++
       }
