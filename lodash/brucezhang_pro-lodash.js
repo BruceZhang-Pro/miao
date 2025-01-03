@@ -6,7 +6,7 @@ var brucezhang_pro = function() {
   const EVERY = true
   const SOME = false
 //用于判断基础类型的值是否为falsey的函数
-function isFalsey (item) {
+function isFalse (item) {
   if (item === false || item === null || item === 0 || item === "" || item === undefined || item !== item) {
     return true
   } else {
@@ -41,17 +41,17 @@ function forEachStartIndex(array, fromIndex = 0, iteratee = identity) {
 function isArray(item) {
   return Object.prototype.toString.call(item) === '[object Array]'
 }
-  //Creates an array with all falsey values removed. The values false, null, 0, "", undefined, and NaN are false
-  function compact(array) {
-    var result = []
-    forEach(array, (item) => {
-      if (isFalsey(item) !== true) {
-        result.push(item)
-      }
-    })
-    
-    return result
-  }
+//Creates an array with all falsey values removed. The values false, null, 0, "", undefined, and NaN are false
+function compact(array) {
+  var result = []
+  forEach(array, (item) => {
+    if (isFalse(item) !== true) {
+      result.push(item)
+    }
+  })
+  
+  return result
+}
   
   //Creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.
   function chunk(array, size = 1) {
@@ -247,17 +247,20 @@ function isArray(item) {
   //Performs a partial deep comparison between object and source to determine if object contains equivalent property values.
   function isMatch(object, source) {
     for (var key in source) {
-      if (key in object) {
-        if(isEqual(object[key], source[key]) === false) {
-          return false
+      if(Object.hasOwn(object, key)) {
+        if (object[key] && typeof object[key] === "object") {
+          return isMatch(object[key], source[key])
+        } else {
+          return object[key] === source[key]
         }
       } else {
         return false
       }
     }
-    return true
+
   }
   //Creates a function that performs a partial deep comparison between a given object and source, returning true if the given object has equivalent property values, else false.
+
   function matches(source) {
     return function(object) {
       return isMatch(object, source)
@@ -1197,10 +1200,28 @@ function isArray(item) {
     }
      return num
   }
+  function bind(func, thisArg, ...partials) {
+    return function (...args) {
+      let allArgs = []
+      let i = 0
+      forEach(partials, val => {
+        if (val === "_") {
+          allArgs.push(args[i++])
+        } else {
+          allArgs.push(val)
+        }
+      })
+      while(i < args.length) {
+        allArgs.push(args[i++])
+      }
+      return func.apply(thisArg, allArgs)
+    }
+  }
   function cloneDeep() {
 
   }
   return {
+    bind,
     cloneDeep,
     floor,
     ceil,

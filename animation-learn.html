@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公转但不自转</title>
+  <style>
+    * {
+      background-color: rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 1px red;
+    }
+    html, body {
+      margin: 0;
+      height:100%;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .container {
+      width: 51%;
+      animation: circle 4s linear infinite;
+    }
+    .content {
+      font-size: 32px;
+      text-align: center;
+      animation: reverse-circle 4s linear infinite;
+    }
+    @keyframes reverse-circle {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+    @keyframes circle {
+      0% {
+        transform: rotate(0deg) translate(50px, 50px);
+      }
+      100% {
+        transform: rotate(360deg) translate(50px, 50px);
+      }
+    }
+    .content2 {
+      position: relative;
+      font-size: 32px;
+      width: 50%;
+      height: 100px;
+      animation: draw-circle 4s linear infinite;
+    }
+    .content2::before {
+      content: '🐱';
+      position: absolute;
+      animation: draw-circle 4s linear reverse infinite;
+    }
+    @keyframes draw-circle {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content"> 🐶 </div>
+  </div>
+  <div class="content2"></div>
+</body>
+</html>

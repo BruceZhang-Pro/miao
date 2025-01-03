@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>abs-center</title>
+  <style>
+  /* 双向居中方案中至少要有一个元素的某一个维度是不定宽或高的 或者是宽高在一定范围内修改时依然能居中才能算是一个方案
+
+  没有最好的方案,只有最合适的方案,根据实际情况选择合适的方案
+  */
+    * {
+      background-color: rgb(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 1px red;
+    }
+    body {
+      margin-left: 300px;
+      padding: 0;
+    }
+    div {
+      height: 200px;
+      width: 200px;
+    }
+    span {
+      height: 100px;
+      width: 100px;
+    }
+    .a1 { /* 2D 变换实现双向居中 子元素可以不定宽高，且子元素可以比父元素大*/
+      > span {
+        display: inline-block; /* span 默认为 inline 元素，无法使用 margin-top */
+        margin-top: 50%; /* 这里的 50% 是基于父元素的大小来计算的 */
+        margin-left: 50%;
+        transform: translate(-50%, -50%); /* 这里的 50% 是基于自己的大小来计算的 */
+      }
+    }
+    .a2 { /* 子元素必须比父元素小，行内元素实现，子元素不用定宽高，可以实现多行文本居中 */
+      height: auto;
+      text-align: center;
+      &::before {
+        content: '';
+        height: 200px;
+        width: 5px;
+        display: inline-block; /* 默认为 inline, 设置宽和高没有用，所以要改成 inline-block */
+        background-color: red;
+        vertical-align: middle; /* 设置与默认文本的对其方式 */ 
+      }
+      > span {
+        display: inline-block;/* 默认为 inline, 设置宽和高没有用，所以要改成 inline-block */ 
+        vertical-align: middle; /* 设置与默认文本的对其方式 */
+        height:auto;
+        width: auto;
+        /* height: 80px;
+        width: 90px; */
+      }
+    }
+    .a3 { /* 子元素要比父元素小，且子元素要定宽高 */
+      position: relative;
+      > span {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto; /* margin box 是 absolute 的布局框 */
+      }
+    }
+    .a4 { /* 宽高可以超过父元素，处于常规流中 */
+      display: flex;
+      justify-content: center;
+      > span {
+        height: 350px;
+        width: 350px;
+        flex-shrink: 0; /* 不缩小, 默认为缩小*/
+        align-self: center; /* 这个方案 span 可以比父元素大 */
+        /* margin: auto;  这个方案 span 必须必父元素小 */
+      }
+    }
+    .a5 {
+      display: grid;
+      /* justify-items: center;
+      align-items: center; */
+      justify-content: center; /* 这个方案 span 可以比父元素大 其他两个 span 不能比父元素大*/
+      align-content: center;
+      > span {
+        height: 430px;
+        width: 430px;
+        /* justify-self: center;
+        align-self: center; */
+      }
+    }
+    .a6 { /* 水平居中比较麻烦，要比父元素小，在常规流中，周围不能放其他元素 */
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+      > span {
+        display: inline-block;
+        height: 100px;
+        width: 100px;
+      }
+    }
+    .trans {
+      transition: 1s;
+      transform-origin: left top;
+    }
+    .trans:hover {
+      /* transform: matrix(0.5, 0.866025, -0.866025, 0.5, 0, 0) */
+      transform: rotate(60deg);
+      /* transform-origin: left top; */ /* 这样写比较有意思 原点在变换的过程中发生了变化*/
+
+    }
+  </style>
+</head>
+<body>
+  <div class="a1"><span>11</span></div>
+  <div class="a2">x<span>22</span></div>
+  <div class="a3"><span>33</span></div>
+  <div class="a4"><span>44</span></div>
+  <div class="a5"><span>55</span></div>
+  <div class="a6"><span>66</span></div>
+  <div class="trans">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo, libero laudantium. Iure asperiores delectus consequatur amet, omnis consequuntur maxime? Voluptates, fugiat possimus. Unde in odio numquam perferendis distinctio placeat dolor.</div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 <script>
   "use strict"
 </script>
-<script src="lodash/brucezhang_pro-lodash.js"></script>
+<!-- <script src="lodash/brucezhang_pro-lodash.js"></script> -->
 <!-- <script src="oop.js"></script> -->
 <script type="1">
 function swap(array, x, y) {
@@ -1058,25 +1058,25 @@ var ancestry = JSON.parse(ANCESTRY_FILE)
 // console.log('male: ' + ancestry.filter(male).map(age).reduce(peopleAverage))
 // console.log('female: ' + ancestry.filter(female).map(age).reduce(peopleAverage))
 
-// var theSet = ["Carel Haverbeke", "Maria van Brussel", "Donald Duck"]
+var theSet = ["Carel Haverbeke", "Maria van Brussel", "Donald Duck"]
 
-// function isInSet(set, people) {
-//   return set.indexOf(people.name) > -1
-// }
+function isInSet(set, people) {
+  return set.indexOf(people.name) > -1
+}
 
-// let isNamePeople = ancestry.filter((people) => {
-//   return isInSet(theSet, people)
-// })
-// console.log(isNamePeople)
+let isNamePeople = ancestry.filter((people) => {
+  return isInSet(theSet, people)
+})
+console.log(isNamePeople)
 
-// function bind(f, ...surplus) {
-//   return function (...surplus2) {
-//     return f(...surplus, ...surplus2)
-//   }
-// }
+function bind(f, ...surplus) {
+  return function (...surplus2) {
+    return f(...surplus, ...surplus2)
+  }
+}
 
-// console.log(ancestry.filter(isInSet.bind(null, theSet)))
-// console.log(ancestry.filter(bind(isInSet, theSet)))
+console.log(ancestry.filter(isInSet.bind(null, theSet)))
+console.log(ancestry.filter(bind(isInSet, theSet)))
 
 </script>
 
