@@ -7,9 +7,171 @@
   <!-- <link href="  https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
   <link rel="stylesheet" href="../../lib/font-awesome-4.7.0/css/font-awesome.css">
   <title>mi</title>
+  <style>
+    /* * {
+      background-color: rgb(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 1px red;
+    } */
+    .slideshow {
+      > a {
+        opacity: 0;
+      }
+      > div.prev label {
+        display: none;
+      }
+      > div.next label {
+        display: none;
+      }
+      > #slideshow-radio:has(input:nth-child(1):checked) ~ a:nth-of-type(1),
+      > #slideshow-radio:has(input:nth-child(2):checked) ~ a:nth-of-type(2),
+      > #slideshow-radio:has(input:nth-child(3):checked) ~ a:nth-of-type(3),
+      > #slideshow-radio:has(input:nth-child(4):checked) ~ a:nth-of-type(4),
+      > #slideshow-radio:has(input:nth-child(5):checked) ~ a:nth-of-type(5),
+      > #slideshow-radio:has(input:nth-child(6):checked) ~ a:nth-of-type(6) {
+        opacity: 1;
+      }
+      > #slideshow-radio:has(input:nth-child(1):checked) ~ .prev :nth-child(1),
+      > #slideshow-radio:has(input:nth-child(2):checked) ~ .prev :nth-child(2),
+      > #slideshow-radio:has(input:nth-child(3):checked) ~ .prev :nth-child(3),
+      > #slideshow-radio:has(input:nth-child(4):checked) ~ .prev :nth-child(4),
+      > #slideshow-radio:has(input:nth-child(5):checked) ~ .prev :nth-child(5),
+      > #slideshow-radio:has(input:nth-child(6):checked) ~ .prev :nth-child(6) {
+        display: block;
+      }
+      > #slideshow-radio:has(input:nth-child(1):checked) ~ .next :nth-child(1),
+      > #slideshow-radio:has(input:nth-child(2):checked) ~ .next :nth-child(2),
+      > #slideshow-radio:has(input:nth-child(3):checked) ~ .next :nth-child(3),
+      > #slideshow-radio:has(input:nth-child(4):checked) ~ .next :nth-child(4),
+      > #slideshow-radio:has(input:nth-child(5):checked) ~ .next :nth-child(5),
+      > #slideshow-radio:has(input:nth-child(6):checked) ~ .next :nth-child(6) {
+        display: block;
+      }
+      /* 因为 input 与 label 关联后，label 被 hover 时也会触发 input 的 hover，所以在这里判断 label 被 hover 时修改对应的 input 的颜色为不 hover 的颜色 */
+      > #slideshow-radio:has(~.prev label:nth-child(1):hover) input:nth-child(6),
+      > #slideshow-radio:has(~.prev label:nth-child(2):hover) input:nth-child(1),
+      > #slideshow-radio:has(~.prev label:nth-child(3):hover) input:nth-child(2),
+      > #slideshow-radio:has(~.prev label:nth-child(4):hover) input:nth-child(3),
+      > #slideshow-radio:has(~.prev label:nth-child(5):hover) input:nth-child(4),
+      > #slideshow-radio:has(~.prev label:nth-child(6):hover) input:nth-child(5) {
+        border-color: #8c99a7;
+        background-color: transparent;
+      }
+      > #slideshow-radio:has(~.next label:nth-child(1):hover) input:nth-child(2),
+      > #slideshow-radio:has(~.next label:nth-child(2):hover) input:nth-child(3),
+      > #slideshow-radio:has(~.next label:nth-child(3):hover) input:nth-child(4),
+      > #slideshow-radio:has(~.next label:nth-child(4):hover) input:nth-child(5),
+      > #slideshow-radio:has(~.next label:nth-child(5):hover) input:nth-child(6),
+      > #slideshow-radio:has(~.next label:nth-child(6):hover) input:nth-child(1) {
+        border-color: #8c99a7;
+        background-color: transparent;
+      }
+    }
+    .option-class {
+      > a:first-child {
+        color: #ff6700;
+        border-bottom: 2px solid #ff6700;
+      }
+      > a,
+      ~ #headset,
+      ~ #dress {
+        transition: 0s 99999999s;
+      }
+      > a:nth-of-type(1):hover + a {
+        transition: none;
+      }
+      &:has(a:nth-of-type(2):hover) a:nth-of-type(1) {
+        color: black;
+        border: none;
+        transition: none;
+      }
+      > a:nth-of-type(1):hover,
+      > a:nth-of-type(2):hover {
+        color: #ff6700;
+        border-bottom: 2px solid #ff6700;
+        transition: none;
+      }
+      &:has(>a:nth-of-type(1):hover) ~ #headset {
+        visibility: visible;
+        transition: none;
+      }
+      &:has(>a:nth-of-type(1):hover) ~ #dress {
+        visibility: hidden;
+        transition: none;
+      }
+      &:has(>a:nth-of-type(2):hover) ~ #headset {
+        visibility: hidden;
+        transition: none;
+      }
+      &:has(>a:nth-of-type(2):hover) ~ #dress {
+        visibility: visible;
+        transition: none;
+      }
+    }
+    .option-parent {
+      & span {
+        transition: 0s 99999999s;
+        color: black;
+        > .option-item {
+          transition: 0s 99999999s;
+          visibility: hidden;
+        }
+        /* border: none; */ /* border由 none 到非 none 的过程不会 transition 但是其他的属性可以 transition */
+      }
+      &:hover span {
+        transition: none;
+        > .option-item {
+          transition: none;
+        }
+      }
+      & span:hover {
+        color: #ff6700;
+        border-bottom: 2px solid;
+        > .option-item {
+          visibility: visible;
+        }
+      }
+      & .option-title:nth-child(1) span {
+        color: #ff6700;
+        border-bottom: 2px solid;
+        > .option-item {
+          visibility: visible;
+        }
+      }
+      &:hover .option-title:nth-child(1) span:not(:hover) {
+        color: black;
+        border: none;
+        > .option-item {
+          visibility: hidden;
+        }
+      }
+    }
+    @media (width <= 1440px) {
+      #rightFixed {
+        width: 25px;
+        height: 200px;
+        left: 50%;
+        right: auto;
+        margin-left: 613px;
+        & .data-fixed {
+          display: none;
+        }
+        & .data-png {
+          width: 18px;
+          height: 20px;
+        }
+      }
+    }
+    @media (width <= 1276px) {
+      #rightFixed {
+        left: auto;
+        right: 0px;
+        margin: 0px;
+      }
+    }
+  </style>
 </head>
 <body class="overflow-y-scroll min-w-[1226px]">
-  <div class="h-10 bg-[#333333]">
+  <div class="h-10 bg-[#333333]"> <!-- 小米品牌导航栏 -->
     <div class="w-[1226px] mx-auto text-[#adadad] text-xs font-sans leading-10">
       <div class="float-left">
         <a href="#" class="hover:text-white h-full inline-block">小米官网 </a>
@@ -36,7 +198,7 @@
         <span class="mx-1 text-[#424242]">|</span>
         <a href="#" class="hover:text-white h-full inline-block"> Select Location</a>
       </div>
-      <div class="float-right ml-6 bg-[#424242] hover:text-[#ff6700] hover:bg-white relative group">
+      <div class="float-right ml-6 bg-[#424242] hover:text-[#ff6700] hover:bg-white relative group z-20">
         <a href="#" class="inline-block h-full px-4">
           <span class="fa fa-shopping-cart fa-lg mr-2"></span>购物车 (0) </a>
         <div class="absolute right-0 w-80 group-hover:h-[100px] h-0 overflow-hidden duration-300 text-center shadow-xl bg-white">
@@ -52,32 +214,2175 @@
       </div>
     </div>
   </div>
-  <div class="w-full">
+  <div class="w-full relative"> <!-- 小米商城核心内容 -->
     <div class="w-[1226px] mx-auto">
-      <div class="h-[100px] w-full flex items-center">
-        <div class="w-[234px]">
+      <div class="h-[100px] w-full flex items-center"> <!-- 小米商城导航栏 -->
+        <div class="w-[234px]"> <!-- 小米商城图标 -->
           <a href="#">
-            <img class="w-[55px] h-[55px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi.com-assets/shop/img/logo-mi2.png" alt="小米图标">
+            <img class="w-[56px] h-[56px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi.com-assets/shop/img/logo-mi2.png" alt="小米图标">
           </a>
         </div>
-        <div class="flex w-[630px] gap-4 pl-2.5">
-          <span class="">Xiaomi手机 </span>
-          <span class="">REDMI手机 </span>
-          <span class="">电视 </span>
-          <span class="">笔记本 </span>
-          <span class="">平板 </span>
-          <span class="">家电 </span>
-          <span class="">路由器 </span>
-          <span class="">服务中心 </span>
-          <span class="">社区</span>
+        <div class="flex h-full text-[#333333]"> <!-- 小米动态下拉产品列表 -->
+          <div class="flex h-full group/container uiui">
+            <div class="flex items-center h-full peer/Xaiomi"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">Xiaomi手机 </span></a></div>
+            <div class="flex items-center h-full peer/REDMI"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">REDMI手机 </span></a></div>
+            <div class="flex items-center h-full peer/TV"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">电视 </span></a></div>
+            <div class="flex items-center h-full peer/Laptop"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">笔记本 </span></a></div>
+            <div class="flex items-center h-full peer/Ipad"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">平板 </span></a></div>
+            <div class="flex items-center h-full peer/Appliance"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">家电 </span></a></div>
+            <div class="flex items-center h-full peer/Router"><a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">路由器 </span></a></div>
+            <div class="group/item product absolute left-0 top-[100px] w-full h-0 overflow-hidden group-has-[+:hover]/container:delay-0 group-hover/container:h-[228px] group-hover/container:delay-0 delay-300 duration-500 shadow-lg text-xs">
+              <!-- group-hover/container:border-t -->
+               <!-- group-hover/container:duration-500 group-hover/container:transition-[height] 设置 transition-[height] 时，tailwind 会一起设置 duration 为 150  -->
+              <!-- group-has-[+:hover]/container:delay-0  父元素的兄弟元素被 hover 了当前元素的 delay 为 0 -->
+               <!--  -->
+              <!-- peer-hover/Xiaomi:group-[.product]:z-10 -->
+              <!-- .peer\/Xiaomi:hover ~ .group.product .peer-hover\/Xiaomi\:group-\[\.product\]\:z-10 {
+                  z-index: 10;
+              } -->
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/Xaiomi:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="Xiaomi手机 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/d0acdc0fc97f894fc1c698522e8e1cc9.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15</div>
+                        <div class="text-center text-[#ff6700]">4499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b3fd13de87bcd8755fdbb804bfba467a.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15 Pro</div>
+                        <div class="text-center text-[#ff6700]">5299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/d0acdc0fc97f894fc1c698522e8e1cc9.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15</div>
+                        <div class="text-center text-[#ff6700]">4499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b3fd13de87bcd8755fdbb804bfba467a.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15 Pro</div>
+                        <div class="text-center text-[#ff6700]">5299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/d0acdc0fc97f894fc1c698522e8e1cc9.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15</div>
+                        <div class="text-center text-[#ff6700]">4499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b3fd13de87bcd8755fdbb804bfba467a.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 15 Pro</div>
+                        <div class="text-center text-[#ff6700]">5299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/REDMI:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="REDMI手机 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b7b35c6e85b764c6d8b07ca0dc4924af.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">REDMI Turbo4</div>
+                        <div class="text-center text-[#ff6700]">1999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/07318b6d71b43c8f1093d0ceabe23e7a.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi 14C</div>
+                        <div class="text-center text-[#ff6700]">499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/08f9d298aa64bd81b4c01891266e4572.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">REDMI K80 Pro</div>
+                        <div class="text-center text-[#ff6700]">3699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5f9da01e805c1d61c650bc27b754f173.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">REDMI K80</div>
+                        <div class="text-center text-[#ff6700]">2499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/fa1b75b14fd41a5e1d98d25cbe6a1a89.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">REDMI Note 14 Pro+</div>
+                        <div class="text-center text-[#ff6700]">1899元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/106529ca2a44569b3955198ac43b525b.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">REDMI Note 14 Pro</div>
+                        <div class="text-center text-[#ff6700]">1299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/TV:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="电视 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a32280bcf272b9ee7cc03f01ff921db0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi 电视MAX系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c3e9eafd588b3994ec7f370379ecd2f4.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">小米电视S Pro Mini LED系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a32280bcf272b9ee7cc03f01ff921db0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi 电视MAX系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c3e9eafd588b3994ec7f370379ecd2f4.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">小米电视S Pro Mini LED系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a32280bcf272b9ee7cc03f01ff921db0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi 电视MAX系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c3e9eafd588b3994ec7f370379ecd2f4.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">小米电视S Pro Mini LED系列</div>
+                        <div class="text-center text-[#ff6700]">4999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/Laptop:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="笔记本 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a1f6a20434940961e37aa3ab8f956217.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book Pro 16 2014</div>
+                        <div class="text-center text-[#ff6700]">6399元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/1e3e74dfb320c28e0264fd52427a94b3.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book 16 2015</div>
+                        <div class="text-center text-[#ff6700]">4799元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a1f6a20434940961e37aa3ab8f956217.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book Pro 16 2014</div>
+                        <div class="text-center text-[#ff6700]">6399元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/1e3e74dfb320c28e0264fd52427a94b3.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book 16 2015</div>
+                        <div class="text-center text-[#ff6700]">4799元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a1f6a20434940961e37aa3ab8f956217.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book Pro 16 2014</div>
+                        <div class="text-center text-[#ff6700]">6399元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/1e3e74dfb320c28e0264fd52427a94b3.jpg?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Book 16 2015</div>
+                        <div class="text-center text-[#ff6700]">4799元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/Ipad:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="平板 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/75f234c4bc74c6a3cc6b054b24a5a94c.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Pad SE</div>
+                        <div class="text-center text-[#ff6700]">999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/db2d3127c6bf5b89488efa8f6fd85ded.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi Pad 7 Pro</div>
+                        <div class="text-center text-[#ff6700]">2499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/75f234c4bc74c6a3cc6b054b24a5a94c.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Pad SE</div>
+                        <div class="text-center text-[#ff6700]">999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/db2d3127c6bf5b89488efa8f6fd85ded.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi Pad 7 Pro</div>
+                        <div class="text-center text-[#ff6700]">2499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/75f234c4bc74c6a3cc6b054b24a5a94c.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Redmi Pad SE</div>
+                        <div class="text-center text-[#ff6700]">999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/db2d3127c6bf5b89488efa8f6fd85ded.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi Pad 7 Pro</div>
+                        <div class="text-center text-[#ff6700]">2499元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/Appliance:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="家电 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/80416c1c7040aabbafa527a6ea652948.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 空调1.5匹新1级能效</div>
+                        <div class="text-center text-[#ff6700]">2299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/85009f514f7505825899635daeb761b0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">米家洗烘一体机 12Kg</div>
+                        <div class="text-center text-[#ff6700]">1999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/80416c1c7040aabbafa527a6ea652948.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 空调1.5匹新1级能效</div>
+                        <div class="text-center text-[#ff6700]">2299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/85009f514f7505825899635daeb761b0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">米家洗烘一体机 12Kg</div>
+                        <div class="text-center text-[#ff6700]">1999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/80416c1c7040aabbafa527a6ea652948.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi 空调1.5匹新1级能效</div>
+                        <div class="text-center text-[#ff6700]">2299元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/85009f514f7505825899635daeb761b0.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">米家洗烘一体机 12Kg</div>
+                        <div class="text-center text-[#ff6700]">1999元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+              <div class="absolute inset-0 w-full h-full border-t opacity-100 bg-white peer-hover/Router:group-[.product]/item:z-10 hover:z-10 z-0 delay-1000 group-hover/container:delay-0"><div class="路由器 w-[1226px] h-full mx-auto flex">
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow relative after:absolute after:inline-block after:w-px after:h-[100px] after:bg-[#e0e0e0] after:top-[35px] after:left-full">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="grow">
+                  <div class="px-[22px] pt-[35px] pb-7 box-border h-full">
+                    <a href="#" class="flex flex-col h-full">
+                      <img class="w-40 h-[110px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2e4e053bd4dd41341ce8950ae1c3896d.png?thumb=1&w=320&h=220&f=webp&q=90" alt="">
+                      <div class="mt-[22px]">
+                        <div class="text-center text-[#333]">Xiaomi全屋路由 BE3600Pro 套装</div>
+                        <div class="text-center text-[#ff6700]">699元起</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="flex items-center h-full">
+            <a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">服务中心 </span></a>
+            <a href="#" class="hover:text-[#ff6700] align-middle leading-[80px]"><span class="px-2.5">社区</span></a>
+          </div>
         </div>
-        <div class="ml-auto">
-          <form action="#" class="flex">
-            <input class="duration-300 w-60 h-12 outline-none border border-r-0 peer/item hover:border-slate-400 has-[+:hover]:border-slate-400 focus:border-[#ff6700]">
+        <div class="ml-auto"> <!-- 右侧搜索框 -->
+          <form action="#" class="flex relative z-10">
+            <!-- [&:not(:focus)]:has-[+:hover]:border-slate-400  当自身没有被 focus 并且紧挨着的兄弟元素被 hover 的时候，设置边框--> 
+            <!-- .\[\&\:not\(\:focus\)\]\:has-\[\+\:hover\]\:border-slate-400:has(+:hover):not(:focus) {
+                --tw-border-opacity: 1;
+                border-color: rgb(148 163 184 / var(--tw-border-opacity, 1));
+            } -->
+            <input class="pl-2.5 duration-300 w-60 h-12 outline-none border border-r-0 peer/item hover:border-slate-400 focus:border-[#ff6700] [&:not(:focus)]:has-[+:hover]:border-slate-400">
             <button class="duration-300 h-12 w-12 border fa fa-search fa-lg text-[#616161] hover:bg-[#ff6700] hover:text-white hover:border-[#ff6700] peer-hover/item:border-slate-400 peer-focus/item:border-[#ff6700]"></button>
+            <ul class="absolute top-full right-[47px] flex flex-col w-[241px] h-0 overflow-auto bg-white peer-focus/item:h-60 peer-focus/item:border peer-focus/item:border-t-0 border-[#ff6700] text-[#333333] text-xs">
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">手机换新</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">小米手环9</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">笔记本</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">Redmi K70至尊版</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">门锁</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">热水壶</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">晾衣架</li>
+              <li class="grow flex items-center w-full pl-3 hover:bg-[#f5f5f5]">充电宝</li>
+            </ul>
           </form>
         </div>
       </div>
+      <div class="w-full h-[460px] relative"> <!-- 小米商城产品罗列 -->
+        <div class="slideshow w-full h-full relative z-0"> <!-- 小米主要产品轮播图 -->
+          <div class="absolute z-10 right-8 bottom-6 cursor-default" id="slideshow-radio">
+            <input id="product-1" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]" checked>
+            <input id="product-2" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]">
+            <input id="product-3" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]">
+            <input id="product-4" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]">
+            <input id="product-5" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]">
+            <input id="product-6" type="radio" name="product" class="cursor-pointer ml-1 appearance-none w-2.5 h-2.5 rounded-full border-2 border-[#8c99a7] checked:border-[#77777a] hover:border-[#77777a] checked:bg-[#c5c5cc] hover:bg-[#c5c5cc]">
+          </div>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/28aec77fa645c4d78a5154963d025e00.jpg?w=2452&h=920" alt=""></a>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/d092e593a92ea73c70cd138ee843aba2.jpg?thumb=1&w=2452&h=920&f=webp&q=90" alt=""></a>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/ace3f78a6db3bf071b84213f0e531e88.jpg?thumb=1&w=2452&h=920&f=webp&q=90" alt=""></a>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/70e646187d15c29ef2762da104065d21.jpg?thumb=1&w=2452&h=920&f=webp&q=90" alt=""></a>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/cd3aecdd51725ee0f23d4564b843f8ee.jpg?thumb=1&w=2452&h=920&f=webp&q=90" alt=""></a>
+          <a href="#" class="transition duration-1000"><img class="absolute w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/58f9ef56efd5493e2d2ba5a246a931f5.jpg?thumb=1&w=2452&h=920&f=webp&q=90" alt=""></a>
+          <div class="absolute prev left-[234px] top-1/2 translate-y-[-50%] w-[41px] h-[69px]">
+            <label for="product-6" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+            <label for="product-1" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+            <label for="product-2" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+            <label for="product-3" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+            <label for="product-4" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+            <label for="product-5" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-left fa-3x"></label>
+          </div>
+          <div class="absolute next top-1/2 right-0 translate-y-[-50%] w-[41px] h-[69px]">
+            <label for="product-2" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+            <label for="product-3" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+            <label for="product-4" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+            <label for="product-5" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+            <label for="product-6" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+            <label for="product-1" class="absolute w-full h-full leading-[69px] align-middle text-center hover:bg-zinc-500/50 text-white fa fa-angle-right fa-3x"></label>
+          </div>
+        </div>
+        <ul class="absolute top-0 left-0 w-[234px] h-full box-border py-5 bg-[#3f3d3d]/50 text-white text-sm grid grid-cols-1 grid-rows-6 auto-rows-fr"> <!-- 小米主要产品列表 -->
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/cellphone">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>手机</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/TV">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>电视</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/appliances">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>家电</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/book">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>笔记本 平板 显示器</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/dress">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>出行 穿戴</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/music">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>耳机 音箱</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/health">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>健康 儿童</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/life">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>生活 箱包</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/smart">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>智能 路由器</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <li class="w-full h-full hover:bg-[#ff6700]/100 peer/parts">
+            <a href="#" class="flex items-center w-full h-full pl-[30px]">
+              <span>电源 配件</span>
+              <span class="ml-auto pr-6 fa fa-angle-right fa-lg"></span>
+            </a>
+          </li>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/cellphone:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米手机7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/TV:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米电视6</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/appliances:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电1</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电2</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电3</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电4</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电5</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电6</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电7</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电8</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电9</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电10</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电11</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电12</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电13</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电14</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电15</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电16</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电17</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电18</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电19</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电20</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电21</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电22</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电23</span>
+            </a>
+            <a href="#" class="w-[248px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">小米家电24</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/book:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">笔记本7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/dress:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">穿戴7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/music:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">音箱7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/health:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">健康7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/life:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">生活7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/smart:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">智能7</span>
+            </a>
+          </div>
+          <div class="absolute top-0 left-full w-0 h-full peer-hover/parts:w-max hover:w-max overflow-hidden box-border flex flex-col flex-wrap shadow-md bg-white text-black border-t border-slate-300">
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件1</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件2</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件3</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件4</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件5</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件6</span>
+            </a>
+            <a href="#" class="w-[268px] h-1/6 pl-5 hover:text-[#ff6700] flex items-center">
+              <img class="w-10 h-10" src="#"></img>
+              <span class="pl-3">配件7</span>
+            </a>
+          </div>
+        </ul>
+      </div>
+      <div class="w-full h-[210px] box-border pt-[14px] pb-[26px] flex gap-[13px]"> <!-- 其他服务与最新产品 -->
+        <div class="grow-0 shrink-0 w-[234px] h-full p-[3px] bg-[#5f5750] flex flex-wrap text-white text-xs">
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/82abdba456e8caaea5848a0cddce03db.png?w=48&h=48"></img>
+              <span class="pt-1">服务保障</span>
+            </a>
+          </div>
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/806f2dfb2d27978e33fe3815d3851fa3.png?w=48&h=48"></img>
+              <span class="pt-1">企业团购</span>
+            </a>
+          </div>
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/eded6fa3b897a058163e2485532c4f10.png?w=48&h=48"></img>
+              <span class="pt-1">F码通道</span>
+            </a>
+          </div>
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/43a3195efa6a3cc7662efed8e7abe8bf.png?w=48&h=48"></img>
+              <spa class="pt-1"n>米粉卡</span>
+            </a>
+          </div>
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/f4846bca6010a0deb9f85464409862af.png?w=48&h=48"></img>
+              <span class="pt-1">以旧换新</span>
+            </a>
+          </div>
+          <div class="w-1/3 box-border px-0.5 pb-5 relative after:absolute after:content-[''] after:left-0 after:top-0 after:bottom-0 after:my-auto after:h-[70px] after:w-px after:bg-[#665e57]">
+            <a href="#" class="w-full h-full flex flex-col justify-end items-center opacity-70 hover:opacity-100 relative before:absolute before:content-[''] before:left-0 before:right-0 before:mx-auto before:top-0 before:w-[64px] before:h-px before:bg-[#665e57]">
+              <img class="w-6 h-6" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/9a76d7636b08e0988efb4fc384ae497b.png?w=48&h=48"></img>
+              <span class="pt-1">话费充值</span>
+            </a>
+          </div>
+        </div>
+        <div class="w-auto h-full grow transition-shadow duration-200 ease-in shadow-none hover:shadow-xl">
+          <a href="#" class="h-full w-full">
+            <img class="w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/e981f78d2ac17c504975a719cb8b069d.png?w=632&h=340" alt="">
+          </a>
+        </div>
+        <div class="w-auto h-full grow transition-shadow duration-200 ease-in shadow-none hover:shadow-xl">
+          <a href="#" class="h-full w-full">
+            <img class="w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6b04dfc206dec442fe161b33082681ec.png?w=632&h=340" alt="">
+          </a>
+        </div>
+        <div class="w-auto h-full grow transition-shadow duration-200 ease-in shadow-none hover:shadow-xl">
+          <a href="#" class="h-full w-full">
+            <img class="w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6b0c7fadbd84a808287af5faad6e62d7.png?w=632&h=340" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-full h-auto bg-[#f5f5f5]"> <!-- 产品展示 -->
+    <div class="w-[1226px] h-auto mx-auto">
+      <div class="w-full h-[145px] pt-[25px]">
+        <a href="#">
+          <img class="w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/9e9c620dbad5c650b6ff0c573df76e14.jpg?thumb=1&w=2452&h=240&f=webp&q=90" alt="">
+        </a>
+      </div>
+      <!-- 手机产品展示 float 布局实现 -->
+      <div class="w-full h-[694px]">
+        <div class="w-full h-[80px] box-border pt-[22px] leading-[58px] flow-root">
+          <span class="text-[22px] font-extralight">手机</span>
+          <a class="float-right group" href="#">
+            <span class="text-[16px] font-light pr-2 text-[#424242] transition-colors duration-300 group-hover:text-[#ff6701] align-middle">查看更多</span>
+            <span class="fa fa-chevron-circle-right fa-lg text-[#b0b0b0] transition-colors duration-300 group-hover:text-[#ff6701] leading-[58px] align-middle"></span>
+          </a>
+        </div>
+        <div class="w-full h-[614px]">
+          <div class="float-left h-full w-[234px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <a href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/55d2e50dd3783b52244ea3938e9dfca7.png?thumb=1&w=468&h=1228&f=webp&q=90" alt="">
+            </a>
+          </div>
+          <a href="#" class="float-left h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+          <a href="#" class="float-left h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/00eb27ead9512a7f12604ad3469460b6.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">REDMI Turbo 4</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5">REDMI Turbo 4 好看又能打</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1999元起</span>
+          </a>
+        </div>
+      </div>
+      <!-- 智能穿戴产品展示 常规流 布局实现 -->
+      <div class="w-full h-[694px] text-[0px]">
+        <div class="h-full w-[234px] inline-block">
+          <h2 class="w-full h-[80px] box-border pt-[22px] leading-[58px] text-[22px] font-extralight">智能穿戴</h2>
+          <a href="#" class="block transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+            <img class="w-full h-[614px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/15bd8044e1dbe5cdc05806ef3dc7bdf6.png?thumb=1&w=468&h=1228&f=webp&q=90" alt="">
+          </a>
+        </div>
+        <div class="relative h-full w-[992px] inline-block align-top">
+          <div class="option-class w-full h-[80px] box-border pt-[22px] leading-[58px] text-right">
+            <!-- hover:text-[#ff6700] hover:border-b-2 hover:border-[#ff6700] -->
+            <a href="#" class="text-base align-middle pb-1 font-light">耳机</a>
+            <a href="#" class="text-base align-middle pb-1 ml-6 font-light">穿戴</a>
+          </div>
+          <div id="headset" class="absolute w-full h-[614px]">
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full text-center overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202407172252_14dde1819e157be030514edaddf0ead9.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">Xiaomi Buds 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">舒适无感佩戴｜高通全链路无损音频｜哈曼 AudioEFX 联合调音</span>
+                <span class="inline-block text-center text-[#ff6700] text-sm mt-3">679元</span>
+                <span class="inline-block ml-2 text-sm text-[#b0b0b0] line-through">699元</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] align-top">
+              <div class="w-[234px] h-[143px] overflow-hidden bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+                <a href="#" class="block w-full h-20 box-center mt-8 mb-[31px] text-center">
+                  <div class="inline-block h-20 w-24 text-start text-sm pt-[6px]">
+                    <span class="block">Redmi Buds 5 Pro</span>
+                    <span class="block mt-1 text-[#ff6700]">369元起</span>
+                  </div>
+                  <img class="inline-block w-20 h-20 ml-3 align-top" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311292123_5f019eb3ce2987e60596f7a54630e44c.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                </a>
+              </div>
+              <div class="w-[234px] h-[143px] mt-[14px] overflow-hidden bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+                <a href="#" class="block w-full h-20 box-center mt-8 mb-[31px] text-center text-sm">
+                  <div class="inline-block h-20 w-24 text-start pt-5">
+                    <span class="block text-[22px] font-light">浏览更多</span>
+                    <span class="block text-sm text-[#b0b0b0] mt-2">耳机</span>
+                  </div>
+                  <span class="inline-block w-20 h-20 ml-3 align-top fa fa-arrow-circle-o-right fa-3x leading-[80px] text-[#ff6700]"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div id="dress" class="absolute w-full h-[614px] invisible">
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="block w-full h-full overflow-hidden">
+                <img class="block w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202411261459_d47c23aa207b6cb0e2e6feee7d9888c5.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+                <span class="inline-block w-full text-center text-sm mt-3">REDMI Watch 5</span>
+                <span class="inline-block w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 box-border whitespace-nowrap overflow-hidden text-ellipsis">2.07英寸高刷高亮大屏 | 24天超长续航 | 搭载小米澎湃OS 2</span>
+                <span class="inline-block w-full text-center text-[#ff6700] text-sm mt-3">599元起</span>
+              </a>
+            </div>
+            <div class="text-[0px] inline-block w-[234px] h-[300px] ml-[14px] mt-[14px] align-top">
+              <div class="w-[234px] h-[143px] overflow-hidden bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+                <a href="#" class="block w-full h-20 box-center mt-8 mb-[31px] text-center">
+                  <div class="inline-block h-20 w-24 text-start text-sm pt-[6px]">
+                    <span class="block">小米手环8 Pro 原神定制版</span>
+                    <span class="block mt-1 text-[#ff6700]">549元</span>
+                  </div>
+                  <img class="inline-block w-20 h-20 ml-3 align-top" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202312081723_8c6876edb9fd120f765149945f77a4f1.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                </a>
+              </div>
+              <div class="w-[234px] h-[143px] mt-[14px] overflow-hidden bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+                <a href="#" class="block w-full h-20 box-center mt-8 mb-[31px] text-center text-sm">
+                  <div class="inline-block h-20 w-24 text-start pt-5">
+                    <span class="block text-[22px] font-light">浏览更多</span>
+                    <span class="block text-sm text-[#b0b0b0] mt-2">穿戴</span>
+                  </div>
+                  <span class="inline-block w-20 h-20 ml-3 align-top fa fa-arrow-circle-o-right fa-3x leading-[80px] text-[#ff6700]"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 笔记本丨平板产品展示 定位 布局实现 -->
+      <div class="w-full h-[694px]">
+        <div class="w-full h-[80px] box-border pt-[22px] leading-[58px] relative">
+          <span class="text-[22px] font-extralight">笔记本丨平板</span>
+          <div class="absolute top-[22px] right-0">
+            <a href="####">  <!-- 与 javascript:void(0); 有相同的效果 -->
+              <span class="text-[16px] font-light mr-2 pb-1 border-b-2 border-[#ff6701] text-[#ff6701] align-middle">热门</span>
+            </a>
+          </div>
+        </div>
+        <div class="w-full h-[614px] relative">
+          <div class="h-full w-[234px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <a href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/bd88fa683214713a6acb1afcf738b89c.png?thumb=1&w=468&h=1228&f=webp&q=90" alt="">
+            </a>
+          </div>
+          <a href="#" class="absolute top-0 left-[234px] block h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-0 left-[482px] block h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-0 left-[730px] block h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-0 right-0 block h-[300px] w-[234px] mb-[14px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-[314px] left-[234px] block h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-[314px] left-[482px] block h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <a href="#" class="absolute top-[314px] left-[730px] block h-[300px] w-[234px] ml-[14px] bg-white transition ease-in hover:translate-y-[-2px] hover:shadow-xl">
+            <img class="float-left w-[159px] h-[165px] ml-[37.5px] mt-[20px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5daddaa651568673e87eaf7c15ebd1cb.png?thumb=1&w=400&h=400&f=webp&q=90" alt="">
+            <span class="float-left w-full text-center text-sm mt-3">Redmi Pad Pro系列</span>
+            <span class="float-left w-full text-center text-[#b0b0b0] text-xs mt-0.5 px-2 whitespace-nowrap overflow-hidden text-ellipsis">12.1英寸2.5K旗舰机大屏 | 10000mAh超大电池</span>
+            <span class="float-left w-full text-center text-[#ff6700] text-sm mt-3">1499元起</span>
+          </a>
+          <div href="#" class="absolute top-[314px] right-0 h-[300px] w-[234px] ml-[14px]">
+            <div class="relative w-[234px] h-[143px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="absolute inset-0 my-auto block w-full h-20">
+                <div class="absolute left-7 top-0 h-20 w-24 text-start text-sm pt-[6px]">
+                  <span class="block">Redmi Book Pro 16 2024</span>
+                  <span class="block mt-1 text-[#ff6700]">6399元起</span>
+                </div>
+              <img class="absolute right-5 top-0 w-20 h-20" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202402211658_f8e48c3ab022eede514cc6ef6412a48b.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+              </a>
+            </div>
+            <div class="relative w-[234px] h-[143px] mt-[14px] bg-white transition ease-in hover:-translate-y-0.5 hover:shadow-xl">
+              <a href="#" class="absolute inset-0 my-auto block w-full h-20 text-sm">
+                <div class="absolute left-7 top-0 h-20 w-24 text-start pt-5">
+                  <span class="block text-[22px] font-light">浏览更多</span>
+                  <span class="block text-sm text-[#b0b0b0] mt-2">热门</span>
+                </div>
+              <span class="absolute right-5 top-0 w-20 h-20 text-center fa fa-arrow-circle-o-right fa-3x leading-[80px] text-[#ff6700]"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 家电产品展示 flex 布局实现 -->
+      <div class="w-full h-[694px] flex"> 
+        <div class="h-full w-[234px] pt-[22px] shrink-0">
+          <span class="text-[22px] font-extralight leading-[58px]">家电</span>
+          <div class="flex flex-col w-full h-[614px] justify-between">
+            <a class="block w-full h-[300px] transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/71a8e491a39b9c246246140fe68d256b.jpg?thumb=1&w=468&h=600&f=webp&q=90" alt="">
+            </a>
+            <a class="block w-full h-[300px] transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/46a738e1b375a08dd691a43bb05767f9.png?thumb=1&w=468&h=600&f=webp&q=90" alt="">
+            </a>
+          </div>
+        </div>
+        <div class="h-full w-[992px] shrink-0 relative">
+          <div class="h-[80px] w-full pt-[22px] flex justify-end">
+            <div class="option-parent h-0 w-[188px] flex justify-between">
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  热门
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] flex flex-wrap gap-[14px] cursor-default">
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202403131610_4c436d462d84b5109080ccf6b632844c.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">小米电视 S Mini LED 系列</div>
+                        <div class="w-full text-sm text-[#b0b0b0] px-2 whitespace-nowrap overflow-hidden text-ellipsis">Mini LED 高分区背光、1200nits峰值亮度</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">2999元起</div>
+                    </a>
+                    <div class="w-[234px] h-[300px] flex flex-col gap-[14px]" href="">
+                      <a class="w-[234px] h-[143px] bg-white flex flex-row items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full flex flex-col gap-1 justify-center items-end">
+                          <div class="w-20 text-sm">米家双门冰箱 185L</div>
+                          <div class="w-20 text-sm text-[#ff6700]">799元</div>
+                        </div>
+                        <div class="grow flex justify-center">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6852696ece843f1a1f9667e21bb09c71.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="w-[234px] h-[143px] bg-white flex flex-row items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full flex flex-col gap-1 justify-center items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px]">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">热门</div>
+                        </div>
+                        <div class="h-full grow flex justify-center items-center">
+                          <div class="text-[#ff6700] fa fa-arrow-circle-o-right fa-3x" src="" alt=""></div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  电视影音
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] flex flex-wrap gap-[14px] cursor-default">
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202409051432_82b3c7307d56a4cdc831598ad69e1d7f.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">Redmi智能电视 A Pro 系列</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高清原色画质|智能流畅体验</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">1599元起</div>
+                    </a>
+                    <div class="w-[234px] h-[300px] flex flex-col gap-[14px]" href="">
+                      <a class="w-[234px] h-[143px] bg-white flex flex-row items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full flex flex-col gap-1 justify-center items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px]">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">电视影音</div>
+                        </div>
+                        <div class="grow flex justify-center items-center">
+                          <div class="text-[#ff6700] fa fa-arrow-circle-o-right fa-3x" src="#" alt=""></div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  空调
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] flex flex-wrap gap-[14px] cursor-default">
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <a class="w-[234px] h-[300px] bg-white pt-[20px] flex flex-col gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="flex justify-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1605536123.55818348.jpg?thumb=1&w=400&h=400" alt=""></div>
+                      <div>
+                        <div class="text-sm flex justify-center">巨省电 小米空调 立式3匹新1级能效</div>
+                        <div class="text-sm flex justify-center text-[#b0b0b0]">高效节能 | 立体送风 | 智能互联</div>
+                      </div>
+                      <div class="text-sm flex justify-center text-[#ff6700]">4999元</div>
+                    </a>
+                    <div class="w-[234px] h-[300px] flex flex-col gap-[14px]" href="">
+                      <a class="w-[234px] h-[143px] bg-white flex flex-row gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[122px] h-full flex flex-col gap-1 justify-center items-end">
+                          <div class="w-24 text-sm">巨省电 2匹 新1级 米家空调</div>
+                          <div class="w-24 text-sm text-[#ff6700]">2799元</div>
+                        </div>
+                        <div class="flex justify-center">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209221935_9f4dbcd4bacd914a9990170260a9775d.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="w-[234px] h-[143px] bg-white flex flex-row items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full flex flex-col gap-1 justify-center items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px]">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">空调</div>
+                        </div>
+                        <div class="h-full grow flex justify-center items-center">
+                          <div class="text-[#ff6700] fa fa-arrow-circle-o-right fa-3x" src="" alt=""></div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 生活电器产品展示 grid 布局实现 -->
+      <div class="w-full h-[694px] grid grid-flow-row grid-rows-1 grid-cols-[234px_auto]"> 
+        <div class="h-full w-[234px] pt-[22px]">
+          <span class="text-[22px] font-extralight leading-[58px]">生活电气</span>
+          <div class="w-full h-[614px] grid grid-flow-col grid-cols-1 grid-rows-2 gap-[14px]">
+            <a class="block w-full h-[300px] transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/2455b7d57a782fb9283f49fb4792d11c.png?thumb=1&w=468&h=600&f=webp&q=90" alt="">
+            </a>
+            <a class="block w-full h-[300px] transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+              <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/de8ede1e3e9e10a6e44de7e55f03cde4.png?thumb=1&w=468&h=600&f=webp&q=90" alt="">
+            </a>
+          </div>
+        </div>
+        <div class="h-full w-[992px] relative">
+          <div class="h-[80px] w-full pt-[22px] grid grid-rows-1 grid-cols-1 justify-items-end">
+            <div class="option-parent h-0 w-[250px] grid grid-flow-row grid-rows-1 grid-cols-[auto_auto_auto_auto] justify-between">
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  电暖气
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] grid grid-flow-row grid-rows-4 grid-cols-4 gap-[14px] cursor-default">
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">779元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202408302104_002b4aea8ddbbfccde443d348f9d89ef.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[auto_auto] justify-start gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[122px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-24 text-sm self-end">米家桌面暖风机</div>
+                          <div class="w-24 text-sm text-[#ff6700]">129元</div>
+                        </div>
+                        <div class="justify-self-start">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8bd3bd364071778edd26fdc62a67d2cd.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[107px_1fr] gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px] self-end">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">电暖气</div>
+                        </div>
+                        <div class="justify-self-center text-[#ff6700] fa fa-arrow-circle-o-right fa-3x">
+                        </div>
+                      </a>
+                  </div>
+                </span>
+              </div>
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  扫地机
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] grid grid-flow-row grid-rows-4 grid-cols-4 gap-[14px] cursor-default">
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">779元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202311251129_94eabb38d397de731c90cd014b104afd.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[auto_auto] justify-start gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[122px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-24 text-sm self-end">米家桌面暖风机</div>
+                          <div class="w-24 text-sm text-[#ff6700]">129元</div>
+                        </div>
+                        <div class="justify-self-start">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8bd3bd364071778edd26fdc62a67d2cd.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[107px_1fr] gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px] self-end">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">扫地机</div>
+                        </div>
+                        <div class="justify-self-center text-[#ff6700] fa fa-arrow-circle-o-right fa-3x">
+                        </div>
+                      </a>
+                  </div>
+                </span>
+              </div>
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  空净
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] grid grid-flow-row grid-rows-4 grid-cols-4 gap-[14px] cursor-default">
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">779元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202304101504_22b0ebf11c5a60a76ba6de0a1c7fd2d5.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[auto_auto] justify-start gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[122px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-24 text-sm self-end">米家桌面暖风机</div>
+                          <div class="w-24 text-sm text-[#ff6700]">129元</div>
+                        </div>
+                        <div class="justify-self-start">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8bd3bd364071778edd26fdc62a67d2cd.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[107px_1fr] gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px] self-end">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">空净</div>
+                        </div>
+                        <div class="justify-self-center text-[#ff6700] fa fa-arrow-circle-o-right fa-3x">
+                        </div>
+                      </a>
+                  </div>
+                </span>
+              </div>
+              <div class="option-title leading-[58px] cursor-pointer">
+                <span class="font-light pb-1.5">
+                  清洁
+                  <div class="option-item absolute top-[80px] left-0 pl-[14px] font-normal text-black w-full h-[614px] grid grid-flow-row grid-rows-4 grid-cols-4 gap-[14px] cursor-default">
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">779元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                    <a class="col-span-1 row-span-2 w-[234px] h-[300px] bg-white pt-[20px] grid grid-flow-col grid-cols-1 grid-rows-[auto_auto_auto_auto] gap-3 justify-start transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="">
+                      <div class="grid justify-items-center"><img class="w-[159px] h-[165px]" src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209281724_6ba505dea770a32533f9f08639ba8d56.png?thumb=1&w=400&h=400&f=webp&q=90" alt=""></div>
+                      <div>
+                        <div class="text-sm grid justify-items-center">米家石墨烯踢脚线电暖器 2 折叠版</div>
+                        <div class="text-sm grid justify-items-center text-[#b0b0b0]">随心折叠摆放，石墨烯速暖整屋</div>
+                      </div>
+                      <div class="text-sm grid justify-items-center text-[#ff6700]">799元</div>
+                    </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[auto_auto] justify-start gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[122px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-24 text-sm self-end">米家桌面暖风机</div>
+                          <div class="w-24 text-sm text-[#ff6700]">129元</div>
+                        </div>
+                        <div class="justify-self-start">
+                          <img class="h-20 w-20" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8bd3bd364071778edd26fdc62a67d2cd.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+                        </div>
+                      </a>
+                      <a class="col-span-1 row-span-1 w-[234px] h-[143px] bg-white grid grid-flow-row grid-cols-[107px_1fr] gap-2 items-center transition ease-in hover:translate-y-[-2px] hover:shadow-xl" href="#">
+                        <div class="w-[107px] h-full grid grid-flow-col grid-cols-1 grid-rows-[auto_auto] gap-1 justify-items-end">
+                          <div class="w-20 text-[18px] font-light leading-[18px] self-end">浏览更多</div>
+                          <div class="w-20 text-sm text-[#b0b0b0]">清洁</div>
+                        </div>
+                        <div class="justify-self-center text-[#ff6700] fa fa-arrow-circle-o-right fa-3x">
+                        </div>
+                      </a>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 厨房电器产品展示 table 布局实现 -->
+      <!-- <div class="w-full h-[694px]"> 
+        redmi1
+      </div> -->
+      <!-- 智能家居产品展示 混合 布局实现 -->
+      <!-- <div class="w-full h-[694px]"> 
+        redmi2
+      </div> -->
+      <div class="w-full h-[170px] py-[25px]">
+        <a href="#">
+          <img class="w-full h-full" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/88e35cffc82cd98cd53172460067af17.jpg?thumb=1&w=2452&h=240&f=webp&q=90" alt="">
+        </a>
+      </div>
+    </div>
+  </div>
+  <footer class="w-full h-auto"> <!-- 小米商城底部 -->
+    <div class="w-full h-auto"> <!-- 小米商城信息 -->
+      <div class="w-[1226px] h-auto mx-auto font-sans text-[#616161]">
+        <div class="w-full h-20 border-b border-[#e0e0e0] flex flex-row items-center text-base">
+          <div class="basis-1/4 h-[25px] flex justify-center relative before:absolute before:content-[''] before:right-0 before:top-0 before:w-px before:h-[25px] before:bg-[#e0e0e0]">
+            <div class="h-full flex gap-2 cursor-pointer hover:text-[#ff6700]">
+              <div class="h-full fa fa-map-marker fa-lg"></div>
+              <div class="h-full">预约维修服务</div>
+            </div>
+          </div>
+          <div class="basis-1/4 h-[25px] flex justify-center relative before:absolute before:content-[''] before:right-0 before:top-0 before:w-px before:h-[25px] before:bg-[#e0e0e0]">
+            <div class="h-full flex gap-2 cursor-pointer hover:text-[#ff6700]">
+              <div class="h-full fa fa-map-marker fa-lg"></div>
+              <div class="h-full">7天无理由退货</div>
+            </div>
+          </div>
+          <div class="basis-1/4 h-[25px] flex justify-center relative before:absolute before:content-[''] before:right-0 before:top-0 before:w-px before:h-[25px] before:bg-[#e0e0e0]">
+            <div class="h-full flex gap-2 cursor-pointer hover:text-[#ff6700]">
+              <div class="h-full fa fa-map-marker fa-lg"></div>
+              <div class="h-full">15天免费换货</div>
+            </div>
+          </div>
+          <div class="basis-1/4 h-[25px] flex justify-center relative before:absolute before:content-[''] before:right-0 before:top-0 before:w-px before:h-[25px] before:bg-[#e0e0e0]">
+            <div class="h-full flex gap-2 cursor-pointer hover:text-[#ff6700]">
+              <div class="h-full fa fa-gift fa-lg"></div>
+              <div class="h-full">满69包邮</div>
+            </div>
+          </div>
+          <div class="shrink-0 w-[250px] h-[25px] flex justify-center">
+            <div class="h-full flex gap-2 cursor-pointer hover:text-[#ff6700]">
+              <div class="h-full fa fa-map-marker fa-lg"></div>
+              <div class="h-full">1100余家售后网点</div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full h-auto flex flex-row my-10">
+          <div class="grow pl-[160px] pr-[20px] flex flex-row text-sm">
+            <div class="basis-1/5">选购指南
+              <ul class="mt-[25px] text-xs text-[#757575]">
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">手机</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">电视</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">笔记本</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">平板</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">穿戴</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">耳机</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">家电</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">路由器</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">音响</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">配件</a></li>
+              </ul>
+            </div>
+            <div class="basis-1/5">服务中心
+              <ul class="mt-[25px] text-xs text-[#757575]">
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">申请售后</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">售后政策</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">维修服务价格</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">订单查询</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">以旧换新</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">保障服务</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">防伪查询</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">F码通道</a></li>
+              </ul>
+            </div>
+            <div class="basis-1/5">线下门店
+              <ul class="mt-[25px] text-xs text-[#757575]">
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">小米之家</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">服务网点</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">授权体验店/专区</a></li>
+              </ul>
+            </div>
+            <div class="basis-1/5">关于小米
+              <ul class="mt-[25px] text-xs text-[#757575]">
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">了解小米</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">加入小米</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">投资者关系</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">可持续发展</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">廉洁举报</a></li>
+              </ul>
+            </div>
+            <div class="basis-1/5">关注我们
+              <ul class="mt-[25px] text-xs text-[#757575]">
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">新浪微博</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">官方微信</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">联系我们</a></li>
+                <li class="mt-[10px] hover:text-[#ff6700] "><a href="#">公益基金会</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="w-[250px] flex flex-row">
+            <div class="relative after:absolute after:content-[''] after:top-0 after:left-0 after:w-px after:h-[80px] after:bg-[#e0e0e0]"></div>
+            <div class="grow text-xs leading-[18px]">
+              <div class="flex justify-center text-[#ff6700] text-[22px] leading-[22px]">950816</div>
+              <div class="ml-14 mt-[6px]">8:00-18:00（仅收市话费）</div>
+              <div class="flex justify-center text-[#ff6700] mt-[6px]">
+                <a href="#"><div class="w-[120px] text-center leading-[28px] border border-[#ff6700] hover:bg-[#ff6700] hover:text-white fa fa-commenting fa-lg">人工客服</div></a>
+              </div>
+              <div class="flex justify-center mt-6 text-[#ff6700] text-[22px] leading-[22px]">950818</div>
+              <div class="ml-14 mt-[6px]">8:00-18:00（仅收市话费）</div>
+              <div class="ml-14 mt-[6px]">手机适用于：Xiaomi MIX Fold系列、MIX Flip系列、数字12系列及以上</div>
+              <div class="ml-14 mt-[6px]">电视适用于：98寸、100寸电视</div>
+              <div class="flex justify-center text-[#ff6700] mt-[6px]">
+                <a href="#"><div class="w-[120px] text-center leading-[28px] border border-[#ff6700] hover:bg-[#ff6700] hover:text-white fa fa-commenting fa-lg">人工客服</div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-full h-auto bg-[#f5f5f5]">  <!-- 链接及工商信息 -->
+      <div class="w-[1226px] h-auto mx-auto pt-7 flex flex-row">
+        <div class="w-[77px]">
+          <img class="w-[56px] h-[56px]" src="https://cdn.cnbj1.fds.api.mi-img.com/mi.com-assets/shop/img/logo-mi2.png"></img>
+        </div>
+        <div class="grow text-[#757575] text-xs leading-[18px]">
+          <div>
+            <span>小米商城</span> | 
+            <span>小米澎湃OS</span> | 
+            <span>米家</span> | 
+            <span>多看</span> | 
+            <span>游戏</span> | 
+            <span>音乐</span> | 
+            <span>政企服务</span> | 
+            <span>小米天猫店</span> | 
+            <span>小米集团隐私政策</span> | 
+            <span>小米公司儿童信息保护规则</span> | 
+            <span>小米商城隐私政策</span> | 
+            <span>小米商城用户协议</span> | 
+            <span>问题反馈</span> | 
+            <span>Select Location</span>
+          </div>
+          <div>
+            <span>北京互联网法院法律服务工作站</span> | 
+            <span>中国消费者协会</span> | 
+            <span>北京市消费者协会</span>
+          </div>
+          <div class="text-[#b0b0b0]">
+            <div>© mi.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2023]0169-004号</div>
+            <div>（京）网械平台备字（2018）第00005号 药品医疗器械网络信息服务备案 (京)网药械信息备字（2024）第00478号 营业执照 医疗器械质量公告</div>
+            <div>增值电信业务经营许可证编号：京B2-20180851 网络食品经营备案 京食药网食备202010048   食品经营许可证 新出发京批字第直220280号</div>
+            <div>违法和不良信息举报电话：171-5104-4404 知识产权侵权投诉 本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+          </div>
+          <img class="h-8 w-[84px] inline-block" src="https://s01.mifile.cn/i/v-logo-2.png" alt="">
+          <img class="h-8 w-[84px] inline-block" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/icon3.png" alt="">
+          <img class="h-8 w-[84px] inline-block" src="https://i8.mifile.cn/b2c-mimall-media/ba10428a4f9495ac310fd0b5e0cf8370.png" alt="">
+          <img class="h-8 w-[84px] inline-block" src="https://cnbj1.fds.api.xiaomi.com/b2c-misite-activity/f890f72c4b4a4e086dd99ad211feb9e4.png" alt="">
+        </div>
+      </div>
+      <div class="w-[1226px] mx-auto">
+        <div class="w-full pt-11 pb-8 flex justify-center">
+          <div class="w-[368px] h-5 bg-[url('https://cdn.cnbj1.fds.api.mi-img.com/staticsfile/global/slogan2020.png')]"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- 右侧固定栏 -->
+  <div class="fixed w-[82px] h-[450px] bottom-10 right-0 bg-white flex flex-col text-[#757575]" id="rightFixed">
+    <div class="basis-1/5 w-full flex flex-col justify-center items-center border-b border-[#e0e0e0]">
+      <img class="data-png w-7 h-7" src="https://i8.mifile.cn/b2c-mimall-media/74c4fcb4475af8308e9a670db9c01fdf.png" alt="">
+      <div class="data-fixed">手机APP</div>
+    </div>
+    <div class="basis-1/5 w-full flex flex-col justify-center items-center border-b border-[#e0e0e0]">
+      <img class="data-png w-7 h-7" src="https://i8.mifile.cn/b2c-mimall-media/41f858550f42eb1770b97faf219ae215.png" alt="">
+      <div class="data-fixed">个人中心</div>
+    </div>
+    <div class="basis-1/5 w-full flex flex-col justify-center items-center border-b border-[#e0e0e0]">
+      <img class="data-png w-7 h-7" src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/95fbf0081a06eec7be4d35e277faeca0.png" alt="">
+      <div class="data-fixed">售后服务</div>
+    </div>
+    <div class="basis-1/5 w-full flex flex-col justify-center items-center border-b border-[#e0e0e0]">
+      <img class="data-png w-7 h-7" src="https://i8.mifile.cn/b2c-mimall-media/5e9f2b1b0da09ac3b3961378284ef2d4.png" alt="">
+      <div class="data-fixed">人工客服</div>
+    </div>
+    <div class="basis-1/5 w-full flex flex-col justify-center items-center">
+      <img class="data-png w-7 h-7" src="https://i8.mifile.cn/b2c-mimall-media/692a6c3b0a93a24f74a29c0f9d68ec71.png" alt="">
+      <div class="data-fixed">购物车</div>
     </div>
   </div>
 </body>
